@@ -4,13 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="">
+    <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="entity">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/EmailStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/EmailType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/PropertyStatus.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/PropertyType.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/RoleType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionType.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/UserStatus.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/EmailLog.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Notification.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/PropertyViewHistory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/RealEstate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/RealEstateImage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Transaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/TransactionLog.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/UserVerification.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
@@ -65,6 +76,14 @@
       <option name="presentableId" value="Default" />
       <updated>1784782004303</updated>
     </task>
+    <task id="LOCAL-00001" summary="entity">
+      <created>1784943645221</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1784943645221</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -77,5 +96,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="entity" />
+    <option name="LAST_COMMIT_MESSAGE" value="entity" />
   </component>
 </project>
