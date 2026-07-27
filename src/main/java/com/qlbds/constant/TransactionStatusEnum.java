@@ -1,5 +1,5 @@
 package com.qlbds.constant;
 
-public enum TransactionStatus {
+public enum TransactionStatusEnum {
     PENDING, PROCESSING, COMPLETED, CANCELLED, REJECTED
 }

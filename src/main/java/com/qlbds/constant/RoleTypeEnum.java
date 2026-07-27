@@ -1,6 +1,6 @@
 package com.qlbds.constant;
 
-public enum RoleType {
+public enum RoleTypeEnum {
     ADMIN,
     STAFF,
     CUSTOMER

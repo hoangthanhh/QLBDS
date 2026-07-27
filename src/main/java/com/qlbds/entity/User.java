@@ -1,7 +1,7 @@
 package com.qlbds.entity;
 
-import com.qlbds.constant.RoleType;
-import com.qlbds.constant.UserStatus;
+import com.qlbds.constant.RoleTypeEnum;
+import com.qlbds.constant.UserStatusEnum;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,7 +30,7 @@ public class User {
     // Đã import từ package constant
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private RoleType role = RoleType.CUSTOMER;
+    private RoleTypeEnum role = RoleTypeEnum.CUSTOMER;
 
     @Column(name = "is_verified", nullable = false)
     private Boolean isVerified = false;
@@ -38,7 +38,7 @@ public class User {
     // Đã import từ package constant
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private UserStatus status = UserStatus.ACTIVE;
+    private UserStatusEnum status = UserStatusEnum.ACTIVE;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -91,11 +91,11 @@ public class User {
         this.password = password;
     }
 
-    public RoleType getRole() {
+    public RoleTypeEnum getRole() {
         return role;
     }
 
-    public void setRole(RoleType role) {
+    public void setRole(RoleTypeEnum role) {
         this.role = role;
     }
 
@@ -107,11 +107,11 @@ public class User {
         this.isVerified = isVerified;
     }
 
-    public UserStatus getStatus() {
+    public UserStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(UserStatusEnum status) {
         this.status = status;
     }
 

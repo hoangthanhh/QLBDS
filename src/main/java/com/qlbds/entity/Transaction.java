@@ -1,7 +1,7 @@
 package com.qlbds.entity;
 
-import com.qlbds.constant.TransactionStatus;
-import com.qlbds.constant.TransactionType;
+import com.qlbds.constant.TransactionStatusEnum;
+import com.qlbds.constant.TransactionTypeEnum;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -27,14 +27,14 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type", nullable = false)
-    private TransactionType transactionType;
+    private TransactionTypeEnum transactionType;
 
     @Column(name = "amount", precision = 18, scale = 2, nullable = false)
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private TransactionStatus status = TransactionStatus.PENDING;
+    private TransactionStatusEnum status = TransactionStatusEnum.PENDING;
 
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
@@ -85,11 +85,11 @@ public class Transaction {
         this.customer = customer;
     }
 
-    public TransactionType getTransactionType() {
+    public TransactionTypeEnum getTransactionType() {
         return transactionType;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
+    public void setTransactionType(TransactionTypeEnum transactionType) {
         this.transactionType = transactionType;
     }
 
@@ -101,11 +101,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public TransactionStatus getStatus() {
+    public TransactionStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(TransactionStatus status) {
+    public void setStatus(TransactionStatusEnum status) {
         this.status = status;
     }
 

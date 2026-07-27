@@ -1,7 +1,7 @@
 package com.qlbds.entity;
 
-import com.qlbds.constant.PropertyStatus;
-import com.qlbds.constant.PropertyType;
+import com.qlbds.constant.PropertyStatusEnum;
+import com.qlbds.constant.PropertyTypeEnum;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -23,7 +23,7 @@ public class RealEstate {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "property_type", nullable = false)
-    private PropertyType propertyType;
+    private PropertyTypeEnum propertyType;
 
     @Column(name = "price", precision = 18, scale = 2, nullable = false)
     private BigDecimal price;
@@ -33,7 +33,7 @@ public class RealEstate {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private PropertyStatus status = PropertyStatus.AVAILABLE;
+    private PropertyStatusEnum status = PropertyStatusEnum.AVAILABLE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
@@ -73,11 +73,11 @@ public class RealEstate {
         this.address = address;
     }
 
-    public PropertyType getPropertyType() {
+    public PropertyTypeEnum getPropertyType() {
         return propertyType;
     }
 
-    public void setPropertyType(PropertyType propertyType) {
+    public void setPropertyType(PropertyTypeEnum propertyType) {
         this.propertyType = propertyType;
     }
 
@@ -97,11 +97,11 @@ public class RealEstate {
         this.description = description;
     }
 
-    public PropertyStatus getStatus() {
+    public PropertyStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(PropertyStatus status) {
+    public void setStatus(PropertyStatusEnum status) {
         this.status = status;
     }
 

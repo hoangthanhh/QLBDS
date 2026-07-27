@@ -1,5 +1,5 @@
 package com.qlbds.constant;
 
-public enum EmailType {
+public enum EmailTypeEnum {
     OTP, TRANSACTION_CREATED, TRANSACTION_COMPLETED
 }

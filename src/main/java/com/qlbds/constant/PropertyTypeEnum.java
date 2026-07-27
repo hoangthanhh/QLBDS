@@ -1,5 +1,5 @@
 package com.qlbds.constant;
 
-public enum PropertyType {
+public enum PropertyTypeEnum {
     APARTMENT, HOUSE, LAND
 }

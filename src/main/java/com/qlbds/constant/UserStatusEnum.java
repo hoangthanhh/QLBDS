@@ -1,6 +1,6 @@
 package com.qlbds.constant;
 
-public enum UserStatus {
+public enum UserStatusEnum {
     ACTIVE,
     INACTIVE
 }

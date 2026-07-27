@@ -1,7 +1,7 @@
 package com.qlbds.entity;
 
-import com.qlbds.constant.EmailStatus;
-import com.qlbds.constant.EmailType;
+import com.qlbds.constant.EmailStatusEnum;
+import com.qlbds.constant.EmailTypeEnum;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,11 +29,11 @@ public class EmailLog {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "email_type", nullable = false)
-    private EmailType emailType;
+    private EmailTypeEnum emailType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private EmailStatus status;
+    private EmailStatusEnum status;
 
     @Column(name = "sent_at", insertable = false, updatable = false)
     private LocalDateTime sentAt;
@@ -79,19 +79,19 @@ public class EmailLog {
         this.subject = subject;
     }
 
-    public EmailType getEmailType() {
+    public EmailTypeEnum getEmailType() {
         return emailType;
     }
 
-    public void setEmailType(EmailType emailType) {
+    public void setEmailType(EmailTypeEnum emailType) {
         this.emailType = emailType;
     }
 
-    public EmailStatus getStatus() {
+    public EmailStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(EmailStatus status) {
+    public void setStatus(EmailStatusEnum status) {
         this.status = status;
     }
 

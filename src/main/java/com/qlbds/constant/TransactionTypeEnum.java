@@ -1,5 +1,5 @@
 package com.qlbds.constant;
 
-public enum TransactionType {
+public enum TransactionTypeEnum {
     DEPOSIT, PURCHASE
 }

@@ -5,75 +5,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="entity">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/TestConnection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/auth/LoginController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/auth/RegisterController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/auth/VerifyOtpController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/MockProperty.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/PropertyExploreController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/staff/PropertyManagementController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/HibernateUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/hibernate.cfg.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/login.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/register.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/verify-otp.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common/footer.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common/header.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common/navbar.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/properties.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/staff/property-list.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/css/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/about.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/call-to-action.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/carousel-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/carousel-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/header.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-apartment.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-building.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-condominium.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-deal.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-house.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-housing.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-luxury.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-neighborhood.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-search.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/icon-villa.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/property-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/property-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/property-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/property-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/property-5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/property-6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/team-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/team-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/team-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/team-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/testimonial-1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/testimonial-2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/testimonial-3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/img/testimonial-4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/js/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/animate/animate.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/animate/animate.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/easing/easing.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/easing/easing.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/ajax-loader.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/owl.carousel.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/owl.carousel.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/owl.theme.default.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/owl.theme.default.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/owl.theme.green.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/owl.theme.green.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/assets/owl.video.play.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/owl.carousel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/owlcarousel/owl.carousel.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/waypoints/links.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/waypoints/waypoints.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/wow/wow.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/customer/lib/wow/wow.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminDashBoardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/staff/StaffDashBoardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/admin.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/forgot-password.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/config/HibernateConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/EmailStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/EmailStatusEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/EmailType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/EmailTypeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/PropertyStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/PropertyStatusEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/PropertyType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/PropertyTypeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/RoleType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/RoleTypeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionStatusEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionTypeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/UserStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/UserStatusEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/MockProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/PropertyExploreController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/staff/PropertyManagementController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/EmailLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/EmailLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/RealEstate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/RealEstate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/register.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/verify-otp.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/verify-otp.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common/footer.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common/header.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common/navbar.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/properties.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/home.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/staff/property-list.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/staff/staff.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -1,5 +1,5 @@
 package com.qlbds.constant;
 
-public enum EmailStatus {
+public enum EmailStatusEnum {
     SENT, FAILED
 }
