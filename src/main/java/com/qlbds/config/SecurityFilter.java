@@ -32,13 +32,13 @@ public class SecurityFilter implements Filter {
         // Bao gồm: thư mục assets, trang chủ, và các API/Controller xử lý Auth (login, register)
         if (path.isEmpty() || path.equals("/") || path.equals("/index.jsp") ||
                 path.equals("/home") || path.equals("/trang-chu") ||
-                path.startsWith("/assets/") || path.startsWith("/auth")) {
+                path.startsWith("/assets/") || path.startsWith("/acc")) {
 
             chain.doFilter(request, response);
             return;
         }
 
-        if (path.startsWith("/assets/") || path.equals("/home") || path.equals("/trang-chu") || path.startsWith("/auth")) {
+        if (path.startsWith("/assets/") || path.equals("/home") || path.equals("/trang-chu") || path.startsWith("/acc")) {
             chain.doFilter(request, response);
             return;
         }
@@ -53,7 +53,7 @@ public class SecurityFilter implements Filter {
 
         if (currentUser == null) {
             // Chưa đăng nhập -> Điều hướng về trang đăng nhập của Controller auth
-            resp.sendRedirect(req.getContextPath() + "/auth/login");
+            resp.sendRedirect(req.getContextPath() + "/acc/login");
             return;
         }
 

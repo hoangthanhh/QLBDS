@@ -2,14 +2,13 @@ package com.qlbds.entity;
 
 import com.qlbds.constant.TransactionStatusEnum;
 import com.qlbds.constant.TransactionTypeEnum;
-
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,19 +17,19 @@ public class Transaction {
     private String transactionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "real_estate_id", nullable = false)
-    private RealEstate realEstate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_id", nullable = false)
+    private Property property;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type", nullable = false)
     private TransactionTypeEnum transactionType;
 
-    @Column(name = "amount", precision = 18, scale = 2, nullable = false)
-    private BigDecimal amount;
+    @Column(name = "amount", nullable = false)
+    private Long amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -38,10 +37,6 @@ public class Transaction {
 
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "processed_by")
-    private User processedBy;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -52,92 +47,24 @@ public class Transaction {
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
-    // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTransactionCode() {
-        return transactionCode;
-    }
-
-    public void setTransactionCode(String transactionCode) {
-        this.transactionCode = transactionCode;
-    }
-
-    public RealEstate getRealEstate() {
-        return realEstate;
-    }
-
-    public void setRealEstate(RealEstate realEstate) {
-        this.realEstate = realEstate;
-    }
-
-    public User getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(User customer) {
-        this.customer = customer;
-    }
-
-    public TransactionTypeEnum getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(TransactionTypeEnum transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public TransactionStatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(TransactionStatusEnum status) {
-        this.status = status;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public User getProcessedBy() {
-        return processedBy;
-    }
-
-    public void setProcessedBy(User processedBy) {
-        this.processedBy = processedBy;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public LocalDateTime getCompletedAt() {
-        return completedAt;
-    }
-
-    public void setCompletedAt(LocalDateTime completedAt) {
-        this.completedAt = completedAt;
-    }
+    // GETTERS & SETTERS
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getTransactionCode() { return transactionCode; }
+    public void setTransactionCode(String transactionCode) { this.transactionCode = transactionCode; }
+    public User getCustomer() { return customer; }
+    public void setCustomer(User customer) { this.customer = customer; }
+    public Property getProperty() { return property; }
+    public void setProperty(Property property) { this.property = property; }
+    public TransactionTypeEnum getTransactionType() { return transactionType; }
+    public void setTransactionType(TransactionTypeEnum transactionType) { this.transactionType = transactionType; }
+    public Long getAmount() { return amount; }
+    public void setAmount(Long amount) { this.amount = amount; }
+    public TransactionStatusEnum getStatus() { return status; }
+    public void setStatus(TransactionStatusEnum status) { this.status = status; }
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public LocalDateTime getCompletedAt() { return completedAt; }
 }

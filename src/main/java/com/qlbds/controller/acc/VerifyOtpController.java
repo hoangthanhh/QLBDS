@@ -1,4 +1,4 @@
-package com.qlbds.controller.auth;
+package com.qlbds.controller.acc;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +11,6 @@ import java.io.IOException;
 public class VerifyOtpController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/auth/verify-otp.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/acc/verify-otp.jsp").forward(req, resp);
     }
 }

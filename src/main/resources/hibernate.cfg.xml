@@ -6,7 +6,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/qlbds?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/rems?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">anhthanhpro2005</property>
 
@@ -18,13 +18,13 @@
         <property name="hibernate.current_session_context_class">thread</property>
 
         <mapping class="com.qlbds.entity.User"/>
-        <mapping class="com.qlbds.entity.UserVerification"/>
-        <mapping class="com.qlbds.entity.RealEstate"/>
-        <mapping class="com.qlbds.entity.RealEstateImage"/>
-        <mapping class="com.qlbds.entity.PropertyViewHistory"/>
+        <mapping class="com.qlbds.entity.OtpCode"/>
+        <mapping class="com.qlbds.entity.Property"/>
+        <mapping class="com.qlbds.entity.PropertyImage"/>
+        <mapping class="com.qlbds.entity.ViewLog"/>
         <mapping class="com.qlbds.entity.Transaction"/>
-        <mapping class="com.qlbds.entity.TransactionLog"/>
-        <mapping class="com.qlbds.entity.Notification"/>
-        <mapping class="com.qlbds.entity.EmailLog"/>
+        <mapping class="com.qlbds.entity.TransactionUserSnapshot"/>
+        <mapping class="com.qlbds.entity.TransactionPropertySnapshot"/>
+
     </session-factory>
 </hibernate-configuration>
