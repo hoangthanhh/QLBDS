@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="REMS">
+  <path fill="#ffffff" d="M7 30.4 32 10l25 20.4v24.1c0 2-1.6 3.5-3.5 3.5H10.5A3.5 3.5 0 0 1 7 54.5V30.4Z"/>
+  <path fill="#00B98E" d="M24 57V37h16v20H24Z"/>
+  <path fill="#00B98E" d="M12 27.1V14h8v6.6L12 27.1Zm32-6.5V8h8v19.1l-8-6.5Z"/>
+  <path fill="#ffffff" d="M28 43h8v4h-8z"/>
+</svg>

@@ -1,13 +1,13 @@
 package com.qlbds.controller.customer;
 
+import com.qlbds.entity.Property;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
-
-// Nếu dự án dùng Jakarta EE (Servlet 5.0+ / Tomcat 10+), thay javax.servlet bằng jakarta.servlet
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(urlPatterns = {"/home", "/trang-chu"})
 public class HomeController extends HttpServlet {
@@ -16,7 +16,12 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Forward request từ Controller sang View home.jsp trong WEB-INF
-        req.getRequestDispatcher("/WEB-INF/views/customer/home.jsp").forward(req, resp);
+        // dữ liệu giả để JSP không lỗi
+        List<Property> realEstates = new ArrayList<>();
+
+        req.setAttribute("realEstates", realEstates);
+
+        req.getRequestDispatcher("/WEB-INF/views/customer/home.jsp")
+                .forward(req, resp);
     }
 }

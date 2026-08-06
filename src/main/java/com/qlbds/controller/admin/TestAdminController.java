@@ -8,18 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/test-view")
-public class AdminDashBoardController extends HttpServlet {
+@WebServlet("/test-admin")
+public class TestAdminController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String page = req.getParameter("page");
+        String view = req.getParameter("view");
 
-        if (page == null || page.isEmpty()) {
-            page = "admin"; // Mặc định mở trang admin.jsp
+        if (view == null || view.isEmpty()) {
+            view = "admin"; // Mặc định mở admin.jsp
         }
 
-        // Forward thẳng tới file JSP trong WEB-INF/views/admin/
-        req.getRequestDispatcher("/WEB-INF/views/admin/" + page + ".jsp").forward(req, resp);
+        // Forward dữ liệu tới thư mục trong WEB-INF/views/admin/
+        req.getRequestDispatcher("/WEB-INF/views/admin/" + view + ".jsp").forward(req, resp);
     }
 }

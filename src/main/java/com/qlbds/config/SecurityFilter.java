@@ -27,12 +27,19 @@ public class SecurityFilter implements Filter {
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
         // =========================================================
-        // 1. CHO PHÉP TRUY CẬP CÔNG KHAI (Không cần đăng nhập)
+        // [TAM THỜI TẮT BẢO MẬT ĐỂ SOI GIAO DIỆN ADMIN / STAFF]
+        // Bỏ qua toàn bộ luồng kiểm tra Login & Role dưới đây
         // =========================================================
-        // Bao gồm: thư mục assets, trang chủ, và các API/Controller xử lý Auth (login, register)
+        chain.doFilter(request, response);
+        return;
+
+        /* ---------- COMMENT TOÀN BỘ LOGIC BẢO MẬT BAN ĐẦU ----------
+
+        // 1. CHO PHÉP TRUY CẬP CÔNG KHAI (Không cần đăng nhập)
         if (path.isEmpty() || path.equals("/") || path.equals("/index.jsp") ||
                 path.equals("/home") || path.equals("/trang-chu") ||
-                path.startsWith("/assets/") || path.startsWith("/acc")) {
+                path.startsWith("/assets/") || path.startsWith("/acc") ||
+                path.startsWith("/test-admin")) {
 
             chain.doFilter(request, response);
             return;
@@ -43,31 +50,21 @@ public class SecurityFilter implements Filter {
             return;
         }
 
-        // =========================================================
         // 2. KIỂM TRA ĐĂNG NHẬP (AUTHENTICATION)
-        // =========================================================
         HttpSession session = req.getSession(false);
-
-        // Giả sử khi login thành công, bạn lưu thông tin vào session với key là "currentUser"
         Object currentUser = (session != null) ? session.getAttribute("currentUser") : null;
 
         if (currentUser == null) {
-            // Chưa đăng nhập -> Điều hướng về trang đăng nhập của Controller auth
             resp.sendRedirect(req.getContextPath() + "/acc/login");
             return;
         }
 
-        // =========================================================
         // 3. KIỂM TRA PHÂN QUYỀN (AUTHORIZATION)
-        // =========================================================
-        // Giả sử bạn lưu Role trong session dưới dạng String (hoặc lấy từ entity currentUser)
-        // Bạn cần sửa lại đoạn ép kiểu này cho khớp với Enum bạn đã tạo ở package constant
         String role = (String) session.getAttribute("userRole");
 
         // Ràng buộc cho URL của Admin
         if (path.startsWith("/admin")) {
             if (!"ADMIN".equals(role)) {
-                // Trả về lỗi 403 Forbidden nếu không phải Admin
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập khu vực Quản trị viên.");
                 return;
             }
@@ -76,13 +73,12 @@ public class SecurityFilter implements Filter {
         // Ràng buộc cho URL của Staff
         if (path.startsWith("/staff")) {
             if (!"STAFF".equals(role) && !"ADMIN".equals(role)) {
-                // Admin cũng có thể xem được trang của Staff (tuỳ logic hệ thống của bạn)
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập khu vực Nhân viên.");
                 return;
             }
         }
 
-        // Ràng buộc cho URL của Customer (chỉ những người dùng là Customer mới vào được trang cá nhân/giao dịch)
+        // Ràng buộc cho URL của Customer
         if (path.startsWith("/customer")) {
             if (!"CUSTOMER".equals(role)) {
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Khu vực này chỉ dành cho Khách hàng.");
@@ -90,8 +86,8 @@ public class SecurityFilter implements Filter {
             }
         }
 
-        // Nếu vượt qua mọi điều kiện, cho phép request đi tiếp đến Controller tương ứng
         chain.doFilter(request, response);
+        ------------------------------------------------------------- */
     }
 
     @Override
