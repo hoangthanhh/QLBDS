@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="update entity and db">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LogoutController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/ProfileController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/PropertyDetailController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/PropertyTransactionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/PropertyRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/TransactionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/PropertyService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/TransactionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/ValidationUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/profile.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-grid.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionTypeEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionTypeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/home.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/home.jsp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JspContextManager">
+    <jsp-to-context jsp-file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminHeader.jsp" context-file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" />
+  </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.234880687303503" />
+      <entry key="MS500" value="1.7484614933963456" />
+      <entry key="S2" value="1.9301272442977833" />
+      <entry key="S5" value="1.9714421566858151" />
+      <entry key="S10" value="1.9856176523813964" />
+      <entry key="S30" value="1.9951827151575574" />
+      <entry key="S60" value="1.9975884497915748" />
+      <entry key="M2" value="1.9987934970711287" />
+      <entry key="M5" value="1.9995172240380454" />
+      <entry key="M10" value="1.9997585828779094" />
+      <entry key="M15" value="1.9998390487754416" />
+      <entry key="M30" value="1.9999195211492982" />
+      <entry key="H1" value="1.9999597597650107" />
+      <entry key="H2" value="1.9999798796800916" />
+      <entry key="H4" value="1.999989939789442" />
+      <entry key="D1" value="1.999998323291212" />
+      <entry key="W1" value="1.999999760470001" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.3665458975991591" />
+      <entry key="MS500" value="1.3731754830799485" />
+      <entry key="S2" value="1.8171280730776274" />
+      <entry key="S5" value="1.9244492721062567" />
+      <entry key="S10" value="1.9618114785613416" />
+      <entry key="S30" value="1.987177456903668" />
+      <entry key="S60" value="1.9935770216264819" />
+      <entry key="M2" value="1.9967855782735853" />
+      <entry key="M5" value="1.998713526751844" />
+      <entry key="M10" value="1.999356645887259" />
+      <entry key="M15" value="1.9995710711449566" />
+      <entry key="M30" value="1.999785522514714" />
+      <entry key="H1" value="1.999892757992699" />
+      <entry key="H2" value="1.9999463781801579" />
+      <entry key="H4" value="1.999973188886028" />
+      <entry key="D1" value="1.9999955314526638" />
+      <entry key="W1" value="1.9999993616354006" />
+    </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="3GtDWUTiHQgdHdwhJCfAYL5uOgZ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "D:/QLBDS/src/main/webapp/assets/customer",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\QLBDS\src\main\webapp\assets\customer" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\QLBDS\src\main\webapp\WEB-INF" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn wrapper:wrapper" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.TestConnection">
+    <configuration name="TestConnection" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.qlbds.TestConnection" />
+      <module name="QLBDS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.qlbds.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unnamed" type="com.poratu.idea.plugins.tomcat" nameIsGenerated="true">
+      <predefined_log_file enabled="true" id="Tomcat Localhost Log" />
+      <predefined_log_file enabled="true" id="Tomcat Access Log" />
+      <predefined_log_file id="Tomcat Catalina Log" />
+      <predefined_log_file id="Tomcat Manager Log" />
+      <predefined_log_file id="Tomcat Host Manager Log" />
+      <option name="catalinaBase" value="C:\Users\AS\.SmartTomcat\QLBDS\QLBDS" />
+      <option name="contextPath" value="/QLBDS" />
+      <option name="docBase" value="$PROJECT_DIR$/src/main/webapp" />
+      <option name="extraClassPath" value="" />
+      <option name="tomcatInfo">
+        <TomcatInfo>
+          <option name="name" value="Apache Tomcat/9.0.120" />
+          <option name="path" value="$USER_HOME$/Downloads/apache-tomcat-9.0.120/apache-tomcat-9.0.120" />
+          <option name="version" value="9.0.120.0" />
+        </TomcatInfo>
+      </option>
+      <option name="vmOptions" value="" />
+      <module name="QLBDS" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.TestConnection" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TestConnection" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="" />
+      <created>1784782004303</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1784782004303</updated>
+    </task>
+    <task id="LOCAL-00001" summary="entity">
+      <created>1784943645221</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1784943645221</updated>
+    </task>
+    <task id="LOCAL-00002" summary="entity">
+      <created>1784943755206</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1784943755206</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update entity and db">
+      <created>1785754712515</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1785754712515</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="entity" />
+    <MESSAGE value="update entity and db" />
+    <option name="LAST_COMMIT_MESSAGE" value="update entity and db" />
+  </component>
+</project>

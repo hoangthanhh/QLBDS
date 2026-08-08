@@ -8,6 +8,15 @@ import org.hibernate.query.Query;
 
 public class UserRepository {
 
+    public User findById(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(User.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public User findByEmail(String email) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "FROM User u WHERE u.email = :email";
@@ -17,6 +26,32 @@ public class UserRepository {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public User findByPhone(String phone) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM User u WHERE u.phone = :phone";
+            Query<User> query = session.createQuery(hql, User.class);
+            query.setParameter("phone", phone);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean update(User user) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(user);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            return false;
         }
     }
 
