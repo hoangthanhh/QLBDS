@@ -37,7 +37,9 @@ public class RegisterController extends HttpServlet {
             req.setAttribute("message", "Đăng ký thành công! Vui lòng đăng nhập.");
             req.getRequestDispatcher("/WEB-INF/views/acc/login.jsp").forward(req, resp);
         } else {
+            // Giữ lại toàn bộ dữ liệu vừa nhập và câu thông báo lỗi
             req.setAttribute("error", result);
+            req.setAttribute("userDto", dto);
             req.getRequestDispatcher("/WEB-INF/views/acc/register.jsp").forward(req, resp);
         }
     }

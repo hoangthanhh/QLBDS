@@ -32,23 +32,21 @@
                     </c:if>
 
                     <form action="${pageContext.request.contextPath}/acc/login" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Email đăng nhập</label>
-                            <input type="email" name="email" class="form-control" placeholder="name@example.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Mật khẩu</label>
-                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="rememberMe">
-                                <label class="form-check-label small text-muted" for="rememberMe">Ghi nhớ đăng nhập</label>
-                            </div>
-                            <a href="${pageContext.request.contextPath}/acc/forgot-password" class="small text-makaan text-decoration-none">Quên mật khẩu?</a>
-                        </div>
-                        <button type="submit" class="btn btn-makaan w-100 py-2 fw-bold">Đăng Nhập</button>
-                    </form>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Email đăng nhập</label>
+                                                <input type="email" name="email" class="form-control" value="${email}" placeholder="name@example.com" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Mật khẩu</label>
+                                                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                                <div class="form-check">
+                                                    </div>
+                                                <a href="${pageContext.request.contextPath}/acc/forgot-password" class="small text-makaan text-decoration-none">Quên mật khẩu?</a>
+                                            </div>
+                                            <button type="submit" class="btn btn-makaan w-100 py-2 fw-bold">Đăng Nhập</button>
+                                        </form>
 
                     <div class="text-center mt-4">
                         <p class="small text-muted mb-0">Chưa có tài khoản?

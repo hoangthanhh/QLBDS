@@ -5,6 +5,7 @@ import com.qlbds.constant.PropertyTypeEnum;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "properties")
@@ -46,6 +47,9 @@ public class Property {
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "property", fetch = FetchType.EAGER)
+    private List<PropertyImage> images;
+
     // GETTERS & SETTERS
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -67,4 +71,12 @@ public class Property {
     public void setIsDeleted(Boolean isDeleted) { this.isDeleted = isDeleted; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    public List<PropertyImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<PropertyImage> images) {
+        this.images = images;
+    }
 }

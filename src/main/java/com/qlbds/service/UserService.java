@@ -6,44 +6,78 @@ import com.qlbds.dto.UserDTO;
 import com.qlbds.entity.User;
 import com.qlbds.repository.UserRepository;
 import com.qlbds.util.SecurityUtil;
+import com.qlbds.util.ValidationUtil;
 
 public class UserService {
     private UserRepository userRepository = new UserRepository();
 
+    // NGHIỆP VỤ ĐĂNG KÝ
     public String registerUser(UserDTO userDTO) {
-        if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
-            return "Mật khẩu xác nhận không khớp!";
-        }
-
-        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
-            return "Email này đã được đăng ký trong hệ thống!";
-        }
+        if (!ValidationUtil.isValidPhone(userDTO.getPhone())) return "Định dạng SĐT không hợp lệ!";
+        if (!ValidationUtil.isValidEmail(userDTO.getEmail())) return "Định dạng Email không hợp lệ!";
+        if (!ValidationUtil.isValidPassword(userDTO.getPassword())) return "Mật khẩu tối thiểu 6 ký tự và chứa ít nhất 1 ký tự đặc biệt!";
+        if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) return "Xác nhận mật khẩu không khớp!";
+        if (userRepository.findByEmail(userDTO.getEmail()) != null) return "Email này đã được đăng ký!";
+        if (userRepository.findByPhone(userDTO.getPhone()) != null) return "Số điện thoại này đã được sử dụng!";
 
         User user = new User();
-        user.setFullName(userDTO.getFullName());
-        user.setPhone(userDTO.getPhone());
-        user.setEmail(userDTO.getEmail());
+        user.setFullName(userDTO.getFullName().trim());
+        user.setPhone(userDTO.getPhone().trim());
+        user.setEmail(userDTO.getEmail().trim().toLowerCase());
         user.setPassword(SecurityUtil.hashPassword(userDTO.getPassword()));
-
-        // Gán các giá trị mặc định theo đúng Entity của bạn
         user.setRole(RoleTypeEnum.CUSTOMER);
         user.setStatus(UserStatusEnum.ACTIVE);
-        user.setIsVerified(false); // Chưa xác thực OTP
+        user.setIsVerified(false);
 
-        return userRepository.save(user) ? "SUCCESS" : "Lỗi hệ thống khi lưu dữ liệu, vui lòng thử lại!";
+        return userRepository.save(user) ? "SUCCESS" : "Lỗi hệ thống khi lưu dữ liệu!";
     }
 
+    // NGHIỆP VỤ ĐĂNG NHẬP
     public User loginUser(String email, String password) {
         User user = userRepository.findByEmail(email);
-
-        if (user != null) {
-            String hashedPass = SecurityUtil.hashPassword(password);
-
-            // Khớp mật khẩu và tài khoản phải ở trạng thái ACTIVE
-            if (user.getPassword().equals(hashedPass) && user.getStatus() == UserStatusEnum.ACTIVE) {
+        if (user != null && user.getStatus() == UserStatusEnum.ACTIVE) {
+            if (user.getPassword().equals(SecurityUtil.hashPassword(password))) {
                 return user;
             }
         }
         return null;
+    }
+
+    // NGHIỆP VỤ CẬP NHẬT THÔNG TIN
+    public String updateProfile(Integer userId, String fullName, String phone) {
+        if (fullName == null || fullName.trim().isEmpty()) return "Họ tên không được để trống!";
+        if (!ValidationUtil.isValidPhone(phone)) return "Định dạng SĐT không hợp lệ!";
+
+        User userExist = userRepository.findByPhone(phone.trim());
+        if (userExist != null && !userExist.getId().equals(userId)) {
+            return "Số điện thoại này đã được sử dụng bởi tài khoản khác!";
+        }
+
+        User user = userRepository.findById(userId);
+        if (user == null) return "Tài khoản không tồn tại!";
+
+        user.setFullName(fullName.trim());
+        user.setPhone(phone.trim());
+
+        return userRepository.update(user) ? "SUCCESS" : "Lỗi hệ thống khi cập nhật!";
+    }
+
+    // NGHIỆP VỤ ĐỔI MẬT KHẨU
+    public String changePassword(Integer userId, String oldPassword, String newPassword, String confirmPassword) {
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) return "Vui lòng nhập đủ các trường!";
+
+        User user = userRepository.findById(userId);
+        if (user == null) return "Tài khoản không tồn tại!";
+
+        // ĐÃ FIX: Băm mật khẩu cũ rồi mới so sánh với DB
+        if (!user.getPassword().equals(SecurityUtil.hashPassword(oldPassword))) {
+            return "Mật khẩu hiện tại không chính xác!";
+        }
+
+        if (!ValidationUtil.isValidPassword(newPassword)) return "Mật khẩu mới tối thiểu 6 ký tự!";
+        if (!newPassword.equals(confirmPassword)) return "Xác nhận mật khẩu mới không trùng khớp!";
+
+        user.setPassword(SecurityUtil.hashPassword(newPassword));
+        return userRepository.update(user) ? "SUCCESS" : "Lỗi hệ thống khi đổi mật khẩu!";
     }
 }

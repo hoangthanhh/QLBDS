@@ -50,6 +50,8 @@ public class LoginController extends HttpServlet {
             }
         } else {
             req.setAttribute("error", "Email hoặc mật khẩu không chính xác, hoặc tài khoản đã bị khóa!");
+            // THÊM DÒNG NÀY: Trả lại email người dùng vừa nhập xuống giao diện
+            req.setAttribute("email", email);
             req.getRequestDispatcher("/WEB-INF/views/acc/login.jsp").forward(req, resp);
         }
     }

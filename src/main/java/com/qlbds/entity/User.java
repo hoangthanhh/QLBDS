@@ -42,6 +42,9 @@ public class User {
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "property", fetch = FetchType.EAGER)
+    private java.util.List<PropertyImage> images;
+
     // GETTERS & SETTERS
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -61,4 +64,7 @@ public class User {
     public void setStatus(UserStatusEnum status) { this.status = status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    public java.util.List<PropertyImage> getImages() { return images; }
+    public void setImages(java.util.List<PropertyImage> images) { this.images = images; }
 }
