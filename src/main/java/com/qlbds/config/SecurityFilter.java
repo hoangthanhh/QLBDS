@@ -78,7 +78,7 @@ public class SecurityFilter implements Filter {
             }
         }
 
-        // Ràng buộc cho URL của Customer
+         Ràng buộc cho URL của Customer
         if (path.startsWith("/customer")) {
             if (!"CUSTOMER".equals(role)) {
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Khu vực này chỉ dành cho Khách hàng.");

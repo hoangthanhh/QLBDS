@@ -1,18 +1,18 @@
 package com.qlbds.repository;
 
+import com.qlbds.constant.RoleTypeEnum;
+import com.qlbds.constant.UserStatusEnum;
 import com.qlbds.entity.User;
 import com.qlbds.util.HibernateUtil;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
-
-    // ==========================================
-    // 1. NHÓM HÀM XÁC THỰC & ĐĂNG KÝ
-    // ==========================================
 
     public User findByEmail(String email) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -26,7 +26,28 @@ public class UserRepository {
         }
     }
 
-    public boolean save(User user) {
+    public User findByPhone(String phone) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM User u WHERE u.phone = :phone";
+            Query<User> query = session.createQuery(hql, User.class);
+            query.setParameter("phone", phone);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public User findById(int id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(User.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean insertUser(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -40,45 +61,7 @@ public class UserRepository {
         }
     }
 
-    // ==========================================
-    // 2. NHÓM HÀM QUẢN TRỊ ADMIN (CRUD & PHÂN TRANG)
-    // ==========================================
-
-    // Lấy danh sách tài khoản có phân trang (Sắp xếp mới nhất lên đầu)
-    public List<User> findAllWithPagination(int offset, int limit) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM User u ORDER BY u.id DESC";
-            Query<User> query = session.createQuery(hql, User.class);
-            query.setFirstResult(offset);
-            query.setMaxResults(limit);
-            return query.list();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    // Đếm tổng số lượng tài khoản trong Database
-    public long countAllUsers() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT count(u) FROM User u";
-            Query<Long> query = session.createQuery(hql, Long.class);
-            return query.uniqueResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    // Tìm tài khoản theo ID
-    public User findById(int id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(User.class, id);
-        }
-    }
-
-    // Cập nhật thông tin tài khoản (Đổi quyền, Đổi trạng thái, Đổi mật khẩu)
-    public boolean update(User user) {
+    public boolean updateUser(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -92,14 +75,38 @@ public class UserRepository {
         }
     }
 
-    // Xóa tài khoản
-    public boolean delete(int id) {
+    public List<User> findAllUsers(int offset, int limit) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM User u ORDER BY u.id DESC";
+            Query<User> query = session.createQuery(hql, User.class);
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public int countTotalUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COUNT(u) FROM User u";
+            Long count = (Long) session.createQuery(hql).uniqueResult();
+            return count != null ? count.intValue() : 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public boolean updateRole(int id, RoleTypeEnum role) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             User user = session.get(User.class, id);
             if (user != null) {
-                session.delete(user);
+                user.setRole(role);
+                session.update(user);
                 transaction.commit();
                 return true;
             }
@@ -110,4 +117,28 @@ public class UserRepository {
             return false;
         }
     }
+
+    // XÓA MỀM: ĐỔI TRẠNG THÁI ACTIVE <-> INACTIVE BẰNG HIBERNATE
+    public boolean toggleStatus(int id) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            User user = session.get(User.class, id);
+            if (user != null) {
+                UserStatusEnum newStatus = (user.getStatus() == UserStatusEnum.ACTIVE)
+                        ? UserStatusEnum.INACTIVE
+                        : UserStatusEnum.ACTIVE;
+                user.setStatus(newStatus);
+                session.update(user);
+                transaction.commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

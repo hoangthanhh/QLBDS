@@ -10,13 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="entity">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminDashBoardController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/TestAdminController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminAccountController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/UserDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminFooter.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminFooter.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminHeader.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminHeader.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/editAccount.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/sb-admin-2.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/sb-admin-2.min.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -28,14 +38,14 @@
     <option name="done" value="true" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="137" />
+    <option name="cachedIndexableFilesCount" value="143" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Jsp File" />
         <option value="CSS File" />
         <option value="JavaScript File" />
+        <option value="Jsp File" />
         <option value="Class" />
       </list>
     </option>
@@ -63,60 +73,60 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0000000000000002" />
-      <entry key="S30" value="1.000007319685634" />
-      <entry key="S60" value="1.0052071438147778" />
-      <entry key="M2" value="1.3177618429456646" />
-      <entry key="M5" value="7.314034999221653" />
-      <entry key="M10" value="27.208895397940953" />
-      <entry key="M15" value="52.70660612730726" />
-      <entry key="M30" value="117.95312850983285" />
-      <entry key="H1" value="185.25634978006144" />
-      <entry key="H2" value="234.8003598521941" />
-      <entry key="H4" value="266.184412988867" />
-      <entry key="D1" value="301.46898733845046" />
-      <entry key="W1" value="309.5542477874396" />
+      <entry key="MS500" value="1.0000162410000986" />
+      <entry key="S2" value="1.0634823788081853" />
+      <entry key="S5" value="1.3319412895956095" />
+      <entry key="S10" value="1.5761434626858222" />
+      <entry key="S30" value="1.8321027219998665" />
+      <entry key="S60" value="1.9127816903546775" />
+      <entry key="M2" value="2.000625729287415" />
+      <entry key="M5" value="2.6763101518416113" />
+      <entry key="M10" value="3.9938935983015753" />
+      <entry key="M15" value="5.020271695734921" />
+      <entry key="M30" value="6.785643438756175" />
+      <entry key="H1" value="8.143963531959397" />
+      <entry key="H2" value="9.030137884845916" />
+      <entry key="H4" value="12.700279936471453" />
+      <entry key="D1" value="165.05897742283508" />
+      <entry key="W1" value="313.10560812056497" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.023847800140008736" />
-      <entry key="MS500" value="0.47368503529963385" />
-      <entry key="S2" value="0.8296070158788128" />
-      <entry key="S5" value="0.9280021159645133" />
-      <entry key="S10" value="0.9633286645608101" />
-      <entry key="S30" value="0.9876306240923324" />
-      <entry key="S60" value="0.9969908200951878" />
-      <entry key="M2" value="1.0814448344980905" />
-      <entry key="M5" value="1.6931134107815664" />
-      <entry key="M10" value="2.5491073612192445" />
-      <entry key="M15" value="3.213218519424485" />
-      <entry key="M30" value="4.581688585237335" />
-      <entry key="H1" value="5.877545465568406" />
-      <entry key="H2" value="6.804511435289745" />
-      <entry key="H4" value="7.363770346308668" />
-      <entry key="D1" value="7.888137993159399" />
-      <entry key="W1" value="7.983870392082092" />
+      <entry key="MS100" value="0.01573368046963623" />
+      <entry key="MS500" value="0.43588594826791255" />
+      <entry key="S2" value="0.8636528290320904" />
+      <entry key="S5" value="1.2247067292282923" />
+      <entry key="S10" value="1.5110474827726763" />
+      <entry key="S30" value="1.806428670218158" />
+      <entry key="S60" value="1.8997005678916277" />
+      <entry key="M2" value="2.009059090373845" />
+      <entry key="M5" value="2.7628917905698662" />
+      <entry key="M10" value="4.102155476514033" />
+      <entry key="M15" value="5.117902320979587" />
+      <entry key="M30" value="6.851557827492797" />
+      <entry key="H1" value="8.182225312427171" />
+      <entry key="H2" value="9.02187507704467" />
+      <entry key="H4" value="9.731208785336083" />
+      <entry key="D1" value="19.473482768921237" />
+      <entry key="W1" value="27.985299879635907" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.028184921076717145" />
-      <entry key="MS500" value="0.6055336565297598" />
-      <entry key="S2" value="1.4199131039252686" />
-      <entry key="S5" value="1.7371776513231965" />
-      <entry key="S10" value="1.862753704632841" />
-      <entry key="S30" value="1.952895102489671" />
-      <entry key="S60" value="1.984582630287237" />
-      <entry key="M2" value="2.388762995886708" />
-      <entry key="M5" value="8.99626436041964" />
-      <entry key="M10" value="29.74679209432354" />
-      <entry key="M15" value="55.909230405018185" />
-      <entry key="M30" value="122.52635659695956" />
-      <entry key="H1" value="191.12818904579632" />
-      <entry key="H2" value="241.60148621366628" />
-      <entry key="H4" value="273.54631930923944" />
-      <entry key="D1" value="309.35677998178363" />
-      <entry key="W1" value="317.538067623166" />
+      <entry key="MS100" value="0.018178787203513746" />
+      <entry key="MS500" value="0.6083509024186974" />
+      <entry key="S2" value="1.5485231198193954" />
+      <entry key="S5" value="2.3531132578453144" />
+      <entry key="S10" value="2.966341024923259" />
+      <entry key="S30" value="3.5918793572905394" />
+      <entry key="S60" value="3.7881189575732415" />
+      <entry key="M2" value="3.9954954738952386" />
+      <entry key="M5" value="5.425315853860613" />
+      <entry key="M10" value="8.082804291601118" />
+      <entry key="M15" value="10.126680924739956" />
+      <entry key="M30" value="13.629480149599528" />
+      <entry key="H1" value="16.321648270873286" />
+      <entry key="H2" value="18.04953960440746" />
+      <entry key="H4" value="22.430161305980093" />
+      <entry key="D1" value="184.53197933288507" />
+      <entry key="W1" value="341.0908053079768" />
     </decayedShown>
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
@@ -134,39 +144,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.TestConnection.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Tomcat Server.Tomcat 9.0.120 (1).executor&quot;: &quot;Run&quot;,
-    &quot;Tomcat Server.Tomcat 9.0.120.executor&quot;: &quot;Run&quot;,
-    &quot;Tomcat Server.Unnamed.executor&quot;: &quot;Run&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/qlbds/QLBDS&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.TestConnection.executor": "Run",
+    "Maven.QLBDS [clean].executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Tomcat Server.Tomcat 9.0.120 (1).executor": "Run",
+    "Tomcat Server.Tomcat 9.0.120.executor": "Debug",
+    "Tomcat Server.Unnamed.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "hung",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/qlbds/QLBDS",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "to.speed.mode.migration.done": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\QLBDS\src\main\webapp\assets\customer" />
