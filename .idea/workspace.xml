@@ -10,24 +10,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="entity">
-      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/DashboardDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/ReportRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/ReportService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminAccountController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/UserDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminFooter.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminFooter.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/StatisticController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminDashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/StatisticDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/StatisticRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/StatisticService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/util/DateValidationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/DateValidationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminDashboard.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminDashboard.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminHeader.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminHeader.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/editAccount.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/sb-admin-2.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/sb-admin-2.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,60 +66,60 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000162410000986" />
-      <entry key="S2" value="1.0634823788081853" />
-      <entry key="S5" value="1.3319412895956095" />
-      <entry key="S10" value="1.5761434626858222" />
-      <entry key="S30" value="1.8321027219998665" />
-      <entry key="S60" value="1.9127816903546775" />
-      <entry key="M2" value="2.000625729287415" />
-      <entry key="M5" value="2.6763101518416113" />
-      <entry key="M10" value="3.9938935983015753" />
-      <entry key="M15" value="5.020271695734921" />
-      <entry key="M30" value="6.785643438756175" />
-      <entry key="H1" value="8.143963531959397" />
-      <entry key="H2" value="9.030137884845916" />
-      <entry key="H4" value="12.700279936471453" />
-      <entry key="D1" value="165.05897742283508" />
-      <entry key="W1" value="313.10560812056497" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000000002" />
+      <entry key="S10" value="1.0000000137881104" />
+      <entry key="S30" value="1.002402633476216" />
+      <entry key="S60" value="1.051398537101886" />
+      <entry key="M2" value="1.3111185809877" />
+      <entry key="M5" value="3.4876394872516716" />
+      <entry key="M10" value="9.137088221367476" />
+      <entry key="M15" value="14.003677270700454" />
+      <entry key="M30" value="22.79697480912092" />
+      <entry key="H1" value="29.874108566030756" />
+      <entry key="H2" value="34.49515412743731" />
+      <entry key="H4" value="40.093057851726506" />
+      <entry key="D1" value="192.73431379640058" />
+      <entry key="W1" value="342.50974056582714" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.01573368046963623" />
-      <entry key="MS500" value="0.43588594826791255" />
-      <entry key="S2" value="0.8636528290320904" />
-      <entry key="S5" value="1.2247067292282923" />
-      <entry key="S10" value="1.5110474827726763" />
-      <entry key="S30" value="1.806428670218158" />
-      <entry key="S60" value="1.8997005678916277" />
-      <entry key="M2" value="2.009059090373845" />
-      <entry key="M5" value="2.7628917905698662" />
-      <entry key="M10" value="4.102155476514033" />
-      <entry key="M15" value="5.117902320979587" />
-      <entry key="M30" value="6.851557827492797" />
-      <entry key="H1" value="8.182225312427171" />
-      <entry key="H2" value="9.02187507704467" />
-      <entry key="H4" value="9.731208785336083" />
-      <entry key="D1" value="19.473482768921237" />
-      <entry key="W1" value="27.985299879635907" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="3.038951728012869E-145" />
+      <entry key="S2" value="7.424734876299836E-37" />
+      <entry key="S5" value="3.534047481601603E-15" />
+      <entry key="S10" value="5.944789720118571E-8" />
+      <entry key="S30" value="0.003985887132092048" />
+      <entry key="S60" value="0.0847622506607178" />
+      <entry key="M2" value="0.7152215311252818" />
+      <entry key="M5" value="4.2930966157386665" />
+      <entry key="M10" value="9.161135217660746" />
+      <entry key="M15" value="12.382462153198372" />
+      <entry key="M30" value="17.695629997385986" />
+      <entry key="H1" value="21.891748661750096" />
+      <entry key="H2" value="24.643863936944044" />
+      <entry key="H4" value="26.45816861492513" />
+      <entry key="D1" value="37.13619295238019" />
+      <entry key="W1" value="45.92183262921272" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.018178787203513746" />
-      <entry key="MS500" value="0.6083509024186974" />
-      <entry key="S2" value="1.5485231198193954" />
-      <entry key="S5" value="2.3531132578453144" />
-      <entry key="S10" value="2.966341024923259" />
-      <entry key="S30" value="3.5918793572905394" />
-      <entry key="S60" value="3.7881189575732415" />
-      <entry key="M2" value="3.9954954738952386" />
-      <entry key="M5" value="5.425315853860613" />
-      <entry key="M10" value="8.082804291601118" />
-      <entry key="M15" value="10.126680924739956" />
-      <entry key="M30" value="13.629480149599528" />
-      <entry key="H1" value="16.321648270873286" />
-      <entry key="H2" value="18.04953960440746" />
-      <entry key="H4" value="22.430161305980093" />
-      <entry key="D1" value="184.53197933288507" />
-      <entry key="W1" value="341.0908053079768" />
+      <entry key="MS100" value="0.7900413118633771" />
+      <entry key="MS500" value="0.9539595505475581" />
+      <entry key="S2" value="0.9882856515007326" />
+      <entry key="S5" value="0.9952976898141538" />
+      <entry key="S10" value="0.9976461307671667" />
+      <entry key="S30" value="1.0051546654745593" />
+      <entry key="S60" value="1.1317691456967989" />
+      <entry key="M2" value="2.0159992508677513" />
+      <entry key="M5" value="7.76397722369376" />
+      <entry key="M10" value="18.280310911523223" />
+      <entry key="M15" value="26.369234641699038" />
+      <entry key="M30" value="40.47959959381897" />
+      <entry key="H1" value="51.75745498690947" />
+      <entry key="H2" value="59.13418439217183" />
+      <entry key="H4" value="66.54859310608379" />
+      <entry key="D1" value="229.86979106285807" />
+      <entry key="W1" value="388.43143611022293" />
     </decayedShown>
   </component>
   <component name="ProjectCodeStyleSettingsMigration">

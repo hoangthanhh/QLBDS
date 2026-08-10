@@ -6,29 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>REMS - Quản trị hệ thống</title>
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/admin/lib/fontawesome/fontawesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
     <!-- SB Admin 2 CSS & Custom Styles -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/admin/css/sb-admin-2.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/admin/css/style.css?v=20260806-green-sidebar">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/admin/css/style.css?v=20260806-green-sidebar">
+
+    <style>
+        /* CSS Khóa gạch chân & Khóa click tuyệt đối cho Logo REMS */
+        .sidebar-brand-static,
+        .sidebar-brand-static *,
+        .sidebar-brand-text,
+        .sidebar-brand-text * {
+            text-decoration: none !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+            cursor: default !important;
+            user-select: none !important;
+            pointer-events: none !important;
+        }
+    </style>
 </head>
 <body>
 <div id="wrapper">
     <!-- Sidebar Navbar -->
     <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Link Dashboard Logo -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center"
-           href="${pageContext.request.contextPath}/admin/dashboard">
-            <img class="brand-logo" src="${pageContext.request.contextPath}/assets/admin/img/rems-logo.svg"
-                 alt="REMS logo">
-            <div class="sidebar-brand-text mx-2">
-                REMS <small class="d-block fw-normal">Quản trị hệ thống</small>
+        <!-- LOGO REMS KÈM ICON NGÔI NHÀ CỐ ĐỊNH (KHÔNG CLICK, KHÔNG GẠCH CHÂN) -->
+        <div class="sidebar-brand d-flex align-items-center justify-content-center sidebar-brand-static py-3">
+            <i class="fa-solid fa-house-chimney fa-2x me-2 text-white"></i>
+            <div class="sidebar-brand-text text-white text-start">
+                <span class="fw-bold" style="font-size: 20px; line-height: 1.1; display: block;">REMS</span>
+                <small class="d-block fw-normal text-white-50" style="font-size: 11px;">Quản trị hệ thống</small>
             </div>
-        </a>
+        </div>
         <hr class="sidebar-divider my-0">
 
         <!-- Link Báo cáo thống kê -->

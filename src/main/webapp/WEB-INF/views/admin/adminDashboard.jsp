@@ -8,7 +8,7 @@
         <h4 class="mb-0 text-primary fw-bold"><i class="fa-solid fa-chart-line me-2"></i>Báo cáo & Thống kê</h4>
     </div>
 
-    <!-- 4 THẺ TỔNG QUAN -->
+    <!-- 4 THẺ TỔNG QUAN (ĐÃ BỔ SUNG ICON BÊN PHẢI) -->
     <div class="row g-4 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-primary">
@@ -16,7 +16,7 @@
                     <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Tổng tài khoản</p>
                     <h4 class="mb-0 fw-bold text-dark">${totalAccounts}</h4>
                 </div>
-                <i class="fa-solid fa-users fa-2x text-primary"></i>
+                <i class="fa-solid fa-users fa-2x text-primary opacity-75"></i>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
@@ -25,7 +25,7 @@
                     <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Bất động sản (Đang bán)</p>
                     <h4 class="mb-0 fw-bold text-dark">${totalBDS}</h4>
                 </div>
-                <i class="fa-solid fa-building fa-2x text-success"></i>
+                <i class="fa-solid fa-building fa-2x text-success opacity-75"></i>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
@@ -34,7 +34,7 @@
                     <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Giao dịch thành công</p>
                     <h4 class="mb-0 fw-bold text-dark">${totalTransactions}</h4>
                 </div>
-                <i class="fa-solid fa-handshake fa-2x text-info"></i>
+                <i class="fa-solid fa-handshake fa-2x text-info opacity-75"></i>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
@@ -45,7 +45,7 @@
                         <fmt:formatNumber value="${totalRevenue}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
                     </h4>
                 </div>
-                <i class="fa-solid fa-money-bill-wave fa-2x text-warning"></i>
+                <i class="fa-solid fa-money-bill-wave fa-2x text-warning opacity-75"></i>
             </div>
         </div>
     </div>
@@ -67,14 +67,40 @@
             <div class="bg-light rounded p-4 shadow-sm h-100 d-flex flex-column justify-content-between">
                 <div>
                     <h6 class="mb-4 text-success fw-bold"><i class="fa-solid fa-filter me-2"></i>Báo cáo doanh thu theo kỳ</h6>
+
+                    <!-- 1. THÔNG BÁO LỖI NẾU BỎ TRỐNG NGÀY HOẶC CHỌN NGƯỢC NGÀY -->
+                    <c:if test="${not empty dateError}">
+                        <div class="alert alert-danger py-2 px-3 mb-3 small fw-bold" role="alert">
+                            <i class="fa-solid fa-triangle-exclamation me-1"></i> ${dateError}
+                        </div>
+                    </c:if>
+
+                    <!-- 2. THÔNG BÁO TRẠNG THÁI LỌC DỮ LIỆU -->
+                    <c:if test="${not empty param.startDate && not empty param.endDate && empty dateError}">
+                        <c:choose>
+                            <c:when test="${filteredRevenue > 0}">
+                                <div class="alert alert-success py-2 px-3 mb-3 small fw-bold" role="alert">
+                                    <i class="fa-solid fa-circle-check me-1"></i> Đã lọc doanh thu thành công!
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="alert alert-warning py-2 px-3 mb-3 small fw-bold" role="alert">
+                                    <i class="fa-solid fa-circle-info me-1"></i> Không tìm thấy giao dịch nào trong khoảng thời gian này!
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+
                     <form action="${pageContext.request.contextPath}/admin/dashboard" method="get">
                         <div class="mb-3">
-                            <label class="form-label fw-bold text-secondary">Từ ngày:</label>
-                            <input type="date" name="startDate" class="form-control shadow-none" value="${param.startDate}">
+                            <label class="form-label fw-bold text-secondary">Từ ngày <span class="text-danger">*</span>:</label>
+                            <input type="date" name="startDate" class="form-control shadow-none" value="${startDate}"
+                                   required oninvalid="this.setCustomValidity('Vui lòng chọn từ ngày cụ thể!')" oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold text-secondary">Đến ngày:</label>
-                            <input type="date" name="endDate" class="form-control shadow-none" value="${param.endDate}">
+                            <label class="form-label fw-bold text-secondary">Đến ngày <span class="text-danger">*</span>:</label>
+                            <input type="date" name="endDate" class="form-control shadow-none" value="${endDate}"
+                                   required oninvalid="this.setCustomValidity('Vui lòng chọn đến ngày cụ thể!')" oninput="this.setCustomValidity('')">
                         </div>
                         <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-2 shadow-sm">
                             <i class="fa-solid fa-magnifying-glass me-1"></i> Lọc dữ liệu
@@ -82,11 +108,23 @@
                     </form>
                 </div>
 
+                <!-- KHU VỰC HIỂN THỊ KẾT QUẢ DOANH THU LỌC -->
                 <div class="mt-4 p-3 rounded bg-white border border-success text-center">
                     <span class="text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 12px;">Doanh thu trong kỳ lọc:</span>
-                    <h3 class="text-success fw-bold mb-0">
-                        <fmt:formatNumber value="${filteredRevenue}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
-                    </h3>
+
+                    <c:choose>
+                        <c:when test="${filteredRevenue != null && filteredRevenue > 0}">
+                            <h3 class="text-success fw-bold mb-0">
+                                <fmt:formatNumber value="${filteredRevenue}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                            </h3>
+                        </c:when>
+                        <c:otherwise>
+                            <h3 class="text-secondary fw-bold mb-1">0 đ</h3>
+                            <span class="badge bg-light text-muted border px-2 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-inbox me-1"></i> Chưa có dữ liệu phát sinh
+                            </span>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
@@ -119,7 +157,6 @@
                 scales: {
                     x: {
                         ticks: {
-                            // Ép chữ Tháng 1, 2... NẰM NGANG HOÀN TOÀN
                             maxRotation: 0,
                             minRotation: 0,
                             font: { size: 11, weight: 'bold' }
