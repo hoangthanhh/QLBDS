@@ -22,82 +22,18 @@
             background-color: #f4f6f9;
             font-family: 'Inter', 'Heebo', sans-serif;
         }
-        .main-gallery-card {
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            background: #ffffff;
-            overflow: hidden;
-        }
-        .feature-box {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-            border: none;
-        }
-        .price-tag {
-            color: #00B98E;
-            font-size: 2.2rem;
-            font-weight: 800;
-        }
-        .thumb-img {
-            border: 2px solid transparent;
-            opacity: 0.65;
-            transition: all 0.25s ease;
-        }
-        .thumb-img:hover {
-            opacity: 1;
-            transform: translateY(-2px);
-        }
-        .active-thumb {
-            border-color: #00B98E !important;
-            opacity: 1 !important;
-        }
-        .btn-deposit {
-            background-color: #ff9800;
-            color: #ffffff;
-            font-weight: 700;
-            border-radius: 12px;
-            padding: 14px 24px;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        .btn-deposit:hover {
-            background-color: #e68a00;
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-        .btn-buy {
-            background-color: #00B98E;
-            color: #ffffff;
-            font-weight: 700;
-            border-radius: 12px;
-            padding: 14px 24px;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        .btn-buy:hover {
-            background-color: #009673;
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-        .btn-back-home {
-            background-color: #ffffff;
-            color: #2b303a;
-            border: 1px solid #e0e0e0;
-            border-radius: 30px;
-            padding: 8px 22px;
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            transition: all 0.2s ease;
-        }
-        .btn-back-home:hover {
-            background-color: #00B98E;
-            color: #ffffff;
-            border-color: #00B98E;
-        }
+        .main-gallery-card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); background: #ffffff; overflow: hidden; }
+        .feature-box { background: #ffffff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: none; }
+        .price-tag { color: #00B98E; font-size: 2.2rem; font-weight: 800; }
+        .thumb-img { border: 2px solid transparent; opacity: 0.65; transition: all 0.25s ease; }
+        .thumb-img:hover { opacity: 1; transform: translateY(-2px); }
+        .active-thumb { border-color: #00B98E !important; opacity: 1 !important; }
+        .btn-deposit { background-color: #ff9800; color: #ffffff; font-weight: 700; border-radius: 12px; padding: 14px 24px; border: none; transition: all 0.2s ease; }
+        .btn-deposit:hover { background-color: #e68a00; color: #ffffff; transform: translateY(-1px); }
+        .btn-buy { background-color: #00B98E; color: #ffffff; font-weight: 700; border-radius: 12px; padding: 14px 24px; border: none; transition: all 0.2s ease; }
+        .btn-buy:hover { background-color: #009673; color: #ffffff; transform: translateY(-1px); }
+        .btn-back-home { background-color: #ffffff; color: #2b303a; border: 1px solid #e0e0e0; border-radius: 30px; padding: 8px 22px; font-weight: 600; text-decoration: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); transition: all 0.2s ease; }
+        .btn-back-home:hover { background-color: #00B98E; color: #ffffff; border-color: #00B98E; }
     </style>
 </head>
 
@@ -128,9 +64,7 @@
         </c:if>
 
         <div class="row g-4">
-
             <div class="col-lg-8">
-
                 <div class="main-gallery-card mb-4">
                     <div class="position-relative bg-dark" style="height: 460px;">
                         <c:choose>
@@ -155,7 +89,7 @@
                                 <c:forEach var="img" items="${property.images}" varStatus="status">
                                     <img src="${pageContext.request.contextPath}/${img.imagePath}"
                                          class="thumb-img rounded-3 cursor-pointer ${status.first ? 'active-thumb' : ''}"
-                                         style="width: 90px; height: 65px; object-fit: cover; cursor: pointer;"
+                                         style="width: 90px; height: 65px; object-fit: cover;"
                                          onclick="changeMainImage(this, '${pageContext.request.contextPath}/${img.imagePath}', ${status.index + 1})"
                                          alt="Thumbnail ${status.index + 1}">
                                 </c:forEach>
@@ -204,6 +138,17 @@
                         <strong class="text-dark fs-6"><fmt:formatNumber value="${property.price * 0.1}" pattern="#,###"/> VNĐ</strong>
                     </div>
 
+                    <c:if test="${not empty sessionScope.currentUser}">
+                        <c:if test="${!sessionScope.currentUser.isVerified}">
+                            <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center small py-2 mb-4" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2 text-warning fs-5"></i>
+                                <div>
+                                    Vui lòng <a href="${pageContext.request.contextPath}/customer/profile" class="alert-link text-decoration-underline fw-bold">xác thực tài khoản</a> để thực hiện giao dịch đặt cọc hoặc mua!
+                                </div>
+                            </div>
+                        </c:if>
+                    </c:if>
+
                     <form action="${pageContext.request.contextPath}/customer/property/transaction" method="POST">
                         <input type="hidden" name="propertyId" value="${property.id}">
 
@@ -242,5 +187,4 @@
         }
     </script>
 </body>
-
 </html>

@@ -5,32 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="update entity and db">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LogoutController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/ProfileController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/PropertyDetailController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/PropertyTransactionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/PropertyRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/TransactionRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/PropertyService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/TransactionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/ValidationUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/profile.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-grid.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/ResendOtpController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/OtpRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/OtpService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionTypeEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/constant/TransactionTypeEnum.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/VerifyOtpController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/VerifyOtpController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/home.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/home.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/verify-otp.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/verify-otp.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/admin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/profile.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/profile.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

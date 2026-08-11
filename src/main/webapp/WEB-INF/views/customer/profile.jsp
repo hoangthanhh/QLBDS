@@ -235,7 +235,7 @@
                                         <i class="bi bi-exclamation-triangle-fill fs-5 me-2 text-warning"></i> Chưa xác thực
                                     </div>
                                     <p class="small text-muted mb-3" style="line-height: 1.4;">Xác thực ngay để kích hoạt đầy đủ các quyền lợi và giao dịch an toàn.</p>
-                                    <a href="${pageContext.request.contextPath}/customer/verify-account" class="btn btn-custom-primary btn-sm w-100 py-2">
+                                    <a href="${pageContext.request.contextPath}/acc/verify-otp" class="btn btn-custom-primary btn-sm w-100 py-2">
                                         <i class="bi bi-shield-check me-1"></i> Xác thực ngay
                                     </a>
                                 </div>

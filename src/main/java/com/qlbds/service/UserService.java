@@ -3,15 +3,20 @@ package com.qlbds.service;
 import com.qlbds.constant.RoleTypeEnum;
 import com.qlbds.constant.UserStatusEnum;
 import com.qlbds.dto.UserDTO;
+import com.qlbds.entity.OtpCode;
 import com.qlbds.entity.User;
+import com.qlbds.repository.OtpRepository;
 import com.qlbds.repository.UserRepository;
+import com.qlbds.util.EmailUtil;
 import com.qlbds.util.SecurityUtil;
 import com.qlbds.util.ValidationUtil;
+
+import java.time.LocalDateTime;
+import java.util.Random;
 
 public class UserService {
     private UserRepository userRepository = new UserRepository();
 
-    // NGHIỆP VỤ ĐĂNG KÝ
     public String registerUser(UserDTO userDTO) {
         if (!ValidationUtil.isValidPhone(userDTO.getPhone())) return "Định dạng SĐT không hợp lệ!";
         if (!ValidationUtil.isValidEmail(userDTO.getEmail())) return "Định dạng Email không hợp lệ!";
@@ -29,6 +34,7 @@ public class UserService {
         user.setStatus(UserStatusEnum.ACTIVE);
         user.setIsVerified(false);
 
+        // CHỈ LƯU USER, KHÔNG GỬI OTP Ở ĐÂY
         return userRepository.save(user) ? "SUCCESS" : "Lỗi hệ thống khi lưu dữ liệu!";
     }
 
@@ -36,6 +42,7 @@ public class UserService {
     public User loginUser(String email, String password) {
         User user = userRepository.findByEmail(email);
         if (user != null && user.getStatus() == UserStatusEnum.ACTIVE) {
+            // Giữ nguyên logic băm mật khẩu đồng bộ với phần đổi mật khẩu
             if (user.getPassword().equals(SecurityUtil.hashPassword(password))) {
                 return user;
             }
@@ -69,7 +76,6 @@ public class UserService {
         User user = userRepository.findById(userId);
         if (user == null) return "Tài khoản không tồn tại!";
 
-        // ĐÃ FIX: Băm mật khẩu cũ rồi mới so sánh với DB
         if (!user.getPassword().equals(SecurityUtil.hashPassword(oldPassword))) {
             return "Mật khẩu hiện tại không chính xác!";
         }
