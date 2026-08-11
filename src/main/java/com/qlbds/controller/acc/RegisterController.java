@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "RegisterController", value = {"/acc/register", "/register", "/auth/register"})
+@WebServlet(name = "RegisterController", value = {"/acc/register"})
 public class RegisterController extends HttpServlet {
 
     private UserService userService = new UserService();

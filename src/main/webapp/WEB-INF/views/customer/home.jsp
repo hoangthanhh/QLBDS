@@ -63,7 +63,7 @@
                                         <a href="${pageContext.request.contextPath}/customer/transaction-history" class="dropdown-item">Lịch sử giao dịch</a>
                                         <a href="${pageContext.request.contextPath}/customer/view-history" class="dropdown-item">Lịch sử xem BĐS</a>
                                         <hr class="dropdown-divider">
-                                        <a href="${pageContext.request.contextPath}/auth/logout" class="dropdown-item text-danger">Đăng xuất</a>
+                                        <a href="${pageContext.request.contextPath}/acc/logout" class="dropdown-item text-danger">Đăng xuất</a>
                                     </div>
                                 </div>
                             </c:otherwise>

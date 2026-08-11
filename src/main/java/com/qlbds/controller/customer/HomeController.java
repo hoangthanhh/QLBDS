@@ -9,7 +9,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = {"/home", "/trang-chu"})
+@WebServlet(urlPatterns = {"/home"})
 public class HomeController extends HttpServlet {
 
     private PropertyService propertyService = new PropertyService();

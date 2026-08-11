@@ -79,7 +79,7 @@ public class AdminUserController extends HttpServlet {
                 String newPass = request.getParameter("newPassword");
                 String confirmPass = request.getParameter("confirmPassword");
 
-                errors = userService.changePassword(id, newPass, confirmPass);
+                errors = userService.changePasswordAsAdmin(id, newPass, confirmPass);
             }
 
             boolean isSuccess = (errors != null && errors.isEmpty());

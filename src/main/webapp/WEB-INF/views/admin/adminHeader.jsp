@@ -93,7 +93,7 @@
 
         <!-- Link Đăng xuất -->
         <li class="nav-item mt-auto">
-            <a class="nav-link text-warning" href="${pageContext.request.contextPath}/logout">
+            <a class="nav-link text-warning" href="${pageContext.request.contextPath}/acc/logout">
                 <span class="menu-icon">&#10162;</span>
                 <span>Đăng xuất</span>
             </a>

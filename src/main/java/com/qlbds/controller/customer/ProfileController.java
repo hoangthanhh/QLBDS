@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(urlPatterns = {
         "/customer/profile",
@@ -30,7 +31,6 @@ public class ProfileController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/acc/login");
             return;
         }
-
         request.getRequestDispatcher("/WEB-INF/views/customer/profile.jsp").forward(request, response);
     }
 
@@ -48,7 +48,6 @@ public class ProfileController extends HttpServlet {
         }
 
         String path = request.getServletPath();
-
         if ("/customer/profile/update".equals(path)) {
             handleUpdateProfile(request, response, httpSession, currentUser);
         } else if ("/customer/change-password".equals(path)) {
@@ -58,7 +57,6 @@ public class ProfileController extends HttpServlet {
         }
     }
 
-    // XỬ LÝ CẬP NHẬT THÔNG TIN HỒ SƠ
     private void handleUpdateProfile(HttpServletRequest request, HttpServletResponse response,
                                      HttpSession httpSession, User currentUser) throws IOException {
         String fullName = request.getParameter("fullName");
@@ -74,11 +72,9 @@ public class ProfileController extends HttpServlet {
         } else {
             httpSession.setAttribute("updateError", result);
         }
-
         response.sendRedirect(request.getContextPath() + "/customer/profile");
     }
 
-    // XỬ LÝ ĐỔI MẬT KHẨU QUA AJAX
     private void handleChangePassword(HttpServletRequest request, HttpServletResponse response,
                                       HttpSession httpSession, User currentUser) throws IOException {
 
@@ -88,23 +84,20 @@ public class ProfileController extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        String result = userService.changePassword(
+        // Gọi thẳng Service, KHÔNG CÒN LOGIC NGHIỆP VỤ (loginUser) NẰM Ở CONTROLLER NỮA
+        List<String> errors = userService.changePasswordAsUser(
                 currentUser.getId(),
                 oldPassword != null ? oldPassword : "",
                 newPassword != null ? newPassword : "",
                 confirmPassword != null ? confirmPassword : ""
         );
 
-        if ("SUCCESS".equals(result)) {
-            // Cập nhật lại mật khẩu trong Session
+        if (errors == null || errors.isEmpty()) {
             currentUser.setPassword(SecurityUtil.hashPassword(newPassword));
             httpSession.setAttribute("currentUser", currentUser);
-
-            // Trả về kết quả JSON thành công
             response.getWriter().write("{\"status\":\"SUCCESS\", \"message\":\"Đổi mật khẩu thành công!\"}");
         } else {
-            // Trả về kết quả JSON kèm câu báo lỗi chi tiết
-            response.getWriter().write("{\"status\":\"ERROR\", \"message\":\"" + result + "\"}");
+            response.getWriter().write("{\"status\":\"ERROR\", \"message\":\"" + errors.get(0) + "\"}");
         }
     }
 }
