@@ -3,27 +3,34 @@ package com.qlbds.service;
 import com.qlbds.constant.RoleTypeEnum;
 import com.qlbds.constant.UserStatusEnum;
 import com.qlbds.dto.UserDTO;
-import com.qlbds.entity.OtpCode;
 import com.qlbds.entity.User;
-import com.qlbds.repository.OtpRepository;
 import com.qlbds.repository.UserRepository;
-import com.qlbds.util.EmailUtil;
 import com.qlbds.util.SecurityUtil;
+import com.qlbds.util.UserValidationUtil;
 import com.qlbds.util.ValidationUtil;
 
-import java.time.LocalDateTime;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserService {
-    private UserRepository userRepository = new UserRepository();
+    private UserRepository repo = new UserRepository();
 
+    // 1. HÀM PHỤ TRỢ: Xác minh mật khẩu
+    private boolean verifyPassword(String inputPassword, String storedPassword) {
+        if (inputPassword == null || storedPassword == null) return false;
+        if (inputPassword.equals(storedPassword)) return true;
+        String hashedInput = SecurityUtil.hashPassword(inputPassword);
+        return hashedInput.equals(storedPassword);
+    }
+
+    // 2. ĐĂNG KÝ USER (Phiên bản của nhánh Thanh - Có hỗ trợ OTP ngầm)
     public String registerUser(UserDTO userDTO) {
         if (!ValidationUtil.isValidPhone(userDTO.getPhone())) return "Định dạng SĐT không hợp lệ!";
         if (!ValidationUtil.isValidEmail(userDTO.getEmail())) return "Định dạng Email không hợp lệ!";
         if (!ValidationUtil.isValidPassword(userDTO.getPassword())) return "Mật khẩu tối thiểu 6 ký tự và chứa ít nhất 1 ký tự đặc biệt!";
         if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) return "Xác nhận mật khẩu không khớp!";
-        if (userRepository.findByEmail(userDTO.getEmail()) != null) return "Email này đã được đăng ký!";
-        if (userRepository.findByPhone(userDTO.getPhone()) != null) return "Số điện thoại này đã được sử dụng!";
+        if (repo.findByEmail(userDTO.getEmail()) != null) return "Email này đã được đăng ký!";
+        if (repo.findByPhone(userDTO.getPhone()) != null) return "Số điện thoại này đã được sử dụng!";
 
         User user = new User();
         user.setFullName(userDTO.getFullName().trim());
@@ -34,56 +41,202 @@ public class UserService {
         user.setStatus(UserStatusEnum.ACTIVE);
         user.setIsVerified(false);
 
-        // CHỈ LƯU USER, KHÔNG GỬI OTP Ở ĐÂY
-        return userRepository.save(user) ? "SUCCESS" : "Lỗi hệ thống khi lưu dữ liệu!";
+        return repo.insertUser(user) ? "SUCCESS" : "Lỗi hệ thống khi lưu dữ liệu!";
     }
 
-    // NGHIỆP VỤ ĐĂNG NHẬP
+    // 3. ĐĂNG NHẬP
     public User loginUser(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        if (user != null && user.getStatus() == UserStatusEnum.ACTIVE) {
-            // Giữ nguyên logic băm mật khẩu đồng bộ với phần đổi mật khẩu
-            if (user.getPassword().equals(SecurityUtil.hashPassword(password))) {
-                return user;
-            }
+        if (email == null || password == null) return null;
+        User user = repo.findByEmail(email.trim());
+        if (user != null && user.getStatus() == UserStatusEnum.ACTIVE && verifyPassword(password, user.getPassword())) {
+            return user;
         }
         return null;
     }
 
-    // NGHIỆP VỤ CẬP NHẬT THÔNG TIN
+    // 4. CẬP NHẬT THÔNG TIN CÁ NHÂN (Phiên bản của nhánh Thanh)
     public String updateProfile(Integer userId, String fullName, String phone) {
         if (fullName == null || fullName.trim().isEmpty()) return "Họ tên không được để trống!";
         if (!ValidationUtil.isValidPhone(phone)) return "Định dạng SĐT không hợp lệ!";
 
-        User userExist = userRepository.findByPhone(phone.trim());
+        User userExist = repo.findByPhone(phone.trim());
         if (userExist != null && !userExist.getId().equals(userId)) {
             return "Số điện thoại này đã được sử dụng bởi tài khoản khác!";
         }
 
-        User user = userRepository.findById(userId);
+        User user = repo.findById(userId);
         if (user == null) return "Tài khoản không tồn tại!";
 
         user.setFullName(fullName.trim());
         user.setPhone(phone.trim());
 
-        return userRepository.update(user) ? "SUCCESS" : "Lỗi hệ thống khi cập nhật!";
+        return repo.updateUser(user) ? "SUCCESS" : "Lỗi hệ thống khi cập nhật!";
     }
 
-    // NGHIỆP VỤ ĐỔI MẬT KHẨU
-    public String changePassword(Integer userId, String oldPassword, String newPassword, String confirmPassword) {
-        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) return "Vui lòng nhập đủ các trường!";
+    // =========================================================================
+    // CÁC HÀM PHỤC VỤ TRANG QUẢN TRỊ (ADMIN) CỦA NHÁNH HƯNG
+    // =========================================================================
 
-        User user = userRepository.findById(userId);
-        if (user == null) return "Tài khoản không tồn tại!";
+    public List<UserDTO> getUserList(int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        List<User> entities = repo.findAllUsers(offset, pageSize);
+        List<UserDTO> dtos = new ArrayList<>();
 
-        if (!user.getPassword().equals(SecurityUtil.hashPassword(oldPassword))) {
-            return "Mật khẩu hiện tại không chính xác!";
+        for (User entity : entities) {
+            UserDTO dto = new UserDTO();
+            dto.setId(entity.getId());
+            dto.setFullName(entity.getFullName());
+            dto.setEmail(entity.getEmail());
+            dto.setPhone(entity.getPhone());
+            dto.setRole(entity.getRole() != null ? entity.getRole().name() : "");
+            dto.setStatus(entity.getStatus() != null ? entity.getStatus().name() : "");
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    public int getTotalPages(int pageSize) {
+        if (pageSize <= 0) pageSize = 5;
+        int totalRecords = repo.countTotalUsers();
+        return (int) Math.ceil((double) totalRecords / pageSize);
+    }
+
+    public List<String> addAdminUser(UserDTO dto) {
+        List<String> errors = UserValidationUtil.validateAdminCreate(dto);
+
+        if (dto.getEmail() != null && repo.findByEmail(dto.getEmail().trim()) != null) {
+            errors.add("Email " + dto.getEmail() + " đã tồn tại!");
+        }
+        if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty() && repo.findByPhone(dto.getPhone().trim()) != null) {
+            errors.add("Số điện thoại " + dto.getPhone() + " đã được sử dụng!");
         }
 
-        if (!ValidationUtil.isValidPassword(newPassword)) return "Mật khẩu mới tối thiểu 6 ký tự!";
-        if (!newPassword.equals(confirmPassword)) return "Xác nhận mật khẩu mới không trùng khớp!";
+        if (!errors.isEmpty()) return errors;
+
+        User entity = new User();
+        entity.setFullName(dto.getFullName().trim());
+        entity.setEmail(dto.getEmail().trim());
+        entity.setPhone(dto.getPhone());
+        entity.setPassword(SecurityUtil.hashPassword(dto.getPassword()));
+
+        try {
+            RoleTypeEnum role = RoleTypeEnum.valueOf(dto.getRole());
+            entity.setRole(role == RoleTypeEnum.CUSTOMER ? RoleTypeEnum.STAFF : role);
+        } catch (Exception e) {
+            entity.setRole(RoleTypeEnum.STAFF);
+        }
+
+        entity.setStatus(UserStatusEnum.ACTIVE);
+        entity.setIsVerified(true);
+
+        if (!repo.insertUser(entity)) {
+            errors.add("Lỗi hệ thống khi lưu vào cơ sở dữ liệu!");
+        }
+
+        return errors;
+    }
+
+    public List<String> editUser(UserDTO dto) {
+        List<String> errors = new ArrayList<>();
+
+        if (dto.getFullName() == null || dto.getFullName().trim().isEmpty()) {
+            errors.add("Họ tên không được để trống!");
+        }
+
+        User existingUser = repo.findById(dto.getId());
+        if (existingUser == null) {
+            errors.add("Không tìm thấy tài khoản!");
+            return errors;
+        }
+
+        if (dto.getEmail() == null || !dto.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            errors.add("Định dạng Email không hợp lệ!");
+        } else {
+            User checkEmail = repo.findByEmail(dto.getEmail().trim());
+            if (checkEmail != null && !checkEmail.getId().equals(dto.getId())) {
+                errors.add("Email " + dto.getEmail() + " đã tồn tại!");
+            }
+        }
+
+        if (dto.getPhone() == null || !dto.getPhone().trim().matches("^\\d{10,11}$")) {
+            errors.add("Số điện thoại phải từ 10 - 11 chữ số!");
+        } else {
+            User checkPhone = repo.findByPhone(dto.getPhone().trim());
+            if (checkPhone != null && !checkPhone.getId().equals(dto.getId())) {
+                errors.add("Số điện thoại " + dto.getPhone() + " đã bị trùng!");
+            }
+        }
+
+        if (!errors.isEmpty()) return errors;
+
+        existingUser.setFullName(dto.getFullName().trim());
+        existingUser.setEmail(dto.getEmail().trim());
+        existingUser.setPhone(dto.getPhone().trim());
+
+        if (existingUser.getRole() != RoleTypeEnum.ADMIN) {
+            try {
+                existingUser.setRole(RoleTypeEnum.valueOf(dto.getRole()));
+            } catch (Exception ignored) {}
+        }
+
+        if (!repo.updateUser(existingUser)) {
+            errors.add("Lỗi hệ thống khi cập nhật cơ sở dữ liệu!");
+        }
+
+        return errors;
+    }
+
+    public List<String> changePassword(int id, String newPassword, String confirmPassword) {
+        List<String> errors = new ArrayList<>();
+        List<String> passErrors = UserValidationUtil.checkPassword(newPassword);
+        errors.addAll(passErrors);
+
+        if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
+            errors.add("Mật khẩu xác nhận không được để trống!");
+        } else if (newPassword != null && !newPassword.equals(confirmPassword)) {
+            errors.add("Mật khẩu xác nhận không khớp!");
+        }
+
+        if (!errors.isEmpty()) return errors;
+
+        User user = repo.findById(id);
+        if (user == null) {
+            errors.add("Không tìm thấy tài khoản!");
+            return errors;
+        }
+
+        if (verifyPassword(newPassword, user.getPassword())) {
+            errors.add("Mật khẩu mới không được trùng với mật khẩu hiện tại!");
+            return errors;
+        }
 
         user.setPassword(SecurityUtil.hashPassword(newPassword));
-        return userRepository.update(user) ? "SUCCESS" : "Lỗi hệ thống khi đổi mật khẩu!";
+        if (!repo.updateUser(user)) {
+            errors.add("Lỗi hệ thống khi cập nhật mật khẩu!");
+        }
+
+        return errors;
+    }
+
+    public String changeUserRole(int id, String roleStr) {
+        User user = repo.findById(id);
+        if (user == null) return "Tài khoản không tồn tại!";
+        if (user.getRole() == RoleTypeEnum.ADMIN) return "Không thể hạ quyền Admin bảo vệ hệ thống!";
+
+        try {
+            repo.updateRole(id, RoleTypeEnum.valueOf(roleStr));
+            return "SUCCESS";
+        } catch (Exception ignored) {
+            return "Vai trò không hợp lệ!";
+        }
+    }
+
+    public String toggleUserStatus(int id) {
+        User user = repo.findById(id);
+        if (user == null) return "Tài khoản không tồn tại!";
+        if (user.getRole() == RoleTypeEnum.ADMIN) return "Không thể khóa tài khoản Admin bảo vệ hệ thống!";
+
+        repo.toggleStatus(id);
+        return "SUCCESS";
     }
 }

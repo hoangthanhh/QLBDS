@@ -5,17 +5,52 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="22f3ff81-f779-4cb6-9877-0823318b3500" name="Changes" comment="update entity and db">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/ResendOtpController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/OtpRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/OtpService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.ai/mcp/mcp.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/QLBDS_Web_exploded.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminDashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminUserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/DashboardDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/ReportRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/ReportService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/DateValidationUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/UserValidationUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/addBDS.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/admin.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminBDS.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminDashboard.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminFooter.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminHeader.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminTransaction.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/changePassword.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/editBDS.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/transactionDetail.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/sb-admin-2.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/img/rems-logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/js/main.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/js/sb-admin-2.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/lib/bootstrap/bootstrap.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/lib/chart.js/chart.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/lib/fontawesome/fontawesome.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/assets/admin/lib/js/bootstrap.bundle.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/VerifyOtpController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/VerifyOtpController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/config/SecurityFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminDashBoardController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/verify-otp.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/verify-otp.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/admin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/profile.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/profile.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/hibernate.cfg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/hibernate.cfg.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/acc/register.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminAccount.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

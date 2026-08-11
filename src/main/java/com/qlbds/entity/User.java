@@ -2,6 +2,7 @@ package com.qlbds.entity;
 
 import com.qlbds.constant.RoleTypeEnum;
 import com.qlbds.constant.UserStatusEnum;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -42,29 +43,55 @@ public class User {
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "property", fetch = FetchType.EAGER)
-    private java.util.List<PropertyImage> images;
+    // Constructors từ nhánh của Hưng
+    public User() {
+    }
 
-    // GETTERS & SETTERS
+    public User(Integer id, String fullName, String email, String phone, String password, RoleTypeEnum role, UserStatusEnum status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.role = role;
+        this.status = status;
+        this.isVerified = true;
+    }
+
+    // Gộp chung toàn bộ Getters & Setters của cả 2 nhánh
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
     public RoleTypeEnum getRole() { return role; }
     public void setRole(RoleTypeEnum role) { this.role = role; }
+
     public Boolean getIsVerified() { return isVerified; }
     public void setIsVerified(Boolean isVerified) { this.isVerified = isVerified; }
+
     public UserStatusEnum getStatus() { return status; }
     public void setStatus(UserStatusEnum status) { this.status = status; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public java.util.List<PropertyImage> getImages() { return images; }
-    public void setImages(java.util.List<PropertyImage> images) { this.images = images; }
+
+    // Hàm lấy username thông minh từ nhánh của Hưng
+    public String getUsername() {
+        if (this.email != null && this.email.contains("@")) {
+            return this.email.split("@")[0];
+        }
+        return this.email;
+    }
 }

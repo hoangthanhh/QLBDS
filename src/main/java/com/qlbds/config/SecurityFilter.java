@@ -1,5 +1,7 @@
 package com.qlbds.config;
 
+import com.qlbds.entity.User;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -28,25 +30,29 @@ public class SecurityFilter implements Filter {
                 path.startsWith("/admin") ||
                 path.startsWith("/staff");
 
-        // 2. NẾU KHÔNG PHẢI KHU VỰC BẢO VỆ (Trang chủ, Login, Register, Assets hoặc URL lạ như /okk)
+        // 2. NẾU KHÔNG PHẢI KHU VỰC BẢO VỆ -> ĐI TIẾP BÌNH THƯỜNG
         if (!isProtectedArea) {
-            // Cho phép đi tiếp: Nếu URL đúng thì hiển thị, nếu URL gõ bậy (/okk) Tomcat sẽ tự trả lỗi 404
             chain.doFilter(request, response);
             return;
         }
 
-        // 3. NẾU TRUY CẬP KHU VỰC BẢO VỆ -> BẮT BUỘC KIỂM TRA ĐĂNG NHẬP (AUTHENTICATION)
+        // 3. NẾU TRUY CẬP KHU VỰC BẢO VỆ -> BẮT BUỘC KIỂM TRA ĐĂNG NHẬP
         HttpSession session = req.getSession(false);
         Object currentUser = (session != null) ? session.getAttribute("currentUser") : null;
 
         if (currentUser == null) {
-            // Chưa đăng nhập mà đòi truy cập /customer, /admin, /staff -> Chuyển hướng về Login
+            // Chưa đăng nhập mà đòi truy cập -> Chuyển hướng về Login
             resp.sendRedirect(req.getContextPath() + "/acc/login");
             return;
         }
 
         // 4. KIỂM TRA PHÂN QUYỀN (AUTHORIZATION) DỰA TRÊN ROLE
-        String role = (String) session.getAttribute("userRole"); // "ADMIN", "STAFF", "CUSTOMER"
+        String role = "";
+        if (currentUser instanceof User) {
+            role = ((User) currentUser).getRole().name();
+        } else {
+            role = (String) session.getAttribute("userRole"); // Fallback
+        }
 
         if (path.startsWith("/admin") && !"ADMIN".equals(role)) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập khu vực Quản trị viên.");
