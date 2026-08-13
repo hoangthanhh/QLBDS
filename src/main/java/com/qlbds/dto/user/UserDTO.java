@@ -38,6 +38,16 @@ public class UserDTO {
     public Boolean getIsVerified() { return isVerified; }
     public void setIsVerified(Boolean isVerified) { this.isVerified = isVerified; }
 
+    // ... các getter setter khác của bạn giữ nguyên ...
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    // THÊM HÀM NÀY ĐỂ RENDER RA GIAO DIỆN
+    public String getFormattedCreatedAt() {
+        if (this.createdAt == null) return "";
+        // Định dạng ra kiểu: 15 Thg 08, 2026
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd 'Thg' MM, yyyy");
+        return this.createdAt.format(formatter);
+    }
 }

@@ -209,14 +209,12 @@
                     </p>
 
                     <div class="text-start mt-2 mb-4">
-
                         <div class="info-list-item">
                             <i class="bi bi-calendar-check text-muted"></i>
                             <div class="ms-2">
                                 <small class="text-muted d-block" style="font-size: 0.75rem;">Thành viên từ</small>
                                 <strong class="text-dark">
-                                    <fmt:parseDate value="${sessionScope.currentUser.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both" />
-                                    <fmt:formatDate pattern="dd' Thg 'MM', 'yyyy" value="${parsedDate}" />
+                                    ${sessionScope.currentUser.formattedCreatedAt}
                                 </strong>
                             </div>
                         </div>

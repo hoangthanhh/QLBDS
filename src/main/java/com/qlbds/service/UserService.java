@@ -70,6 +70,7 @@ public class UserService {
 
             // Xử lý an toàn tránh NullPointerException
             userDTO.setIsVerified(user.getIsVerified() != null ? user.getIsVerified() : false);
+            userDTO.setCreatedAt(user.getCreatedAt());
 
             return userDTO;
         }
