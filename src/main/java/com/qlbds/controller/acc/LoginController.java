@@ -1,7 +1,7 @@
 package com.qlbds.controller.acc;
 
-import com.qlbds.constant.RoleTypeEnum;
-import com.qlbds.entity.User;
+import com.qlbds.dto.user.UserDTO;
+import com.qlbds.dto.acc.LoginDTO;
 import com.qlbds.service.UserService;
 
 import javax.servlet.ServletException;
@@ -26,26 +26,29 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        // Đóng gói request vào LoginDTO
+        LoginDTO loginDto = new LoginDTO();
+        loginDto.setEmail(request.getParameter("email"));
+        loginDto.setPassword(request.getParameter("password"));
 
-        User user = userService.loginUser(email, password);
+        // Service trả về thẳng UserDTO sạch sẽ
+        UserDTO currentUser = userService.loginUser(loginDto);
 
-        if (user != null) {
+        if (currentUser != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("currentUser", user);
+            session.setAttribute("currentUser", currentUser); // Lưu DTO vào Session
 
-            if (RoleTypeEnum.ADMIN.equals(user.getRole())) {
+            // Điều hướng theo Role
+            if ("ADMIN".equals(currentUser.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
-            } else if (RoleTypeEnum.STAFF.equals(user.getRole())) {
+            } else if ("STAFF".equals(currentUser.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/staff/dashboard");
             } else {
                 response.sendRedirect(request.getContextPath() + "/home");
             }
         } else {
-            // Giữ lại câu báo lỗi chi tiết và email của bạn, đã fix tên biến request
             request.setAttribute("error", "Email hoặc mật khẩu không chính xác, hoặc tài khoản đã bị khóa!");
-            request.setAttribute("email", email);
+            request.setAttribute("email", loginDto.getEmail());
             request.getRequestDispatcher("/WEB-INF/views/acc/login.jsp").forward(request, response);
         }
     }

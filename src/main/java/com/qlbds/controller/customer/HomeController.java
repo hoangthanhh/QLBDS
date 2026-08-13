@@ -1,5 +1,6 @@
 package com.qlbds.controller.customer;
 
+import com.qlbds.dto.property.PropertySummaryDTO;
 import com.qlbds.entity.Property;
 import com.qlbds.service.PropertyService;
 
@@ -37,7 +38,8 @@ public class HomeController extends HttpServlet {
         String propertyType = req.getParameter("propertyType");
 
         // Gọi Service có truyền tham số lọc
-        List<Property> propertyList = propertyService.getPropertiesByPage(page, pageSize, address, priceRange, propertyType);
+        // Đổi List<Property> thành List<PropertySummaryDTO>
+        List<PropertySummaryDTO> propertyList = propertyService.getPropertiesByPage(page, pageSize, address, priceRange, propertyType);
         int totalPages = propertyService.getTotalPages(pageSize, address, priceRange, propertyType);
 
         req.setAttribute("realEstates", propertyList);

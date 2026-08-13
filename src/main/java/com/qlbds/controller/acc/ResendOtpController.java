@@ -1,6 +1,6 @@
 package com.qlbds.controller.acc;
 
-import com.qlbds.entity.User;
+import com.qlbds.dto.user.UserDTO;
 import com.qlbds.service.OtpService;
 
 import javax.servlet.ServletException;
@@ -16,14 +16,15 @@ public class ResendOtpController extends HttpServlet {
 
     private OtpService otpService = new OtpService();
 
-    // Hứng sự kiện từ nút "Bấm vào đây để lấy mã OTP" trên giao diện JSP
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
 
-        // Gọi luồng nghiệp vụ Service để check giới hạn 5 lần/ngày và gửi mail ngầm
+        // Đọc UserDTO trực tiếp từ Session an toàn
+        UserDTO currentUser = (UserDTO) session.getAttribute("currentUser");
+
+        // Gọi Service truyền UserDTO
         String result = otpService.generateAndSendOtp(currentUser);
 
         if ("SUCCESS".equals(result)) {

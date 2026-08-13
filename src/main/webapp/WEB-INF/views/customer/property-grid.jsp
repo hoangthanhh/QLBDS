@@ -11,9 +11,9 @@
                         <div class="position-relative overflow-hidden">
                             <a href="${pageContext.request.contextPath}/property/detail?id=${item.id}">
                                 <c:choose>
-                                    <c:when test="${not empty item.images}">
+                                    <c:when test="${not empty item.thumbnail}">
                                         <img class="img-fluid w-100"
-                                             src="${pageContext.request.contextPath}/${item.images[0].imagePath}"
+                                             src="${pageContext.request.contextPath}/${item.thumbnail}"
                                              alt="${item.title}"
                                              style="height: 250px; object-fit: cover;">
                                     </c:when>

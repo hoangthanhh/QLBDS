@@ -1,6 +1,6 @@
 package com.qlbds.util;
 
-import com.qlbds.dto.UserDTO;
+import com.qlbds.dto.user.UserCreateDTO;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -9,13 +9,10 @@ import java.util.regex.Pattern;
 
 public class ValidationUtil {
 
-    // 1. CÁC BIỂU THỨC CHÍNH QUY ĐƯỢC ĐỒNG NHẤT
     private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final String PHONE_PATTERN = "^0\\d{9,10}$";
-    // Tối thiểu 6 ký tự và KHÔNG chứa khoảng trắng (\S)
     private static final String PASSWORD_PATTERN = "^\\S{6,}$";
 
-    // 2. KIỂM TRA ĐỊNH DẠNG CƠ BẢN
     public static boolean isValidEmail(String email) {
         if (email == null || email.trim().isEmpty()) return false;
         return Pattern.compile(EMAIL_PATTERN).matcher(email.trim()).matches();
@@ -31,7 +28,6 @@ public class ValidationUtil {
         return Pattern.compile(PASSWORD_PATTERN).matcher(password).matches();
     }
 
-    // 3. KIỂM TRA FORM ĐĂNG KÝ (Dùng chung cho cả User và Admin)
     public static List<String> checkPassword(String password) {
         List<String> passErrors = new ArrayList<>();
         if (password == null || password.trim().isEmpty()) {
@@ -42,7 +38,8 @@ public class ValidationUtil {
         return passErrors;
     }
 
-    public static List<String> validateAdminCreate(UserDTO dto) {
+    // ĐÃ SỬA: Dùng UserCreateDTO
+    public static List<String> validateAdminCreate(UserCreateDTO dto) {
         List<String> errors = new ArrayList<>();
         if (dto.getFullName() == null || dto.getFullName().trim().isEmpty()) errors.add("Họ tên không được để trống!");
         if (!isValidEmail(dto.getEmail())) errors.add("Email không hợp lệ!");
@@ -53,7 +50,6 @@ public class ValidationUtil {
         return errors;
     }
 
-    // 4. KIỂM TRA DỮ LIỆU NGÀY THÁNG (Giữ nguyên)
     public static LocalDate parseDate(String dateStr) {
         if (dateStr == null || dateStr.trim().isEmpty()) return null;
         try {

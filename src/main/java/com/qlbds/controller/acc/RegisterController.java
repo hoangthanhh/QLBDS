@@ -1,6 +1,6 @@
 package com.qlbds.controller.acc;
 
-import com.qlbds.dto.UserDTO;
+import com.qlbds.dto.acc.RegisterDTO;
 import com.qlbds.service.UserService;
 
 import javax.servlet.ServletException;
@@ -24,22 +24,21 @@ public class RegisterController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        UserDTO dto = new UserDTO();
-        dto.setFullName(request.getParameter("fullName"));
-        dto.setEmail(request.getParameter("email"));
-        dto.setPhone(request.getParameter("phone"));
-        dto.setPassword(request.getParameter("password"));
-        dto.setConfirmPassword(request.getParameter("confirmPassword"));
+        RegisterDTO registerDto = new RegisterDTO();
+        registerDto.setFullName(request.getParameter("fullName"));
+        registerDto.setEmail(request.getParameter("email"));
+        registerDto.setPhone(request.getParameter("phone"));
+        registerDto.setPassword(request.getParameter("password"));
+        registerDto.setConfirmPassword(request.getParameter("confirmPassword"));
 
-        String result = userService.registerUser(dto);
+        String result = userService.registerUser(registerDto);
 
         if ("SUCCESS".equals(result)) {
-            // Chuyển hướng kèm theo cờ báo thành công để hiển thị lên View
             response.sendRedirect(request.getContextPath() + "/acc/login?registerSuccess=true");
         } else {
-            // Giữ lại toàn bộ dữ liệu vừa nhập và câu thông báo lỗi (Đã fix tên biến)
             request.setAttribute("error", result);
-            request.setAttribute("userDto", dto);
+            request.setAttribute("registerDto", registerDto);
+            request.setAttribute("userDto", registerDto); // Giữ biến này để tương thích với file register.jsp hiện tại
             request.getRequestDispatcher("/WEB-INF/views/acc/register.jsp").forward(request, response);
         }
     }

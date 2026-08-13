@@ -1,6 +1,8 @@
 package com.qlbds.controller.admin;
 
-import com.qlbds.dto.UserDTO;
+import com.qlbds.dto.user.UserDTO;
+import com.qlbds.dto.user.UserCreateDTO;
+import com.qlbds.dto.user.UserUpdateDTO;
 import com.qlbds.service.UserService;
 
 import javax.servlet.ServletException;
@@ -45,12 +47,12 @@ public class AdminUserController extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
 
-        // 1. XỬ LÝ YÊU CẦU QUA AJAX (THÊM, SỬA, ĐỔI MẬT KHẨU)
         if ("add-user".equals(action) || "edit-user".equals(action) || "change-password".equals(action)) {
             List<String> errors = null;
 
             if ("add-user".equals(action)) {
-                UserDTO dto = new UserDTO();
+                // SỬ DỤNG DTO CHUYÊN BIỆT CHO THÊM MỚI
+                UserCreateDTO dto = new UserCreateDTO();
                 dto.setFullName(request.getParameter("fullName"));
                 dto.setEmail(request.getParameter("email"));
                 dto.setPhone(request.getParameter("phone"));
@@ -60,7 +62,8 @@ public class AdminUserController extends HttpServlet {
                 errors = userService.addAdminUser(dto);
             }
             else if ("edit-user".equals(action)) {
-                UserDTO dto = new UserDTO();
+                // SỬ DỤNG DTO CHUYÊN BIỆT CHO CHỈNH SỬA
+                UserUpdateDTO dto = new UserUpdateDTO();
                 try {
                     dto.setId(Integer.parseInt(request.getParameter("id")));
                 } catch (Exception ignored) {}
@@ -101,7 +104,6 @@ public class AdminUserController extends HttpServlet {
             return;
         }
 
-        // 2. XỬ LÝ SUBMIT FORM THƯỜNG (CẤP ROLE, KHÓA / MỞ KHÓA TÀI KHOẢN)
         if ("change-role".equals(action)) {
             try {
                 int id = Integer.parseInt(request.getParameter("id"));

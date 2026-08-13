@@ -2,7 +2,13 @@ package com.qlbds.service;
 
 import com.qlbds.constant.RoleTypeEnum;
 import com.qlbds.constant.UserStatusEnum;
-import com.qlbds.dto.UserDTO;
+import com.qlbds.dto.user.UserDTO;
+import com.qlbds.dto.acc.LoginDTO;
+import com.qlbds.dto.acc.RegisterDTO;
+import com.qlbds.dto.user.ChangePasswordDTO;
+import com.qlbds.dto.user.UserCreateDTO;
+import com.qlbds.dto.user.UserProfileDTO;
+import com.qlbds.dto.user.UserUpdateDTO;
 import com.qlbds.entity.User;
 import com.qlbds.repository.UserRepository;
 import com.qlbds.util.SecurityUtil;
@@ -20,20 +26,23 @@ public class UserService {
         return SecurityUtil.hashPassword(inputPassword).equals(storedPassword);
     }
 
-    public String registerUser(UserDTO userDTO) {
-        if (!ValidationUtil.isValidPhone(userDTO.getPhone())) return "Định dạng SĐT không hợp lệ!";
-        if (!ValidationUtil.isValidEmail(userDTO.getEmail())) return "Định dạng Email không hợp lệ!";
-        if (!ValidationUtil.isValidPassword(userDTO.getPassword())) return "Mật khẩu tối thiểu 6 ký tự, không chứa khoảng trắng!";
-        if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) return "Xác nhận mật khẩu không khớp!";
+    // 2. ĐĂNG KÝ USER (Đã chuyển sang nhận RegisterDTO chuyên biệt)
+    public String registerUser(RegisterDTO dto) {
+        if (dto == null) return "Dữ liệu đăng ký không hợp lệ!";
 
-        if (repo.findByEmail(userDTO.getEmail()) != null) return "Email này đã được đăng ký!";
-        if (repo.findByPhone(userDTO.getPhone()) != null) return "Số điện thoại này đã được sử dụng!";
+        if (!ValidationUtil.isValidPhone(dto.getPhone())) return "Định dạng SĐT không hợp lệ!";
+        if (!ValidationUtil.isValidEmail(dto.getEmail())) return "Định dạng Email không hợp lệ!";
+        if (!ValidationUtil.isValidPassword(dto.getPassword())) return "Mật khẩu tối thiểu 6 ký tự, không chứa khoảng trắng!";
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) return "Xác nhận mật khẩu không khớp!";
+
+        if (repo.findByEmail(dto.getEmail().trim()) != null) return "Email này đã được đăng ký!";
+        if (repo.findByPhone(dto.getPhone().trim()) != null) return "Số điện thoại này đã được sử dụng!";
 
         User user = new User();
-        user.setFullName(userDTO.getFullName().trim());
-        user.setPhone(userDTO.getPhone().trim());
-        user.setEmail(userDTO.getEmail().trim().toLowerCase());
-        user.setPassword(SecurityUtil.hashPassword(userDTO.getPassword()));
+        user.setFullName(dto.getFullName().trim());
+        user.setPhone(dto.getPhone().trim());
+        user.setEmail(dto.getEmail().trim().toLowerCase());
+        user.setPassword(SecurityUtil.hashPassword(dto.getPassword()));
         user.setRole(RoleTypeEnum.CUSTOMER);
         user.setStatus(UserStatusEnum.ACTIVE);
         user.setIsVerified(false);
@@ -41,27 +50,47 @@ public class UserService {
         return repo.insertUser(user) ? "SUCCESS" : "Lỗi hệ thống khi lưu dữ liệu!";
     }
 
-    public User loginUser(String email, String password) {
-        if (email == null || password == null) return null;
-        User user = repo.findByEmail(email.trim());
-        if (user != null && user.getStatus() == UserStatusEnum.ACTIVE && verifyPassword(password, user.getPassword())) {
-            return user;
+    public UserDTO loginUser(LoginDTO loginDTO) {
+        if (loginDTO.getEmail() == null || loginDTO.getPassword() == null) return null;
+
+        // Gọi Repo lấy Entity
+        User user = repo.findByEmail(loginDTO.getEmail().trim());
+
+        if (user != null && user.getStatus() == UserStatusEnum.ACTIVE
+                && verifyPassword(loginDTO.getPassword(), user.getPassword())) {
+
+            // Map Entity sang DTO ngay tại tầng Service để bảo mật
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setFullName(user.getFullName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPhone(user.getPhone());
+            userDTO.setRole(user.getRole().name());
+            userDTO.setStatus(user.getStatus().name());
+
+            // Xử lý an toàn tránh NullPointerException
+            userDTO.setIsVerified(user.getIsVerified() != null ? user.getIsVerified() : false);
+
+            return userDTO;
         }
         return null;
     }
 
-    public String updateProfile(Integer userId, String fullName, String phone) {
-        if (fullName == null || fullName.trim().isEmpty()) return "Họ tên không được để trống!";
-        if (!ValidationUtil.isValidPhone(phone)) return "Định dạng SĐT không hợp lệ!";
+    // 1. CẬP NHẬT PROFILE (Dùng UserProfileDTO)
+    public String updateProfile(Integer userId, UserProfileDTO profileDTO) {
+        if (profileDTO == null) return "Dữ liệu không hợp lệ!";
+        if (profileDTO.getFullName() == null || profileDTO.getFullName().trim().isEmpty()) return "Họ tên không được để trống!";
+        if (!ValidationUtil.isValidPhone(profileDTO.getPhone())) return "Định dạng SĐT không hợp lệ!";
 
-        User userExist = repo.findByPhone(phone.trim());
+        String cleanPhone = profileDTO.getPhone().trim();
+        User userExist = repo.findByPhone(cleanPhone);
         if (userExist != null && !userExist.getId().equals(userId)) return "Số điện thoại này đã được sử dụng bởi tài khoản khác!";
 
         User user = repo.findById(userId);
         if (user == null) return "Tài khoản không tồn tại!";
 
-        user.setFullName(fullName.trim());
-        user.setPhone(phone.trim());
+        user.setFullName(profileDTO.getFullName().trim());
+        user.setPhone(cleanPhone);
 
         return repo.updateUser(user) ? "SUCCESS" : "Lỗi hệ thống khi cập nhật!";
     }
@@ -90,7 +119,8 @@ public class UserService {
         return (int) Math.ceil((double) totalRecords / pageSize);
     }
 
-    public List<String> addAdminUser(UserDTO dto) {
+    // Đã sửa: Nhận vào UserCreateDTO
+    public List<String> addAdminUser(UserCreateDTO dto) {
         List<String> errors = ValidationUtil.validateAdminCreate(dto);
         if (dto.getEmail() != null && repo.findByEmail(dto.getEmail().trim()) != null) errors.add("Email " + dto.getEmail() + " đã tồn tại!");
         if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty() && repo.findByPhone(dto.getPhone().trim()) != null) errors.add("Số điện thoại " + dto.getPhone() + " đã được sử dụng!");
@@ -113,7 +143,8 @@ public class UserService {
         return errors;
     }
 
-    public List<String> editUser(UserDTO dto) {
+    // Đã sửa: Nhận vào UserUpdateDTO
+    public List<String> editUser(UserUpdateDTO dto) {
         List<String> errors = new ArrayList<>();
         if (dto.getFullName() == null || dto.getFullName().trim().isEmpty()) errors.add("Họ tên không được để trống!");
 
@@ -162,10 +193,19 @@ public class UserService {
         return errors;
     }
 
-    // --- USER TỰ ĐỔI MẬT KHẨU (Bắt buộc check pass cũ) ---
-    public List<String> changePasswordAsUser(int id, String oldPassword, String newPassword, String confirmPassword) {
+    // 2. USER TỰ ĐỔI MẬT KHẨU (Dùng ChangePasswordDTO)
+    public List<String> changePasswordAsUser(int id, ChangePasswordDTO dto) {
         List<String> errors = new ArrayList<>();
-        if (oldPassword == null || oldPassword.trim().isEmpty()) {
+        if (dto == null) {
+            errors.add("Dữ liệu không hợp lệ!");
+            return errors;
+        }
+
+        String oldPass = dto.getOldPassword() != null ? dto.getOldPassword().trim() : "";
+        String newPass = dto.getNewPassword() != null ? dto.getNewPassword().trim() : "";
+        String confirmPass = dto.getConfirmPassword() != null ? dto.getConfirmPassword().trim() : "";
+
+        if (oldPass.isEmpty()) {
             errors.add("Vui lòng nhập mật khẩu hiện tại!");
             return errors;
         }
@@ -176,18 +216,18 @@ public class UserService {
             return errors;
         }
 
-        if (!verifyPassword(oldPassword, user.getPassword())) {
+        if (!verifyPassword(oldPass, user.getPassword())) {
             errors.add("Mật khẩu hiện tại không chính xác!");
             return errors;
         }
 
-        if (verifyPassword(newPassword, user.getPassword())) {
+        if (verifyPassword(newPass, user.getPassword())) {
             errors.add("Mật khẩu mới không được trùng với mật khẩu hiện tại!");
             return errors;
         }
 
-        // Tái sử dụng logic kiểm tra pass mới của Admin
-        return changePasswordAsAdmin(id, newPassword, confirmPassword);
+        // Kiểm tra mật khẩu mới và khớp mật khẩu xác nhận
+        return changePasswordAsAdmin(id, newPass, confirmPass);
     }
 
     public String changeUserRole(int id, String roleStr) {

@@ -1,6 +1,7 @@
 package com.qlbds.controller.acc;
 
-import com.qlbds.entity.User;
+import com.qlbds.dto.user.UserDTO;
+import com.qlbds.dto.acc.VerifyOtpDTO;
 import com.qlbds.service.OtpService;
 
 import javax.servlet.ServletException;
@@ -19,21 +20,19 @@ public class VerifyOtpController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserDTO currentUser = (UserDTO) session.getAttribute("currentUser"); // Đọc UserDTO từ Session
 
-        // Chưa đăng nhập thì về trang login
         if (currentUser == null) {
             resp.sendRedirect(req.getContextPath() + "/acc/login");
             return;
         }
 
         // Đã xác thực rồi thì về trang chủ
-        if (currentUser.getIsVerified()) {
+        if (currentUser.getIsVerified() != null && currentUser.getIsVerified()) {
             resp.sendRedirect(req.getContextPath() + "/home");
             return;
         }
 
-        // CHUẨN NGHIỆP VỤ: Không làm gì cả, chỉ chuyển tiếp giao diện lên cho người dùng thấy
         req.getRequestDispatcher("/WEB-INF/views/acc/verify-otp.jsp").forward(req, resp);
     }
 
@@ -41,17 +40,21 @@ public class VerifyOtpController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
-        User currentUser = (User) session.getAttribute("currentUser");
+        UserDTO currentUser = (UserDTO) session.getAttribute("currentUser"); // Đọc UserDTO từ Session
 
-        String inputOtp = req.getParameter("otpCode");
-        String result = otpService.verifyUserOtp(currentUser, inputOtp);
+        // Đóng gói tham số vào VerifyOtpDTO
+        VerifyOtpDTO verifyOtpDTO = new VerifyOtpDTO(req.getParameter("otpCode"));
+
+        // Gọi Service xử lý nghiệp vụ với DTO
+        String result = otpService.verifyUserOtp(currentUser, verifyOtpDTO);
 
         if ("SUCCESS".equals(result)) {
+            // Đồng bộ lại cờ isVerified trên Session DTO để tránh bị bộ lọc chặn
+            currentUser.setIsVerified(true);
             session.setAttribute("currentUser", currentUser);
 
-            // Thay đổi đường dẫn "/acc/profile" tương ứng với URL Servlet hiển thị trang profile.jsp của bạn
             resp.sendRedirect(req.getContextPath() + "/customer/profile");
-            return; // Kết thúc hàm luôn, không forward về trang OTP nữa
+            return;
         } else {
             req.setAttribute("error", result);
         }

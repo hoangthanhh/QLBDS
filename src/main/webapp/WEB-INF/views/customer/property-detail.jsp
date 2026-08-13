@@ -68,8 +68,8 @@
                 <div class="main-gallery-card mb-4">
                     <div class="position-relative bg-dark" style="height: 460px;">
                         <c:choose>
-                            <c:when test="${not empty property.images}">
-                                <img id="mainImage" src="${pageContext.request.contextPath}/${property.images[0].imagePath}"
+                            <c:when test="${not empty property.imageUrls}">
+                                <img id="mainImage" src="${pageContext.request.contextPath}/${property.imageUrls[0]}"
                                      class="w-100 h-100 object-fit-cover" alt="Main Property Image">
                             </c:when>
                             <c:otherwise>
@@ -79,18 +79,18 @@
                         </c:choose>
 
                         <div class="position-absolute bottom-0 end-0 m-3 px-3 py-1.5 bg-dark bg-opacity-75 text-white rounded-pill small fw-bold">
-                            <i class="bi bi-images me-1"></i> <span id="currentImgIndex">1</span>/${not empty property.images ? property.images.size() : 1} Ảnh
+                            <i class="bi bi-images me-1"></i> <span id="currentImgIndex">1</span>/${not empty property.imageUrls ? property.imageUrls.size() : 1} Ảnh
                         </div>
                     </div>
 
-                    <c:if test="${not empty property.images && property.images.size() > 1}">
+                    <c:if test="${not empty property.imageUrls && property.imageUrls.size() > 1}">
                         <div class="p-3 bg-light border-top">
                             <div class="d-flex gap-2 overflow-auto py-1" style="scrollbar-width: thin;">
-                                <c:forEach var="img" items="${property.images}" varStatus="status">
-                                    <img src="${pageContext.request.contextPath}/${img.imagePath}"
+                                <c:forEach var="imgUrl" items="${property.imageUrls}" varStatus="status">
+                                    <img src="${pageContext.request.contextPath}/${imgUrl}"
                                          class="thumb-img rounded-3 cursor-pointer ${status.first ? 'active-thumb' : ''}"
                                          style="width: 90px; height: 65px; object-fit: cover;"
-                                         onclick="changeMainImage(this, '${pageContext.request.contextPath}/${img.imagePath}', ${status.index + 1})"
+                                         onclick="changeMainImage(this, '${pageContext.request.contextPath}/${imgUrl}', ${status.index + 1})"
                                          alt="Thumbnail ${status.index + 1}">
                                 </c:forEach>
                             </div>

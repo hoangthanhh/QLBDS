@@ -1,8 +1,9 @@
 package com.qlbds.controller.customer;
 
-import com.qlbds.entity.User;
+import com.qlbds.dto.user.UserDTO;
+import com.qlbds.dto.user.ChangePasswordDTO;
+import com.qlbds.dto.user.UserProfileDTO;
 import com.qlbds.service.UserService;
-import com.qlbds.util.SecurityUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,7 +41,9 @@ public class ProfileController extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         HttpSession httpSession = request.getSession(false);
-        User currentUser = (httpSession != null) ? (User) httpSession.getAttribute("currentUser") : null;
+
+        // Đã sửa: Ép kiểu sang UserDTO từ Session
+        UserDTO currentUser = (httpSession != null) ? (UserDTO) httpSession.getAttribute("currentUser") : null;
 
         if (currentUser == null) {
             response.sendRedirect(request.getContextPath() + "/acc/login");
@@ -51,22 +54,27 @@ public class ProfileController extends HttpServlet {
         if ("/customer/profile/update".equals(path)) {
             handleUpdateProfile(request, response, httpSession, currentUser);
         } else if ("/customer/change-password".equals(path)) {
-            handleChangePassword(request, response, httpSession, currentUser);
+            handleChangePassword(request, response, currentUser);
         } else {
             response.sendRedirect(request.getContextPath() + "/customer/profile");
         }
     }
 
     private void handleUpdateProfile(HttpServletRequest request, HttpServletResponse response,
-                                     HttpSession httpSession, User currentUser) throws IOException {
-        String fullName = request.getParameter("fullName");
-        String phone = request.getParameter("phone");
+                                     HttpSession httpSession, UserDTO currentUser) throws IOException {
 
-        String result = userService.updateProfile(currentUser.getId(), fullName, phone);
+        // Đóng gói request vào UserProfileDTO
+        UserProfileDTO profileDTO = new UserProfileDTO(
+                request.getParameter("fullName"),
+                request.getParameter("phone")
+        );
+
+        String result = userService.updateProfile(currentUser.getId(), profileDTO);
 
         if ("SUCCESS".equals(result)) {
-            currentUser.setFullName(fullName.trim());
-            currentUser.setPhone(phone.trim());
+            // Cập nhật lại thông tin mới lên UserDTO trong Session
+            currentUser.setFullName(profileDTO.getFullName().trim());
+            currentUser.setPhone(profileDTO.getPhone().trim());
             httpSession.setAttribute("currentUser", currentUser);
             httpSession.setAttribute("updateSuccess", "Cập nhật thông tin cá nhân thành công!");
         } else {
@@ -76,25 +84,20 @@ public class ProfileController extends HttpServlet {
     }
 
     private void handleChangePassword(HttpServletRequest request, HttpServletResponse response,
-                                      HttpSession httpSession, User currentUser) throws IOException {
+                                      UserDTO currentUser) throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
 
-        String oldPassword = request.getParameter("oldPassword");
-        String newPassword = request.getParameter("newPassword");
-        String confirmPassword = request.getParameter("confirmPassword");
-
-        // Gọi thẳng Service, KHÔNG CÒN LOGIC NGHIỆP VỤ (loginUser) NẰM Ở CONTROLLER NỮA
-        List<String> errors = userService.changePasswordAsUser(
-                currentUser.getId(),
-                oldPassword != null ? oldPassword : "",
-                newPassword != null ? newPassword : "",
-                confirmPassword != null ? confirmPassword : ""
+        // Đóng gói request vào ChangePasswordDTO
+        ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO(
+                request.getParameter("oldPassword"),
+                request.getParameter("newPassword"),
+                request.getParameter("confirmPassword")
         );
 
+        List<String> errors = userService.changePasswordAsUser(currentUser.getId(), changePasswordDTO);
+
         if (errors == null || errors.isEmpty()) {
-            currentUser.setPassword(SecurityUtil.hashPassword(newPassword));
-            httpSession.setAttribute("currentUser", currentUser);
             response.getWriter().write("{\"status\":\"SUCCESS\", \"message\":\"Đổi mật khẩu thành công!\"}");
         } else {
             response.getWriter().write("{\"status\":\"ERROR\", \"message\":\"" + errors.get(0) + "\"}");
