@@ -1,11 +1,17 @@
-package com.qlbds.dto;
+package com.qlbds.dto.admin;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class DashboardDTO {
-    private long totalAccounts;
-    private long totalBDS;
+    private long totalDepositedBDS;
+    private long totalSoldBDS;
+
+    public long getTotalDepositedBDS() { return totalDepositedBDS; }
+    public void setTotalDepositedBDS(long totalDepositedBDS) { this.totalDepositedBDS = totalDepositedBDS; }
+
+    public long getTotalSoldBDS() { return totalSoldBDS; }
+    public void setTotalSoldBDS(long totalSoldBDS) { this.totalSoldBDS = totalSoldBDS; }
     private long totalTransactions;
     private BigDecimal totalRevenue;
     private List<Long> monthlyData; // Mảng 12 phần tử đại diện cho 12 tháng
@@ -18,12 +24,6 @@ public class DashboardDTO {
         this.totalRevenue = BigDecimal.ZERO;
         this.filteredRevenue = BigDecimal.ZERO;
     }
-
-    public long getTotalAccounts() { return totalAccounts; }
-    public void setTotalAccounts(long totalAccounts) { this.totalAccounts = totalAccounts; }
-
-    public long getTotalBDS() { return totalBDS; }
-    public void setTotalBDS(long totalBDS) { this.totalBDS = totalBDS; }
 
     public long getTotalTransactions() { return totalTransactions; }
     public void setTotalTransactions(long totalTransactions) { this.totalTransactions = totalTransactions; }

@@ -82,7 +82,7 @@
 
         <!-- Link Lịch sử xem -->
         <li class="nav-item">
-            <a class="nav-link" href="${pageContext.request.contextPath}/admin/history">
+            <a class="nav-link" href="${pageContext.request.contextPath}/admin/view-history">
                 <span class="menu-icon">&#128338;</span>
                 <span>Lịch sử xem</span>
             </a>

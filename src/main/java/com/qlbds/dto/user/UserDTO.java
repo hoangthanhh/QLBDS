@@ -1,6 +1,7 @@
 package com.qlbds.dto.user;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class UserDTO {
     private Integer id;
@@ -47,7 +48,7 @@ public class UserDTO {
     public String getFormattedCreatedAt() {
         if (this.createdAt == null) return "";
         // Định dạng ra kiểu: 15 Thg 08, 2026
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd 'Thg' MM, yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd 'Thg' MM, yyyy");
         return this.createdAt.format(formatter);
     }
 }

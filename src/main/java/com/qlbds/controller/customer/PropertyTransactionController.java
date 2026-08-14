@@ -1,6 +1,6 @@
 package com.qlbds.controller.customer;
 
-import com.qlbds.entity.User;
+import com.qlbds.dto.user.UserDTO;
 import com.qlbds.service.TransactionService;
 
 import javax.servlet.ServletException;
@@ -21,31 +21,31 @@ public class PropertyTransactionController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession(false);
 
-        // BƯỚC 1: Bắt buộc Đăng nhập
-        User currentUser = (session != null) ? (User) session.getAttribute("currentUser") : null;
+        // CHUẨN KIẾN TRÚC: Đọc UserDTO từ Session
+        UserDTO currentUser = (session != null) ? (UserDTO) session.getAttribute("currentUser") : null;
         if (currentUser == null) {
             resp.sendRedirect(req.getContextPath() + "/acc/login");
             return;
         }
 
         String propertyIdParam = req.getParameter("propertyId");
-        String type = req.getParameter("type"); // "DEPOSIT" hoặc "BUY"
+        String type = req.getParameter("type");
 
-        // BƯỚC 2: Kiểm tra Xác thực tài khoản
-        if (!currentUser.getIsVerified()) {
+        if (currentUser.getIsVerified() == null || !currentUser.getIsVerified()) {
             session.setAttribute("updateError", "Tài khoản của bạn chưa được xác thực! Vui lòng xác thực trước khi thực hiện đặt cọc hoặc mua.");
             resp.sendRedirect(req.getContextPath() + "/customer/profile");
             return;
         }
 
-        // BƯỚC 3: Xử lý giao dịch
         try {
             Integer propertyId = Integer.parseInt(propertyIdParam);
-            String result = transactionService.processTransaction(currentUser, propertyId, type);
+            // Gửi ID User xuống Service
+            String result = transactionService.processTransaction(currentUser.getId(), propertyId, type);
 
             if ("SUCCESS".equals(result)) {
                 String actionName = "BUY".equals(type) ? "Mua Bất động sản" : "Đặt cọc";
-                session.setAttribute("txSuccess", "Tạo yêu cầu " + actionName + " thành công! Email xác nhận đã được gửi tới " + currentUser.getEmail());
+                // ĐÃ SỬA: Sửa lại câu thông báo do chưa gửi email ở bước này
+                session.setAttribute("txSuccess", "Gửi yêu cầu " + actionName + " thành công! Vui lòng chờ bộ phận CSKH của REMS liên hệ xác nhận.");
             } else {
                 session.setAttribute("txError", result);
             }

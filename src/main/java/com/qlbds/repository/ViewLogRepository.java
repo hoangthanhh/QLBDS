@@ -1,5 +1,6 @@
 package com.qlbds.repository;
 
+import com.qlbds.constant.RoleTypeEnum;
 import com.qlbds.entity.ViewLog;
 import com.qlbds.util.HibernateUtil;
 import org.hibernate.Session;
@@ -43,20 +44,70 @@ public class ViewLogRepository {
         }
     }
 
-    // Lấy danh sách BĐS đã xem (Dùng JOIN FETCH để lấy luôn ảnh, tránh lỗi N+1)
-    public List<ViewLog> findLogsByUserId(Integer userId) {
+    // ĐÃ SỬA: Thêm phân trang (page, pageSize) vào câu truy vấn
+    public List<ViewLog> findLogsByUserId(Integer userId, int page, int pageSize) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT DISTINCT v FROM ViewLog v " +
                     "JOIN FETCH v.property p " +
                     "LEFT JOIN FETCH p.images " +
                     "WHERE v.user.id = :userId " +
-                    "ORDER BY v.id DESC"; // Mới nhất lên đầu
+                    "ORDER BY v.id DESC";
             Query<ViewLog> query = session.createQuery(hql, ViewLog.class);
             query.setParameter("userId", userId);
+
+            // Tính toán vị trí bắt đầu lấy dữ liệu
+            query.setFirstResult((page - 1) * pageSize);
+            query.setMaxResults(pageSize);
+
             return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+
+    // THÊM MỚI: Đếm tổng số log để tính tổng số trang
+    public long countLogsByUserId(Integer userId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COUNT(v) FROM ViewLog v WHERE v.user.id = :userId";
+            Query<Long> query = session.createQuery(hql, Long.class);
+            query.setParameter("userId", userId);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // Lấy toàn bộ lịch sử xem hệ thống (Phân trang dành cho Admin)
+    public List<ViewLog> findAllLogsForAdmin(RoleTypeEnum role, int page, int pageSize) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT v FROM ViewLog v " +
+                    "JOIN FETCH v.user u " +
+                    "JOIN FETCH v.property p " +
+                    "WHERE u.role = :role " + // Thêm điều kiện lọc Role
+                    "ORDER BY v.id DESC";
+            Query<ViewLog> query = session.createQuery(hql, ViewLog.class);
+            query.setParameter("role", role);
+            query.setFirstResult((page - 1) * pageSize);
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    // ĐÃ SỬA: Đếm tổng số log theo Role
+    public long countAllLogs(RoleTypeEnum role) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COUNT(v) FROM ViewLog v WHERE v.user.role = :role";
+            Query<Long> query = session.createQuery(hql, Long.class);
+            query.setParameter("role", role);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 }

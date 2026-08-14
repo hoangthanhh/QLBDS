@@ -1,6 +1,6 @@
 package com.qlbds.controller.admin;
 
-import com.qlbds.dto.DashboardDTO;
+import com.qlbds.dto.admin.DashboardDTO;
 import com.qlbds.service.ReportService;
 
 import javax.servlet.ServletException;
@@ -24,8 +24,8 @@ public class AdminDashboardController extends HttpServlet {
         DashboardDTO dashboardData = reportService.getDashboardData(startDate, endDate);
 
         // Đẩy đúng các biến sang JSP
-        request.setAttribute("totalAccounts", dashboardData.getTotalAccounts());
-        request.setAttribute("totalBDS", dashboardData.getTotalBDS());
+        request.setAttribute("totalDeposited", dashboardData.getTotalDepositedBDS());
+        request.setAttribute("totalSold", dashboardData.getTotalSoldBDS());
         request.setAttribute("totalTransactions", dashboardData.getTotalTransactions());
         request.setAttribute("totalRevenue", dashboardData.getTotalRevenue());
         request.setAttribute("monthlyData", dashboardData.getMonthlyData().toString());

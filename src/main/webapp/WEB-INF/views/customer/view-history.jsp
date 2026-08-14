@@ -43,6 +43,29 @@
                             </div>
                         </div>
                     </c:forEach>
+
+                    <c:if test="${totalPages > 1}">
+                        <div class="col-12 mt-4">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <a class="page-link" href="${pageContext.request.contextPath}/customer/view-history?page=${currentPage - 1}">Trang Trước</a>
+                                    </li>
+
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                            <a class="page-link" href="${pageContext.request.contextPath}/customer/view-history?page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                        <a class="page-link" href="${pageContext.request.contextPath}/customer/view-history?page=${currentPage + 1}">Trang Sau</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </c:if>
+
                 </c:otherwise>
             </c:choose>
         </div>

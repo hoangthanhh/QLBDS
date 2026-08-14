@@ -149,18 +149,39 @@
                         </c:if>
                     </c:if>
 
-                    <form action="${pageContext.request.contextPath}/customer/property/transaction" method="POST">
-                        <input type="hidden" name="propertyId" value="${property.id}">
+                    <!-- TÌM ĐẾN KHU VỰC HIỂN THỊ NÚT ĐẶT CỌC / MUA NGAY VÀ SỬA THÀNH NHƯ SAU -->
+                    <c:choose>
+                        <c:when test="${hasPendingTx}">
+                            <!-- Nếu đang có giao dịch Pending: Hiển thị NÚT HỦY -->
+                            <div class="alert alert-warning mb-3">
+                                <i class="fa-solid fa-clock me-2"></i> Bạn đang có 1 yêu cầu chờ xác nhận.
+                            </div>
+                            <form action="${pageContext.request.contextPath}/customer/property/transaction/cancel" method="post">
+                                <input type="hidden" name="propertyId" value="${property.id}">
+                                <button type="submit" class="btn btn-danger w-100 fw-bold py-2">
+                                    <i class="fa-solid fa-times-circle me-1"></i> Hủy yêu cầu đang chờ
+                                </button>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- Nếu KHÔNG có giao dịch Pending: Hiển thị 2 nút Đặt cọc / Mua bình thường -->
+                            <form action="${pageContext.request.contextPath}/customer/property/transaction" method="post" class="mb-2">
+                                <input type="hidden" name="propertyId" value="${property.id}">
+                                <input type="hidden" name="type" value="DEPOSIT">
+                                <button type="submit" class="btn btn-warning w-100 fw-bold py-2 text-white">
+                                    <i class="fa-solid me-1"></i> Đặt cọc giữ chỗ
+                                </button>
+                            </form>
 
-                        <div class="d-grid gap-3">
-                            <button type="submit" name="type" value="DEPOSIT" class="btn btn-deposit">
-                                <i class="bi bi-bookmark-star me-2"></i>Đặt cọc giữ chỗ
-                            </button>
-                            <button type="submit" name="type" value="BUY" class="btn btn-buy">
-                                <i class="bi bi-cart-check me-2"></i>Mua ngay
-                            </button>
-                        </div>
-                    </form>
+                            <form action="${pageContext.request.contextPath}/customer/property/transaction" method="post">
+                                <input type="hidden" name="propertyId" value="${property.id}">
+                                <input type="hidden" name="type" value="BUY">
+                                <button type="submit" class="btn btn-success w-100 fw-bold py-2">
+                                    <i class="fa-solid fa-cart-shopping me-1"></i> Mua ngay
+                                </button>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
 
                     <div class="mt-4 pt-3 border-top text-center text-muted small">
                         <i class="bi bi-headset me-1 text-primary"></i> Hỗ trợ tư vấn 24/7: <strong>0123 456 789</strong>

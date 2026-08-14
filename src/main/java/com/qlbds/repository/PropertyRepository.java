@@ -5,6 +5,8 @@ import com.qlbds.entity.Property;
 import com.qlbds.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+
+import java.util.Collections;
 import java.util.List;
 
 public class PropertyRepository {
@@ -45,7 +47,7 @@ public class PropertyRepository {
 
             // Nếu không có BĐS nào thỏa mãn điều kiện, trả về list rỗng luôn
             if (propertyIds.isEmpty()) {
-                return java.util.Collections.emptyList();
+                return Collections.emptyList();
             }
 
             // BƯỚC 2: Truy vấn lấy Property và JOIN FETCH Images dựa trên danh sách ID vừa lấy
@@ -99,6 +101,23 @@ public class PropertyRepository {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    // Thêm hàm cập nhật BĐS
+    public boolean update(Property property) {
+        org.hibernate.Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(property);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return false;
         }
     }
 }

@@ -47,7 +47,7 @@ public class Property {
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "property", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "property", fetch = FetchType.LAZY)
     private List<PropertyImage> images;
 
     // GETTERS & SETTERS

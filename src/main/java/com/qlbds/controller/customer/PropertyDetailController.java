@@ -41,10 +41,22 @@ public class PropertyDetailController extends HttpServlet {
             HttpSession session = req.getSession(false);
             if (session != null && session.getAttribute("currentUser") != null) {
                 UserDTO currentUser = (UserDTO) session.getAttribute("currentUser");
-                viewLogService.logPropertyView(currentUser.getId(), id);
+                if ("CUSTOMER".equals(currentUser.getRole())) {
+                    viewLogService.logPropertyView(currentUser.getId(), id);
+                }
             }
 
             req.setAttribute("property", property);
+            // Kiểm tra xem khách hàng có đang Pending giao dịch này không
+            boolean hasPendingTx = false;
+            if (session != null && session.getAttribute("currentUser") != null) {
+                UserDTO currentUser =  (UserDTO) session.getAttribute("currentUser");
+                // Cần khởi tạo TransactionRepository ở đầu class controller để dùng hàm này
+                com.qlbds.repository.TransactionRepository txRepo = new com.qlbds.repository.TransactionRepository();
+                hasPendingTx = txRepo.hasPendingTransaction(currentUser.getId(), id);
+            }
+            // Truyền cờ này sang JSP
+            req.setAttribute("hasPendingTx", hasPendingTx);
             req.getRequestDispatcher("/WEB-INF/views/customer/property-detail.jsp").forward(req, resp);
         } catch (NumberFormatException e) {
             resp.sendRedirect(req.getContextPath() + "/home");

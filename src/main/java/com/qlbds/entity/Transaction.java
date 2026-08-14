@@ -47,6 +47,14 @@ public class Transaction {
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
+    // Thêm thuộc tính này vào Transaction.java
+    @Column(name = "reject_reason", length = 500)
+    private String rejectReason;
+
+    // Nhớ tạo Getter & Setter cho nó:
+    public String getRejectReason() { return rejectReason; }
+    public void setRejectReason(String rejectReason) { this.rejectReason = rejectReason; }
+
     // GETTERS & SETTERS
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }

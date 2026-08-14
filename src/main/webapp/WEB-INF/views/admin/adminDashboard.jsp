@@ -11,23 +11,25 @@
     <!-- 4 THẺ TỔNG QUAN (ĐÃ BỔ SUNG ICON BÊN PHẢI) -->
     <div class="row g-4 mb-4">
         <div class="col-sm-6 col-xl-3">
-            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-primary">
-                <div>
-                    <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Tổng tài khoản</p>
-                    <h4 class="mb-0 fw-bold text-dark">${totalAccounts}</h4>
+                    <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-primary">
+                        <div>
+                            <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">BĐS Đã Đặt Cọc</p>
+                            <h4 class="mb-0 fw-bold text-dark">${totalDeposited}</h4>
+                        </div>
+                        <!-- Đổi Icon sang hình Bookmark (Giữ chỗ) -->
+                        <i class="fa-solid fa-bookmark fa-2x text-primary opacity-75"></i>
+                    </div>
                 </div>
-                <i class="fa-solid fa-users fa-2x text-primary opacity-75"></i>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-success">
-                <div>
-                    <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Bất động sản (Đang bán)</p>
-                    <h4 class="mb-0 fw-bold text-dark">${totalBDS}</h4>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-success">
+                        <div>
+                            <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">BĐS Đã Bán Mua</p>
+                            <h4 class="mb-0 fw-bold text-dark">${totalSold}</h4>
+                        </div>
+                        <!-- Đổi Icon sang hình Chìa khóa (Giao nhà) -->
+                        <i class="fa-solid fa-key fa-2x text-success opacity-75"></i>
+                    </div>
                 </div>
-                <i class="fa-solid fa-building fa-2x text-success opacity-75"></i>
-            </div>
-        </div>
         <div class="col-sm-6 col-xl-3">
             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-info">
                 <div>

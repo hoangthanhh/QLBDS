@@ -28,6 +28,7 @@ public class EmailUtil {
     }
 
     // 1. HÀM GỬI MAIL GIAO DỊCH (ĐẶT CỌC / MUA)
+    // 1. ĐÃ SỬA: HÀM GỬI MAIL DUYỆT GIAO DỊCH THÀNH CÔNG
     public static boolean sendTransactionEmail(String recipientEmail, String customerName, String propertyTitle, String type, double amount) {
         Session session = getMailSession();
 
@@ -36,19 +37,44 @@ public class EmailUtil {
             message.setFrom(new InternetAddress(SENDER_EMAIL, "REMS Real Estate"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
 
-            String subject = "BUY".equals(type) ? "[REMS] XÁC NHẬN YÊU CẦU MUA BẤT ĐỘNG SẢN" : "[REMS] XÁC NHẬN ĐẶT CỌC BẤT ĐỘNG SẢN";
+            String subject = "BUY".equals(type) ? "[REMS] CHÚC MỪNG: GIAO DỊCH MUA BẤT ĐỘNG SẢN THÀNH CÔNG" : "[REMS] CHÚC MỪNG: ĐẶT CỌC BẤT ĐỘNG SẢN THÀNH CÔNG";
             message.setSubject(subject);
 
-            String actionText = "BUY".equals(type) ? "Yêu cầu Mua" : "Đặt cọc";
+            String actionText = "BUY".equals(type) ? "Mua BĐS" : "Đặt cọc";
             String content = "<h3>Kính gửi " + customerName + ",</h3>"
-                    + "<p>Cảm ơn bạn đã tin tưởng dịch vụ của REMS! Dưới đây là thông tin giao dịch mới nhất của bạn:</p>"
+                    + "<p>Chúc mừng bạn! Yêu cầu giao dịch của bạn đã được Admin của REMS <strong>duyệt thành công</strong>. Dưới đây là thông tin chi tiết:</p>"
                     + "<ul>"
                     + "<li><strong>Loại giao dịch:</strong> " + actionText + "</li>"
                     + "<li><strong>Bất động sản:</strong> " + propertyTitle + "</li>"
-                    + "<li><strong>Số tiền thanh toán:</strong> " + String.format("%,.0f", amount) + " VNĐ</li>"
-                    + "<li><strong>Trạng thái:</strong> Đã ghi nhận hệ thống</li>"
+                    + "<li><strong>Số tiền:</strong> " + String.format("%,.0f", amount) + " VNĐ</li>"
+                    + "<li><strong>Trạng thái:</strong> <span style='color:green'>Đã xác nhận</span></li>"
                     + "</ul>"
-                    + "<p>Chuyên viên tư vấn của REMS sẽ liên hệ trực tiếp với bạn qua số điện thoại đăng ký trong vòng 24h tới.</p>"
+                    + "<p>Bộ phận CSKH sẽ sớm liên hệ với bạn để tiến hành các thủ tục ký kết hợp đồng tiếp theo.</p>"
+                    + "<br><p>Trân trọng,<br><strong>Đội ngũ REMS Real Estate</strong></p>";
+
+            message.setContent(content, "text/html; charset=UTF-8");
+            Transport.send(message);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 2. THÊM MỚI: HÀM GỬI MAIL TỪ CHỐI GIAO DỊCH
+    public static boolean sendRejectEmail(String recipientEmail, String customerName, String propertyTitle, String reason) {
+        Session session = getMailSession();
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(SENDER_EMAIL, "REMS Real Estate"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject("[REMS] THÔNG BÁO TỪ CHỐI YÊU CẦU GIAO DỊCH");
+
+            String content = "<h3>Kính gửi " + customerName + ",</h3>"
+                    + "<p>Chúng tôi rất tiếc phải thông báo rằng yêu cầu giao dịch đối với bất động sản <strong>" + propertyTitle + "</strong> của bạn không thể thực hiện được.</p>"
+                    + "<p><strong>Lý do từ chối:</strong> <span style='color:red'>" + reason + "</span></p>"
+                    + "<p>Nếu bạn có bất kỳ thắc mắc nào, xin vui lòng liên hệ lại với bộ phận Hỗ trợ khách hàng của chúng tôi để được giải đáp chi tiết.</p>"
                     + "<br><p>Trân trọng,<br><strong>Đội ngũ REMS Real Estate</strong></p>";
 
             message.setContent(content, "text/html; charset=UTF-8");

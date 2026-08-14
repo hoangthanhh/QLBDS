@@ -1,7 +1,7 @@
 package com.qlbds.controller.customer;
 
 import com.qlbds.dto.user.UserDTO;
-import com.qlbds.dto.user.ViewHistoryDTO; // Import package mới
+import com.qlbds.dto.user.ViewHistoryDTO;
 import com.qlbds.service.ViewLogService;
 
 import javax.servlet.ServletException;
@@ -29,9 +29,28 @@ public class ViewHistoryController extends HttpServlet {
 
         UserDTO currentUser = (UserDTO) session.getAttribute("currentUser");
 
-        List<ViewHistoryDTO> historyList = viewLogService.getViewHistory(currentUser.getId());
+        // ĐÃ THÊM: Xử lý đọc tham số trang hiện tại công thức phân trang
+        int page = 1;
+        int pageSize = 6; // Đặt hiển thị mỗi trang 6 bài viết lịch sử cho đẹp giao diện
+
+        String pageParam = req.getParameter("page");
+        if (pageParam != null && !pageParam.trim().isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+                if (page < 1) page = 1;
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        // Đã sửa: Truyền tham số phân trang vào service
+        List<ViewHistoryDTO> historyList = viewLogService.getViewHistory(currentUser.getId(), page, pageSize);
+        int totalPages = viewLogService.getTotalPages(currentUser.getId(), pageSize);
 
         req.setAttribute("historyList", historyList);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+
         req.getRequestDispatcher("/WEB-INF/views/customer/view-history.jsp").forward(req, resp);
     }
 }

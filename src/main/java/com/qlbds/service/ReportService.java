@@ -1,6 +1,6 @@
 package com.qlbds.service;
 
-import com.qlbds.dto.DashboardDTO;
+import com.qlbds.dto.admin.DashboardDTO;
 import com.qlbds.repository.ReportRepository;
 import com.qlbds.util.ValidationUtil; // Thêm import ValidationUtil mới
 
@@ -15,8 +15,8 @@ public class ReportService {
         DashboardDTO dto = new DashboardDTO();
 
         // 1. Thống kê 4 thẻ tổng quan
-        dto.setTotalAccounts(reportRepo.countTotalAccounts()); //
-        dto.setTotalBDS(reportRepo.countAvailableBDS()); //
+        dto.setTotalDepositedBDS(reportRepo.countDepositedBDS());
+        dto.setTotalSoldBDS(reportRepo.countSoldBDS());
         dto.setTotalTransactions(reportRepo.countTotalSuccessfulTransactions()); //
         dto.setTotalRevenue(reportRepo.getTotalRevenue()); //
 
