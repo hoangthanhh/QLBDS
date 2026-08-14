@@ -31,8 +31,11 @@ public class AdminUserController extends HttpServlet {
             } catch (NumberFormatException ignored) {}
         }
 
-        List<UserDTO> userList = userService.getUserList(page, pageSize);
-        int totalPage = userService.getTotalPages(pageSize);
+        // ĐỌC THAM SỐ TÌM KIẾM
+        String keyword = request.getParameter("keyword");
+
+        List<UserDTO> userList = userService.getUserList(keyword, page, pageSize);
+        int totalPage = userService.getTotalPages(keyword, pageSize);
 
         request.setAttribute("userList", userList);
         request.setAttribute("currentPage", page);

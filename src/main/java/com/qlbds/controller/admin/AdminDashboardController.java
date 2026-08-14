@@ -1,6 +1,6 @@
 package com.qlbds.controller.admin;
 
-import com.qlbds.dto.DashboardDTO;
+import com.qlbds.dto.admin.DashboardDTO;
 import com.qlbds.service.ReportService;
 
 import javax.servlet.ServletException;

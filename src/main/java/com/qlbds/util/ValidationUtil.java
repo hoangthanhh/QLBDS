@@ -1,13 +1,14 @@
 package com.qlbds.util;
 
 import com.qlbds.dto.user.UserCreateDTO;
+import com.qlbds.dto.property.PropertyCreateUpdateDTO;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ValidationUtil {
+public class    ValidationUtil {
 
     private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final String PHONE_PATTERN = "^0\\d{9,10}$";
@@ -71,5 +72,31 @@ public class ValidationUtil {
         if (start == null || end == null) return "Định dạng ngày tháng chọn không hợp lệ!";
         if (start.isAfter(end)) return "Từ ngày không được lớn hơn Đến ngày!";
         return null;
+    }
+    public static List<String> validateProperty(PropertyCreateUpdateDTO dto, boolean isCreate) {
+        List<String> errors = new ArrayList<>();
+        if (dto == null) {
+            errors.add("Dữ liệu gửi lên không hợp lệ!");
+            return errors;
+        }
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            errors.add("Tiêu đề BĐS không được để trống!");
+        }
+        if (dto.getAddress() == null || dto.getAddress().trim().isEmpty()) {
+            errors.add("Địa chỉ BĐS không được để trống!");
+        }
+        if (dto.getPropertyType() == null || dto.getPropertyType().trim().isEmpty()) {
+            errors.add("Vui lòng chọn loại hình BĐS!");
+        }
+        if (dto.getPrice() == null || dto.getPrice() <= 0) {
+            errors.add("Giá BĐS phải lớn hơn 0!");
+        }
+        if (dto.getArea() == null || dto.getArea() <= 0) {
+            errors.add("Diện tích BĐS phải lớn hơn 0!");
+        }
+        if (isCreate && (dto.getImageParts() == null || dto.getImageParts().isEmpty())) {
+            errors.add("Vui lòng chọn ít nhất 1 ảnh minh họa khi tạo mới!");
+        }
+        return errors;
     }
 }

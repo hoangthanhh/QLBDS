@@ -5,195 +5,410 @@
 
 <%@ include file="adminHeader.jsp" %>
 
-<style>
-    td.description-cell {
-        max-width: 250px;
-        max-height: 80px;
-        overflow-y: auto;
-        white-space: pre-line;
-        word-break: break-word;
-    }
-</style>
-
-<h1 class="h3 mb-4 text-gray-800">🏡 Quản lý Bất Động Sản</h1>
-
-<!-- Thông báo -->
-<c:if test="${not empty sessionScope.msg}">
-    <div class="alert alert-${sessionScope.msgType} alert-dismissible fade show" role="alert">
-            ${sessionScope.msg}
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+<div class="container-fluid pt-3">
+    <!-- TIÊU ĐỀ & NÚT THÊM MỚI -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0 text-dark fw-bold"><i class="fa-solid fa-building me-2 text-primary"></i>Quản lý Bất Động Sản
+        </h1>
+        <button type="button" class="btn btn-success fw-bold px-3 shadow-sm" onclick="openAddModal()">
+            <i class="fa-solid fa-plus me-1"></i> Thêm BĐS Mới
+        </button>
     </div>
-    <c:remove var="msg" scope="session"/>
-    <c:remove var="msgType" scope="session"/>
-</c:if>
 
-<!-- TÌM KIẾM NÂNG CẠO (Mục 2.A: Địa chỉ, Khoảng giá, Loại hình) -->
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <form action="admin-bds" method="get" class="row align-items-center">
-            <!-- Từ khóa / Địa chỉ -->
-            <div class="col-md-3 mb-2">
-                <input type="text" name="keyword" class="form-control rounded-pill shadow-sm px-3"
-                       placeholder="Tìm theo mã, tên, địa chỉ..." value="${keyword}">
+    <!-- ALERT THÔNG BÁO OUTSIDE (SESSION) -->
+    <c:if test="${not empty sessionScope.msg}">
+        <div class="alert alert-${sessionScope.msgType} alert-dismissible fade show shadow-sm border-0 mb-3 py-2 px-3"
+             role="alert" style="border-radius: 8px;">
+            <div>
+                <strong>${sessionScope.msgType == 'success' ? '✅ Thành công:' : '⚠️ Thông báo:'}</strong> ${sessionScope.msg}
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <c:remove var="msg" scope="session"/>
+        <c:remove var="msgType" scope="session"/>
+    </c:if>
 
-            <!-- Loại hình (Căn hộ, Nhà riêng, Đất nền) -->
-            <div class="col-md-3 mb-2">
-                <select name="categoryId" class="form-control rounded-pill shadow-sm px-3">
-                    <option value="">-- Tất cả loại hình --</option>
-                    <c:forEach var="cat" items="${categoryList}">
-                        <option value="${cat.id}" ${param.categoryId == cat.id ? 'selected' : ''}>${cat.name}</option>
-                    </c:forEach>
-                </select>
-            </div>
-
-            <!-- Lọc theo khoảng giá -->
-            <div class="col-md-3 mb-2">
-                <div class="input-group">
-                    <input type="number" name="minPrice" class="form-control rounded-left shadow-sm" placeholder="Giá từ" value="${param.minPrice}">
-                    <input type="number" name="maxPrice" class="form-control rounded-right shadow-sm" placeholder="Đến giá" value="${param.maxPrice}">
+    <!-- FORM TÌM KIẾM NÂNG CAO -->
+    <div class="card shadow-sm mb-4 border-0" style="border-radius: 12px;">
+        <div class="card-body p-3">
+            <form action="${pageContext.request.contextPath}/admin/bds" method="get" class="row g-2 align-items-center">
+                <div class="col-md-3">
+                    <input type="text" name="keyword" class="form-control rounded-pill px-3 shadow-none"
+                           placeholder="Nhập địa chỉ, tiêu đề..." value="${keyword}">
                 </div>
-            </div>
-
-            <!-- Nút hành động -->
-            <div class="col-md-3 mb-2 text-right">
-                <button type="submit" class="btn btn-primary rounded-pill px-3"><i class="fas fa-search"></i> Tìm kiếm</button>
-                <button type="button" class="btn btn-success rounded-pill px-3 ml-1" onclick="loadAddBDSForm()">
-                    <i class="fas fa-plus"></i> Thêm BĐS
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Danh sách Bất Động Sản -->
-<div class="table-responsive shadow-sm rounded">
-    <table class="table table-bordered table-hover bg-white mb-0">
-        <thead class="thead-light">
-        <tr>
-            <th>STT</th>
-            <th>Mã BĐS</th>
-            <th>Tiêu đề BĐS</th>
-            <th>Địa chỉ</th>
-            <th>Loại hình</th>
-            <th>Giá bán</th>
-            <th>Hình ảnh</th>
-            <th>Hành động</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:set var="startIndex" value="${(currentPage - 1) * pageSize}" />
-        <c:forEach var="p" items="${productList}" varStatus="loop">
-            <tr>
-                <td>${startIndex + loop.index + 1}</td>
-                <td><strong>${p.masp}</strong></td>
-                <td>${p.name}</td>
-                <td>${p.address}</td>
-                <td><span class="badge badge-info px-2 py-1">${p.categoryName}</span></td>
-                <td class="text-danger font-weight-bold">
-                    <fmt:formatNumber value="${p.price}" type="number" maxFractionDigits="0"/> VNĐ
-                </td>
-                <td>
-                    <img src="${pageContext.request.contextPath}/image?file=${fn:substringAfter(p.image, 'image\\')}" alt="${p.name}" width="60" height="60" class="rounded" style="object-fit: cover;" />
-                </td>
-                <td>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-info mb-1" onclick="openEditBDSModal(${p.id})">
-                        <i class="fas fa-edit"></i> Chi tiết / Sửa
+                <div class="col-md-3">
+                    <select name="propertyType" class="form-select rounded-pill px-3 shadow-none">
+                        <option value="">-- Tất cả loại hình --</option>
+                        <option value="APARTMENT" ${propertyType == 'APARTMENT' ? 'selected' : ''}>Căn hộ (APARTMENT)
+                        </option>
+                        <option value="HOUSE" ${propertyType == 'HOUSE' ? 'selected' : ''}>Nhà riêng (HOUSE)</option>
+                        <option value="LAND" ${propertyType == 'LAND' ? 'selected' : ''}>Đất nền (LAND)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="priceRange" class="form-select rounded-pill px-3 shadow-none">
+                        <option value="">-- Tất cả khoảng giá --</option>
+                        <option value="UNDER_1B" ${priceRange == 'UNDER_1B' ? 'selected' : ''}>Dưới 1 Tỷ</option>
+                        <option value="1B_3B" ${priceRange == '1B_3B' ? 'selected' : ''}>1 Tỷ - 3 Tỷ</option>
+                        <option value="3B_7B" ${priceRange == '3B_7B' ? 'selected' : ''}>3 Tỷ - 7 Tỷ</option>
+                        <option value="OVER_7B" ${priceRange == 'OVER_7B' ? 'selected' : ''}>Trên 7 Tỷ</option>
+                    </select>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> Tìm kiếm
+                    </button>
+                    <a href="${pageContext.request.contextPath}/admin/bds"
+                       class="btn btn-outline-secondary rounded-pill px-3 ms-1 shadow-sm" title="Tải lại">
+                        <i class="fa-solid fa-rotate-left"></i>
                     </a>
-                </td>
-            </tr>
-        </c:forEach>
-        <c:if test="${empty productList}">
-            <tr>
-                <td colspan="8" class="text-center text-muted py-4">Chưa có dữ liệu Bất Động Sản nào.</td>
-            </tr>
-        </c:if>
-        </tbody>
-    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- BẢNG DANH SÁCH BĐS -->
+    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="table-light">
+                    <tr>
+                        <th style="width: 5%;" class="text-center">STT</th>
+                        <th style="width: 8%;" class="text-center">Ảnh</th>
+                        <th style="width: 25%;" class="text-center">Tiêu đề BĐS</th>
+                        <th style="width: 22%;" class="text-center">Địa chỉ chi tiết</th>
+                        <th style="width: 10%;" class="text-center">Loại hình</th>
+                        <th style="width: 8%;" class="text-center">Diện tích</th>
+                        <th style="width: 10%;" class="text-center">Giá bán</th>
+                        <th style="width: 12%;" class="text-center">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:set var="startIndex" value="${(currentPage - 1) * (empty pageSize ? 5 : pageSize)}"/>
+                    <c:forEach var="p" items="${productList}" varStatus="loop">
+                        <tr>
+                            <td class="fw-bold text-center">${startIndex + loop.index + 1}</td>
+                            <td class="text-center">
+                                <c:set var="imgPath" value="${p.thumbnail}"/>
+                                <c:choose>
+                                    <c:when test="${not empty imgPath && (fn:startsWith(imgPath, 'http://') || fn:startsWith(imgPath, 'https://'))}">
+                                        <c:set var="finalSrc" value="${imgPath}"/>
+                                    </c:when>
+                                    <c:when test="${not empty imgPath && fn:startsWith(imgPath, '/')}">
+                                        <c:set var="finalSrc" value="${pageContext.request.contextPath}${imgPath}"/>
+                                    </c:when>
+                                    <c:when test="${not empty imgPath}">
+                                        <c:set var="finalSrc" value="${pageContext.request.contextPath}/${imgPath}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="finalSrc"
+                                               value="${pageContext.request.contextPath}/assets/customer/img/property-1.jpg"/>
+                                    </c:otherwise>
+                                </c:choose>
+                                <img src="${finalSrc}" alt="${p.title}" width="55" height="55" class="rounded shadow-sm"
+                                     style="object-fit: cover;"
+                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/customer/img/property-1.jpg';"/>
+                            </td>
+                            <td class="fw-bold text-dark text-center">${p.title}</td>
+                            <td class="text-center text-dark fw-medium">${p.address}</td>
+                            <td class="text-center"><span
+                                    class="badge bg-info text-dark px-2 py-1">${p.propertyType}</span></td>
+                            <td class="fw-bold text-center">${p.area} m²</td>
+                            <td class="text-danger fw-bold text-center">
+                                <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="đ"
+                                                  maxFractionDigits="0"/>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <button type="button"
+                                            class="btn btn-warning btn-sm text-white shadow-sm"
+                                            onclick="openEditModal(${p.id})"
+                                            title="Chỉnh sửa BĐS" style="border-radius: 6px; padding: 4px 8px;">
+                                        <i class="fa-solid fa-pen-to-square"></i> Sửa
+                                    </button>
+
+                                    <form action="${pageContext.request.contextPath}/admin/bds" method="post"
+                                          class="d-inline m-0"
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa BĐS này không?\nHệ thống sẽ từ chối xóa nếu BĐS đã phát sinh giao dịch.');">
+                                        <input type="hidden" name="action" value="delete"/>
+                                        <input type="hidden" name="id" value="${p.id}"/>
+                                        <button type="submit" class="btn btn-danger btn-sm shadow-sm" title="Xóa BĐS"
+                                                style="border-radius: 6px; padding: 4px 8px;">
+                                            <i class="fa-solid fa-trash"></i> Xóa
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${empty productList}">
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">Không tìm thấy Bất Động Sản nào phù
+                                hợp.
+                            </td>
+                        </tr>
+                    </c:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- PHÂN TRANG -->
+    <c:set var="maxPage" value="${totalPage > 0 ? totalPage : 1}"/>
+    <c:set var="kwParam"
+           value="${not empty keyword ? '&keyword='.concat(keyword) : ''}${not empty propertyType ? '&propertyType='.concat(propertyType) : ''}${not empty priceRange ? '&priceRange='.concat(priceRange) : ''}"/>
+    <nav class="mt-3">
+        <ul class="pagination pagination-sm justify-content-end mb-0">
+            <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                <a class="page-link"
+                   href="${pageContext.request.contextPath}/admin/bds?page=${currentPage - 1}${kwParam}">Trước</a>
+            </li>
+            <c:forEach begin="1" end="${maxPage}" var="i">
+                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                    <a class="page-link"
+                       href="${pageContext.request.contextPath}/admin/bds?page=${i}${kwParam}">${i}</a>
+                </li>
+            </c:forEach>
+            <li class="page-item ${currentPage >= maxPage ? 'disabled' : ''}">
+                <a class="page-link"
+                   href="${pageContext.request.contextPath}/admin/bds?page=${currentPage + 1}${kwParam}">Sau</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
-<!-- Phân trang -->
-<c:set var="start" value="${currentPage - 2 < 1 ? 1 : currentPage - 2}" />
-<c:set var="end" value="${currentPage + 2 > totalPage ? totalPage : currentPage + 2}" />
+<!-- MODAL CẤU TRÚC 2-IN-1 -->
+<div class="modal fade" id="bdsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+            <div id="modalHeader" class="modal-header text-white px-4 py-3 bg-success">
+                <h5 class="modal-title fw-bold" id="modalTitle"><i class="fa-solid fa-house-medical me-2"></i>Thêm Bất
+                    Động Sản Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
 
-<nav class="mt-4">
-    <ul class="pagination justify-content-center">
-        <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-            <a class="page-link" href="admin-bds?page=${currentPage - 1}&keyword=${keyword}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&categoryId=${param.categoryId}&size=${pageSize}">«</a>
-        </li>
+            <form id="bdsForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="action" id="formAction" value="create"/>
+                <!-- INPUT HIDDEN LƯU ID ĐỂ CHỈ CẬP NHẬT ĐÚNG 1 BĐS ĐANG CHỌN -->
+                <input type="hidden" name="id" id="bdsId" value=""/>
 
-        <c:if test="${start > 1}">
-            <li class="page-item">
-                <a class="page-link" href="admin-bds?page=1&keyword=${keyword}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&categoryId=${param.categoryId}&size=${pageSize}">1</a>
-            </li>
-            <li class="page-item disabled"><span class="page-link">...</span></li>
-        </c:if>
+                <div class="modal-body px-4 pt-4">
+                    <div id="modalAlert" class="alert d-none py-2 px-3 mb-3 alert-danger"></div>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Tiêu đề BĐS <span class="text-danger">*</span></label>
+                            <input type="text" name="title" id="bdsTitleInput" class="form-control"
+                                   placeholder="Nhập tiêu đề BĐS (tối thiểu 6 ký tự)..." required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Địa chỉ chi tiết <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="address" id="bdsAddressInput" class="form-control"
+                                   placeholder="Nhập số nhà, đường, phường/xã, quận/huyện..." required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Loại hình BĐS <span class="text-danger">*</span></label>
+                            <select name="propertyType" id="bdsTypeInput" class="form-select" required>
+                                <option value="APARTMENT">Căn hộ (APARTMENT)</option>
+                                <option value="HOUSE">Nhà riêng (HOUSE)</option>
+                                <option value="LAND">Đất nền (LAND)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Diện tích (m²) <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" name="area" id="bdsAreaInput" class="form-control"
+                                   placeholder="Ví dụ: 85.5" min="0.1" required>
+                        </div>
 
-        <c:forEach begin="${start}" end="${end}" var="i">
-            <li class="page-item ${i == currentPage ? 'active' : ''}">
-                <a class="page-link" href="admin-bds?page=${i}&keyword=${keyword}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&categoryId=${param.categoryId}&size=${pageSize}">${i}</a>
-            </li>
-        </c:forEach>
+                        <!-- Ô GIÁ BÁN FORMAT DẤU CHẤM HÀNG NGHÌN & ĐỌC CHỮ -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Giá bán (VNĐ) <span class="text-danger">*</span></label>
+                            <input type="hidden" name="price" id="bdsPriceInputReal">
+                            <input type="text" id="bdsPriceInputDisplay" class="form-control"
+                                   placeholder="Ví dụ: 2.500.000.000" required oninput="handlePriceInput(this)">
+                            <small id="priceTextPreview" class="fw-bold text-success d-block mt-1"
+                                   style="min-height: 20px;"></small>
+                        </div>
 
-        <c:if test="${end < totalPage}">
-            <li class="page-item disabled"><span class="page-link">...</span></li>
-            <li class="page-item">
-                <a class="page-link" href="admin-bds?page=${totalPage}&keyword=${keyword}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&categoryId=${param.categoryId}&size=${pageSize}">${totalPage}</a>
-            </li>
-        </c:if>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Mô tả chi tiết</label>
+                            <textarea name="description" id="bdsDescInput" class="form-control" rows="3"
+                                      placeholder="Nhập thông tin pháp lý, tiện ích nội ngoại khu..."></textarea>
+                        </div>
 
-        <li class="page-item ${currentPage == totalPage ? 'disabled' : ''}">
-            <a class="page-link" href="admin-bds?page=${currentPage + 1}&keyword=${keyword}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&categoryId=${param.categoryId}&size=${pageSize}">»</a>
-        </li>
-    </ul>
-</nav>
-
-<!-- Chọn số bản ghi hiển thị -->
-<form method="get" action="admin-bds" class="text-right mb-4">
-    <input type="hidden" name="keyword" value="${param.keyword}" />
-    <input type="hidden" name="minPrice" value="${param.minPrice}" />
-    <input type="hidden" name="maxPrice" value="${param.maxPrice}" />
-    <input type="hidden" name="categoryId" value="${param.categoryId}" />
-    <select name="size" class="custom-select w-auto shadow-sm" onchange="this.form.submit()">
-        <option value="5" ${pageSize == 5 ? 'selected' : ''}>5 BĐS/trang</option>
-        <option value="10" ${pageSize == 10 ? 'selected' : ''}>10 BĐS/trang</option>
-        <option value="20" ${pageSize == 20 ? 'selected' : ''}>20 BĐS/trang</option>
-    </select>
-</form>
-
-<!-- Modal Thêm BĐS -->
-<div class="modal fade" id="addBDSModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content" id="addBDSContent"></div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold" id="imageLabel">Upload ảnh minh họa <span
+                                    class="text-danger" id="imageRequiredNote">*</span></label>
+                            <input type="file" name="images" id="bdsImagesInput" class="form-control" multiple
+                                   accept="image/*">
+                            <small class="text-muted d-block mt-1" id="imageHelpText">💡 Giữ phím <kbd>Ctrl</kbd> hoặc
+                                <kbd>Shift</kbd> để chọn nhiều ảnh cùng lúc.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" id="btnSubmitForm" class="btn btn-success fw-bold px-4">Lưu BĐS</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- Modal Sửa BĐS -->
-<div class="modal fade" id="editBDSModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content" id="editBDSContent"></div>
-    </div>
-</div>
-
-<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="${pageContext.request.contextPath}/assets/admin/lib/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    function loadAddBDSForm() {
-        $.get("add-bds", function(data) {
-            const formHtml = $('<div>').html(data).find('form').parent().html();
-            $('#addBDSContent').html(formHtml);
-            $('#addBDSModal').modal('show');
+    var contextPath = "${pageContext.request.contextPath}";
+
+    // 1. FORMAT GIÁ BÁN & ĐỌC BẰNG CHỮ
+    function handlePriceInput(inputElem) {
+        var rawValue = inputElem.value.replace(/\D/g, '');
+
+        if (!rawValue) {
+            inputElem.value = '';
+            document.getElementById('bdsPriceInputReal').value = '';
+            document.getElementById('priceTextPreview').innerText = '';
+            return;
+        }
+
+        document.getElementById('bdsPriceInputReal').value = rawValue;
+        inputElem.value = Number(rawValue).toLocaleString('vi-VN');
+        formatPriceText(rawValue);
+    }
+
+    function formatPriceText(val) {
+        var preview = document.getElementById('priceTextPreview');
+        if (!val || isNaN(val) || val <= 0) {
+            preview.innerText = '';
+            return;
+        }
+
+        var num = parseFloat(val);
+        var ty = Math.floor(num / 1000000000);
+        var remainderTy = num % 1000000000;
+        var meo = Math.floor(remainderTy / 1000000);
+
+        var str = '👉 Bằng chữ: ';
+        if (ty > 0) {
+            str += ty + ' tỷ ';
+        }
+        if (meo > 0) {
+            str += meo + ' triệu ';
+        }
+        if (ty === 0 && meo === 0) {
+            str += Number(num).toLocaleString('vi-VN') + ' VNĐ';
+        } else {
+            str += 'VNĐ';
+        }
+
+        preview.innerText = str;
+    }
+
+    // 2. MỞ MODAL THÊM MỚI
+    function openAddModal() {
+        $('#formAction').val('create');
+        $('#bdsId').val(''); // Xóa ID để chắc chắn đây là thêm mới
+        $('#bdsForm')[0].reset();
+
+        document.getElementById('bdsPriceInputReal').value = '';
+        document.getElementById('bdsPriceInputDisplay').value = '';
+        document.getElementById('priceTextPreview').innerText = '';
+
+        $('#modalHeader').removeClass('bg-warning').addClass('bg-success');
+        $('#modalTitle').html('<i class="fa-solid fa-house-medical me-2"></i>Thêm Bất Động Sản Mới');
+        $('#btnSubmitForm').removeClass('btn-warning text-white').addClass('btn-success').text('Lưu BĐS');
+
+        $('#imageRequiredNote').show();
+        $('#bdsImagesInput').prop('required', true);
+        $('#imageHelpText').html('💡 Giữ phím <kbd>Ctrl</kbd> hoặc <kbd>Shift</kbd> để chọn nhiều ảnh cùng lúc.');
+        $('#modalAlert').addClass('d-none').html('');
+
+        var modalElement = document.getElementById('bdsModal');
+        var modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+        modalInstance.show();
+    }
+
+    // 3. MỞ MODAL SỬA BẰNG AJAX (GÁN ĐÚNG ID CẦN SỬA)
+    function openEditModal(id) {
+        $.ajax({
+            url: contextPath + '/admin/bds',
+            type: 'GET',
+            data: {
+                action: 'get-detail',
+                id: id
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#formAction').val('update');
+                $('#bdsId').val(data.id); // <--- BẮT BỘC: Gán đúng ID để chỉ sửa đúng 1 BĐS này
+
+                $('#bdsTitleInput').val(data.title);
+                $('#bdsAddressInput').val(data.address);
+                $('#bdsTypeInput').val(data.propertyType);
+                $('#bdsAreaInput').val(data.area);
+                $('#bdsDescInput').val(data.description);
+                $('#bdsImagesInput').val(''); // Clear file input cũ
+
+                if (data.price) {
+                    document.getElementById('bdsPriceInputReal').value = data.price;
+                    document.getElementById('bdsPriceInputDisplay').value = Number(data.price).toLocaleString('vi-VN');
+                    formatPriceText(data.price);
+                } else {
+                    document.getElementById('bdsPriceInputReal').value = '';
+                    document.getElementById('bdsPriceInputDisplay').value = '';
+                    document.getElementById('priceTextPreview').innerText = '';
+                }
+
+                $('#modalHeader').removeClass('bg-success').addClass('bg-warning');
+                $('#modalTitle').html('<i class="fa-solid fa-pen-to-square me-2"></i>Chỉnh Sửa Bất Động Sản: <span class="text-white">' + data.title + '</span>');
+                $('#btnSubmitForm').removeClass('btn-success').addClass('btn-warning text-white').text('Lưu Thay Đổi');
+
+                $('#imageRequiredNote').hide();
+                $('#bdsImagesInput').prop('required', false);
+                $('#imageHelpText').html('💡 Chọn ảnh mới nếu muốn tải thêm/thay thế. Để trống nếu giữ nguyên ảnh cũ.');
+                $('#modalAlert').addClass('d-none').html('');
+
+                var modalElement = document.getElementById('bdsModal');
+                var modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+                modalInstance.show();
+            },
+            error: function (xhr, status, error) {
+                alert('Không thể lấy chi tiết BĐS #' + id + '. Chi tiết lỗi: ' + error);
+            }
         });
     }
 
-    function openEditBDSModal(bdsId) {
-        $.get("edit-bds?id=" + bdsId, function(data) {
-            const formHtml = $('<div>').html(data).find('form').parent().html();
-            $('#editBDSContent').html(formHtml);
-            $('#editBDSModal').modal('show');
+    // 4. SUBMIT FORM QUA AJAX
+    $(document).ready(function () {
+        $('#bdsForm').on('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $('#btnSubmitForm').prop('disabled', true);
+
+            $.ajax({
+                url: contextPath + '/admin/bds',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    $('#btnSubmitForm').prop('disabled', false);
+                    if (res.success) {
+                        location.reload();
+                    } else {
+                        var html = '<ul class="mb-0 text-start">';
+                        for (var i = 0; i < res.errors.length; i++) {
+                            html += '<li>' + res.errors[i] + '</li>';
+                        }
+                        html += '</ul>';
+                        $('#modalAlert').removeClass('d-none').html(html);
+                    }
+                }
+            });
         });
-    }
+    });
 </script>
+
 <%@ include file="adminFooter.jsp" %>

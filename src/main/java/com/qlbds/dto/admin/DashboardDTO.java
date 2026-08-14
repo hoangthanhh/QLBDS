@@ -1,4 +1,4 @@
-package com.qlbds.dto;
+package com.qlbds.dto.admin;
 
 import java.math.BigDecimal;
 import java.util.List;

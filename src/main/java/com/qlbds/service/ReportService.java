@@ -1,6 +1,6 @@
 package com.qlbds.service;
 
-import com.qlbds.dto.DashboardDTO;
+import com.qlbds.dto.admin.DashboardDTO;
 import com.qlbds.repository.ReportRepository;
 import com.qlbds.util.ValidationUtil; // Thêm import ValidationUtil mới
 
