@@ -65,13 +65,7 @@
                         <label class="form-label small fw-semibold">Mật khẩu</label>
                         <input type="password" name="password" class="form-control" placeholder="••••••••" required>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe">
-                            <label class="form-check-label small text-muted" for="rememberMe">Ghi nhớ đăng nhập</label>
-                        </div>
-                        <a href="${pageContext.request.contextPath}/acc/forgot-password" class="small text-makaan text-decoration-none">Quên mật khẩu?</a>
-                    </div>
+
                     <button type="submit" class="btn btn-makaan w-100 py-2 fw-bold">Đăng Nhập</button>
                 </form>
 

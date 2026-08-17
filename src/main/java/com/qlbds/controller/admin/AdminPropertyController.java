@@ -81,8 +81,15 @@ public class AdminPropertyController extends HttpServlet {
         String priceRange = req.getParameter("priceRange");
         String propertyType = req.getParameter("propertyType");
 
-        List<PropertySummaryDTO> propertyList = propertyService.getPropertiesByPage(page, pageSize, keyword, priceRange, propertyType);
-        int totalPages = propertyService.getTotalPages(pageSize, keyword, priceRange, propertyType);
+        // --- ĐÃ THÊM: Hứng tham số status từ JSP ---
+        String statusFilter = req.getParameter("status");
+        if (statusFilter == null || statusFilter.trim().isEmpty()) {
+            statusFilter = "ALL";
+        }
+
+        // --- ĐÃ SỬA: Truyền thêm statusFilter vào Service ---
+        List<PropertySummaryDTO> propertyList = propertyService.getPropertiesByPage(page, pageSize, keyword, priceRange, propertyType, statusFilter);
+        int totalPages = propertyService.getTotalPages(pageSize, keyword, priceRange, propertyType, statusFilter);
 
         req.setAttribute("productList", propertyList);
         req.setAttribute("currentPage", page);
@@ -91,6 +98,9 @@ public class AdminPropertyController extends HttpServlet {
         req.setAttribute("keyword", keyword);
         req.setAttribute("priceRange", priceRange);
         req.setAttribute("propertyType", propertyType);
+
+        // --- ĐÃ THÊM: Trả lại currentStatus để JSP giữ được thẻ option đang chọn ---
+        req.setAttribute("currentStatus", statusFilter);
 
         req.getRequestDispatcher("/WEB-INF/views/admin/adminBDS.jsp").forward(req, resp);
     }
@@ -168,6 +178,49 @@ public class AdminPropertyController extends HttpServlet {
                 session.setAttribute("msg", "Dữ liệu yêu cầu không hợp lệ!");
                 session.setAttribute("msgType", "danger");
             }
+        }
+
+        // 3. FORM BỂ KÈO (MỞ BÁN LẠI)
+        if ("reopen".equals(action)) {
+            try {
+                int id = Integer.parseInt(req.getParameter("id"));
+                String res = propertyService.reopenProperty(id);
+                session.setAttribute("msg", "SUCCESS".equals(res) ? "Đã hủy cọc và đưa BĐS về trạng thái Mở bán!" : res);
+                session.setAttribute("msgType", "SUCCESS".equals(res) ? "success" : "danger");
+            } catch (Exception e) {
+                session.setAttribute("msg", "Dữ liệu yêu cầu không hợp lệ!");
+                session.setAttribute("msgType", "danger");
+            }
+            resp.sendRedirect(req.getContextPath() + "/admin/bds");
+            return;
+        }
+
+        // 4. AJAX XÓA TỪNG ẢNH
+        if ("delete-image".equals(action)) {
+            try {
+                int imageId = Integer.parseInt(req.getParameter("imageId"));
+                boolean success = propertyService.deletePropertyImage(imageId);
+                resp.setContentType("application/json;charset=UTF-8");
+                resp.getWriter().write("{\"success\":" + success + "}");
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+            return;
+        }
+
+        // 5. KHÔI PHỤC BĐS ĐÃ XÓA MỀM
+        if ("restore".equals(action)) {
+            try {
+                int id = Integer.parseInt(req.getParameter("id"));
+                String res = propertyService.restoreProperty(id);
+                session.setAttribute("msg", "SUCCESS".equals(res) ? "Đã khôi phục và mở bán lại Bất động sản!" : res);
+                session.setAttribute("msgType", "SUCCESS".equals(res) ? "success" : "danger");
+            } catch (Exception e) {
+                session.setAttribute("msg", "Dữ liệu yêu cầu không hợp lệ!");
+                session.setAttribute("msgType", "danger");
+            }
+            resp.sendRedirect(req.getContextPath() + "/admin/bds");
+            return;
         }
 
         resp.sendRedirect(req.getContextPath() + "/admin/bds");

@@ -2,6 +2,7 @@ package com.qlbds.controller.customer;
 
 import com.qlbds.dto.property.PropertyDetailDTO;
 import com.qlbds.dto.user.UserDTO;
+import com.qlbds.repository.TransactionRepository;
 import com.qlbds.service.PropertyService;
 import com.qlbds.service.ViewLogService;
 
@@ -52,7 +53,7 @@ public class PropertyDetailController extends HttpServlet {
             if (session != null && session.getAttribute("currentUser") != null) {
                 UserDTO currentUser =  (UserDTO) session.getAttribute("currentUser");
                 // Cần khởi tạo TransactionRepository ở đầu class controller để dùng hàm này
-                com.qlbds.repository.TransactionRepository txRepo = new com.qlbds.repository.TransactionRepository();
+                TransactionRepository txRepo = new TransactionRepository();
                 hasPendingTx = txRepo.hasPendingTransaction(currentUser.getId(), id);
             }
             // Truyền cờ này sang JSP

@@ -4,29 +4,32 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class DashboardDTO {
-    private long totalDepositedBDS;
-    private long totalSoldBDS;
-
-    public long getTotalDepositedBDS() { return totalDepositedBDS; }
-    public void setTotalDepositedBDS(long totalDepositedBDS) { this.totalDepositedBDS = totalDepositedBDS; }
-
-    public long getTotalSoldBDS() { return totalSoldBDS; }
-    public void setTotalSoldBDS(long totalSoldBDS) { this.totalSoldBDS = totalSoldBDS; }
-    private long totalTransactions;
+    private long totalAvailableBDS; // BĐS đang bán
+    private BigDecimal totalDepositAmount;
+    private long totalSoldBDS;      // BĐS đã bán
     private BigDecimal totalRevenue;
-    private List<Long> monthlyData; // Mảng 12 phần tử đại diện cho 12 tháng
+    private List<Long> monthlyData;
     private BigDecimal filteredRevenue;
     private String startDate;
     private String endDate;
-    private String dateError; // Chứa thông báo lỗi nếu chọn thiếu hoặc ngược ngày
+    private String dateError;
+
+    public BigDecimal getTotalDepositAmount() { return totalDepositAmount; }
+    public void setTotalDepositAmount(BigDecimal totalDepositAmount) {
+        this.totalDepositAmount = (totalDepositAmount != null) ? totalDepositAmount : BigDecimal.ZERO;
+    }
 
     public DashboardDTO() {
         this.totalRevenue = BigDecimal.ZERO;
         this.filteredRevenue = BigDecimal.ZERO;
     }
 
-    public long getTotalTransactions() { return totalTransactions; }
-    public void setTotalTransactions(long totalTransactions) { this.totalTransactions = totalTransactions; }
+    public long getTotalAvailableBDS() { return totalAvailableBDS; }
+    public void setTotalAvailableBDS(long totalAvailableBDS) { this.totalAvailableBDS = totalAvailableBDS; }
+
+
+    public long getTotalSoldBDS() { return totalSoldBDS; }
+    public void setTotalSoldBDS(long totalSoldBDS) { this.totalSoldBDS = totalSoldBDS; }
 
     public BigDecimal getTotalRevenue() { return totalRevenue; }
     public void setTotalRevenue(BigDecimal totalRevenue) {

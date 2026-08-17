@@ -31,7 +31,7 @@ public class StaffPropertyController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
-        // 1. AJAX Lấy chi tiết BĐS để đổ lên modal sửa
+        // 1. AJAX LẤY CHI TIẾT BĐS VÀ TOÀN BỘ DANH SÁCH ẢNH (KÈM ID)
         if ("get-detail".equals(action)) {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
@@ -40,6 +40,7 @@ public class StaffPropertyController extends HttpServlet {
                 if (detail != null) {
                     resp.setContentType("application/json;charset=UTF-8");
 
+                    // ĐÃ FIX: Trả về mảng JSON chứa cả ID và Path để xóa lẻ từng ảnh
                     StringBuilder imgJson = new StringBuilder("[");
                     if (detail.getImageUrls() != null) {
                         for (int i = 0; i < detail.getImageUrls().size(); i++) {
@@ -69,7 +70,7 @@ public class StaffPropertyController extends HttpServlet {
             return;
         }
 
-        // 2. Tìm kiếm, Lọc & Phân trang BĐS
+        // 2. HIỂN THỊ DANH SÁCH & PHÂN TRANG / LỌC (ĐÃ FIX THÊM LỌC TRẠNG THÁI)
         int page = 1;
         try {
             page = Math.max(1, Integer.parseInt(req.getParameter("page")));
@@ -80,8 +81,15 @@ public class StaffPropertyController extends HttpServlet {
         String priceRange = req.getParameter("priceRange");
         String propertyType = req.getParameter("propertyType");
 
-        List<PropertySummaryDTO> propertyList = propertyService.getPropertiesByPage(page, pageSize, keyword, priceRange, propertyType);
-        int totalPages = propertyService.getTotalPages(pageSize, keyword, priceRange, propertyType);
+        // Hứng tham số lọc trạng thái từ giao diện
+        String statusFilter = req.getParameter("status");
+        if (statusFilter == null || statusFilter.trim().isEmpty()) {
+            statusFilter = "ALL";
+        }
+
+        // Truyền thêm statusFilter vào Service
+        List<PropertySummaryDTO> propertyList = propertyService.getPropertiesByPage(page, pageSize, keyword, priceRange, propertyType, statusFilter);
+        int totalPages = propertyService.getTotalPages(pageSize, keyword, priceRange, propertyType, statusFilter);
 
         req.setAttribute("productList", propertyList);
         req.setAttribute("currentPage", page);
@@ -90,6 +98,7 @@ public class StaffPropertyController extends HttpServlet {
         req.setAttribute("keyword", keyword);
         req.setAttribute("priceRange", priceRange);
         req.setAttribute("propertyType", propertyType);
+        req.setAttribute("currentStatus", statusFilter); // Trả lại trạng thái đang lọc
 
         req.getRequestDispatcher("/WEB-INF/views/staff/staffBDS.jsp").forward(req, resp);
     }
@@ -100,11 +109,13 @@ public class StaffPropertyController extends HttpServlet {
         String action = req.getParameter("action");
         HttpSession session = req.getSession();
 
-        // 1. Thêm mới / Cập nhật BĐS
+        // 1. AJAX THÊM MỚI / SỬA BĐS
         if ("create".equals(action) || "update".equals(action)) {
             PropertySaveDTO dto = new PropertySaveDTO();
             if ("update".equals(action)) {
-                try { dto.setId(Integer.parseInt(req.getParameter("id"))); } catch (Exception ignored) {}
+                try {
+                    dto.setId(Integer.parseInt(req.getParameter("id")));
+                } catch (Exception ignored) {}
             }
             dto.setTitle(req.getParameter("title"));
             dto.setAddress(req.getParameter("address"));
@@ -143,18 +154,62 @@ public class StaffPropertyController extends HttpServlet {
             return;
         }
 
-        // 2. Xóa BĐS (Bắt buộc kiểm tra ràng buộc giao dịch ở tầng Service)
+        // 2. FORM XÓA BĐS
         if ("delete".equals(action)) {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
                 String res = propertyService.deleteProperty(id);
-
                 session.setAttribute("msg", "SUCCESS".equals(res) ? "Xóa Bất Động Sản thành công!" : res);
                 session.setAttribute("msgType", "SUCCESS".equals(res) ? "success" : "danger");
             } catch (Exception e) {
                 session.setAttribute("msg", "Dữ liệu yêu cầu không hợp lệ!");
                 session.setAttribute("msgType", "danger");
             }
+            resp.sendRedirect(req.getContextPath() + "/staff/bds");
+            return;
+        }
+
+        // 3. ĐÃ THÊM: FORM BỂ KÈO (MỞ BÁN LẠI)
+        if ("reopen".equals(action)) {
+            try {
+                int id = Integer.parseInt(req.getParameter("id"));
+                String res = propertyService.reopenProperty(id);
+                session.setAttribute("msg", "SUCCESS".equals(res) ? "Đã hủy cọc và đưa BĐS về trạng thái Mở bán!" : res);
+                session.setAttribute("msgType", "SUCCESS".equals(res) ? "success" : "danger");
+            } catch (Exception e) {
+                session.setAttribute("msg", "Dữ liệu yêu cầu không hợp lệ!");
+                session.setAttribute("msgType", "danger");
+            }
+            resp.sendRedirect(req.getContextPath() + "/staff/bds");
+            return;
+        }
+
+        // 4. ĐÃ THÊM: KHÔI PHỤC BĐS ĐÃ XÓA MỀM
+        if ("restore".equals(action)) {
+            try {
+                int id = Integer.parseInt(req.getParameter("id"));
+                String res = propertyService.restoreProperty(id);
+                session.setAttribute("msg", "SUCCESS".equals(res) ? "Đã khôi phục và mở bán lại Bất động sản!" : res);
+                session.setAttribute("msgType", "SUCCESS".equals(res) ? "success" : "danger");
+            } catch (Exception e) {
+                session.setAttribute("msg", "Dữ liệu yêu cầu không hợp lệ!");
+                session.setAttribute("msgType", "danger");
+            }
+            resp.sendRedirect(req.getContextPath() + "/staff/bds");
+            return;
+        }
+
+        // 5. ĐÃ THÊM: AJAX XÓA TỪNG ẢNH
+        if ("delete-image".equals(action)) {
+            try {
+                int imageId = Integer.parseInt(req.getParameter("imageId"));
+                boolean success = propertyService.deletePropertyImage(imageId);
+                resp.setContentType("application/json;charset=UTF-8");
+                resp.getWriter().write("{\"success\":" + success + "}");
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+            return;
         }
 
         resp.sendRedirect(req.getContextPath() + "/staff/bds");

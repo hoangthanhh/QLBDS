@@ -58,7 +58,7 @@
     <c:remove var="msgError" scope="session"/>
 </c:if>
 
-<!-- KHUNG TÌM KIẾM ĐA ĐIỀU KIỆN (Bắt buộc theo yêu cầu) -->
+<!-- KHUNG TÌM KIẾM ĐA ĐIỀU KIỆN -->
 <div class="card shadow-sm border-0 mb-4 rounded-4">
     <div class="card-body p-3">
         <form action="${pageContext.request.contextPath}/staff/transactions" method="GET"
@@ -82,6 +82,8 @@
                     <option value="COMPLETED" ${currentStatus == 'COMPLETED' ? 'selected' : ''}>🟢 Hoàn thành</option>
                     <option value="CANCELLED" ${currentStatus == 'CANCELLED' ? 'selected' : ''}>⚪ Khách hủy</option>
                     <option value="REJECTED" ${currentStatus == 'REJECTED' ? 'selected' : ''}>🔴 Bị từ chối</option>
+                    <!-- ĐÃ THÊM: Trạng thái thu hồi cọc -->
+                    <option value="FORFEITED" ${currentStatus == 'FORFEITED' ? 'selected' : ''}>🟣 Đã thu cọc (Khách hủy cọc)</option>
                 </select>
             </div>
             <div class="col-md-3 text-end">
@@ -153,18 +155,28 @@
                                     <fmt:formatNumber value="${tx.amount}" pattern="#,###"/> đ
                                 </td>
                                 <td>
+                                    <!-- ĐÃ SỬA: Phân loại chi tiết các trạng thái (Thêm CANCELLED và FORFEITED rõ ràng) -->
                                     <c:choose>
-                                        <c:when test="${tx.status == 'PENDING'}"><span
-                                                class="badge bg-warning text-dark badge-custom">Chờ duyệt</span></c:when>
-                                        <c:when test="${tx.status == 'COMPLETED'}"><span
-                                                class="badge bg-success badge-custom">Hoàn thành</span></c:when>
+                                        <c:when test="${tx.status == 'PENDING'}">
+                                            <span class="badge bg-warning text-dark badge-custom">Chờ duyệt</span>
+                                        </c:when>
+                                        <c:when test="${tx.status == 'COMPLETED'}">
+                                            <span class="badge bg-success badge-custom">Hoàn thành</span>
+                                        </c:when>
                                         <c:when test="${tx.status == 'REJECTED'}">
                                             <span class="badge bg-danger badge-custom">Từ chối</span><br>
                                             <small class="text-muted d-block mt-1" style="font-size: 11px;"
                                                    title="${tx.rejectReason}">Lý do đính kèm</small>
                                         </c:when>
-                                        <c:otherwise><span
-                                                class="badge bg-secondary badge-custom">Khách hủy</span></c:otherwise>
+                                        <c:when test="${tx.status == 'CANCELLED'}">
+                                            <span class="badge bg-secondary badge-custom">Khách hủy</span>
+                                        </c:when>
+                                        <c:when test="${tx.status == 'FORFEITED'}">
+                                            <span class="badge badge-custom" style="background-color: #6f42c1; color: white;" title="Khách hủy kèo, công ty thu cọc">Đã thu cọc (Khách hủy cọc)</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="badge bg-secondary badge-custom">Không xác định</span>
+                                        </c:otherwise>
                                     </c:choose>
                                 </td>
                                 <td>

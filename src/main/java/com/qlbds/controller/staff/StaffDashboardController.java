@@ -19,10 +19,12 @@ public class StaffDashboardController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DashboardDTO dashboardData = reportService.getDashboardData(null, null);
 
-        request.setAttribute("totalDeposited", dashboardData.getTotalDepositedBDS());
+        // Đẩy đúng các biến sang JSP
+        request.setAttribute("totalAvailable", dashboardData.getTotalAvailableBDS());
+        request.setAttribute("totalDepositAmount", dashboardData.getTotalDepositAmount());
         request.setAttribute("totalSold", dashboardData.getTotalSoldBDS());
-        request.setAttribute("totalTransactions", dashboardData.getTotalTransactions());
         request.setAttribute("totalRevenue", dashboardData.getTotalRevenue());
+        request.setAttribute("monthlyData", dashboardData.getMonthlyData().toString());
 
         request.getRequestDispatcher("/WEB-INF/views/staff/staffDashboard.jsp").forward(request, response);
     }

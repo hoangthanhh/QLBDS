@@ -248,4 +248,39 @@ public class TransactionRepository {
             return true;
         }
     }
+    // Kiểm tra BĐS có ĐANG BỊ RÀNG BUỘC bởi bất kỳ giao dịch PENDING nào không (Dùng cho Admin/Staff khi Sửa/Xóa BĐS)
+    public boolean hasAnyPendingTransaction(Integer propertyId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.property.id = :propId AND t.status = 'PENDING'";
+            org.hibernate.query.Query<Long> query = session.createQuery(hql, Long.class);
+            query.setParameter("propId", propertyId);
+            return query.getSingleResult() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true; // Trả về true để chặn an toàn (Fail-safe) nếu lỗi DB
+        }
+    }
+
+    // Hủy giao dịch Đặt cọc thành công khi Admin chọn Mở bán lại (Bể kèo)
+    // ĐÃ SỬA: Đổi trạng thái thành FORFEITED để giữ lại doanh thu cọc
+    public boolean cancelCompletedDepositByProperty(Integer propertyId) {
+        org.hibernate.Transaction hbTx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            hbTx = session.beginTransaction();
+
+            // Chuyển status thành FORFEITED và lưu lại lý do vào cột rejectReason
+            String hql = "UPDATE Transaction t SET t.status = 'FORFEITED', t.rejectReason = 'Khách hàng hủy kèo, công ty thu hồi tiền cọc' " +
+                    "WHERE t.property.id = :propertyId AND t.transactionType = 'DEPOSIT' AND t.status = 'COMPLETED'";
+
+            Query query = session.createQuery(hql);
+            query.setParameter("propertyId", propertyId);
+            query.executeUpdate();
+            hbTx.commit();
+            return true;
+        } catch (Exception e) {
+            if (hbTx != null) hbTx.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

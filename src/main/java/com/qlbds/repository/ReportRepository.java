@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.nCopies;
+
 public class ReportRepository {
 
-    // 1. Đếm tổng số tài khoản
-    // 1. Đếm BĐS đã Đặt cọc (DEPOSITED)
-    public long countDepositedBDS() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT COUNT(b) FROM Property b WHERE b.status = 'DEPOSITED'";
+    // 1. Đếm BĐS đang bán (AVAILABLE)
+    public long countAvailableBDS() {
+        try (Session session = com.qlbds.util.HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COUNT(b) FROM Property b WHERE b.status = 'AVAILABLE' AND b.isDeleted = false";
             Long count = (Long) session.createQuery(hql).uniqueResult();
             return count != null ? count : 0L;
         } catch (Exception e) {
@@ -27,9 +28,21 @@ public class ReportRepository {
         }
     }
 
-    // 2. Đếm BĐS đã Bán thành công (SOLD)
+    // Tính tổng Tiền cọc đã nhận (Bao gồm đang cọc và đã thu hồi do bể kèo)
+    public BigDecimal getTotalDepositAmount() {
+        try (Session session = com.qlbds.util.HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT SUM(t.amount) FROM Transaction t WHERE t.transactionType = 'DEPOSIT' AND t.status IN ('COMPLETED', 'FORFEITED')";
+            Object result = session.createQuery(hql).uniqueResult();
+            return result != null ? new BigDecimal(result.toString()) : BigDecimal.ZERO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BigDecimal.ZERO;
+        }
+    }
+
+    // 3. Đếm BĐS đã bán thành công (SOLD)
     public long countSoldBDS() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = com.qlbds.util.HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT COUNT(b) FROM Property b WHERE b.status = 'SOLD'";
             Long count = (Long) session.createQuery(hql).uniqueResult();
             return count != null ? count : 0L;
@@ -39,45 +52,33 @@ public class ReportRepository {
         }
     }
 
-    // 3. Đếm tổng giao dịch THÀNH CÔNG
-    public long countTotalSuccessfulTransactions() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.status = 'COMPLETED'";
-            Long count = (Long) session.createQuery(hql).uniqueResult();
-            return count != null ? count : 0L;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0L;
-        }
-    }
-
-    // 4. Tính tổng doanh thu toàn thời gian
-    public BigDecimal getTotalRevenue() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT SUM(t.amount) FROM Transaction t WHERE t.status = 'COMPLETED'";
+    // 4. Tính tổng doanh thu toàn thời gian (Bao gồm Giao dịch hoàn thành + Tiền thu cọc)
+    public java.math.BigDecimal getTotalRevenue() {
+        try (Session session = com.qlbds.util.HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT SUM(t.amount) FROM Transaction t WHERE t.status IN ('COMPLETED', 'FORFEITED')";
             Object result = session.createQuery(hql).uniqueResult();
-            return result != null ? new BigDecimal(result.toString()) : BigDecimal.ZERO;
+            return result != null ? new java.math.BigDecimal(result.toString()) : java.math.BigDecimal.ZERO;
         } catch (Exception e) {
             e.printStackTrace();
-            return BigDecimal.ZERO;
+            return java.math.BigDecimal.ZERO;
         }
     }
 
-    // 5. ĐÃ SỬA: Bổ sung thêm điều kiện chỉ đếm các giao dịch 'COMPLETED' cho biểu đồ tháng
+    // 5. ĐÃ SỬA: Thống kê số lượng TẤT CẢ giao dịch theo 12 tháng (Bỏ điều kiện lọc Status)
     public List<Long> getMonthlyTransactionCounts(int year) {
-        List<Long> monthlyCounts = new ArrayList<>(Collections.nCopies(12, 0L));
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        List<Long> monthlyCounts = new ArrayList<>(nCopies(12, 0L));
+        try (org.hibernate.Session session = com.qlbds.util.HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT MONTH(t.createdAt), COUNT(t.id) " +
                     "FROM Transaction t " +
-                    "WHERE YEAR(t.createdAt) = :year AND t.status = 'COMPLETED' " +
+                    "WHERE YEAR(t.createdAt) = :year " +
                     "GROUP BY MONTH(t.createdAt)";
 
-            Query<Object[]> query = session.createQuery(hql, Object[].class);
+            org.hibernate.query.Query<Object[]> query = session.createQuery(hql, Object[].class);
             query.setParameter("year", year);
 
-            List<Object[]> results = query.list();
+            java.util.List<Object[]> results = query.list();
             for (Object[] row : results) {
-                int month = (Integer) row[0]; // 1 -> 12
+                int month = (Integer) row[0];
                 long count = (Long) row[1];
                 if (month >= 1 && month <= 12) {
                     monthlyCounts.set(month - 1, count);
@@ -89,24 +90,24 @@ public class ReportRepository {
         return monthlyCounts;
     }
 
-    // 6. ĐÃ SỬA: Tính tổng doanh thu lọc theo khoảng thời gian ('SUCCESS' -> 'COMPLETED')
-    public BigDecimal getFilteredRevenue(LocalDate startDate, LocalDate endDate) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            LocalDateTime startDateTime = startDate.atStartOfDay(); // 00:00:00
-            LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX); // 23:59:59.999999999
+    // 6. Tính tổng doanh thu lọc theo khoảng thời gian tùy chọn
+    public java.math.BigDecimal getFilteredRevenue(java.time.LocalDate startDate, java.time.LocalDate endDate) {
+        try (org.hibernate.Session session = com.qlbds.util.HibernateUtil.getSessionFactory().openSession()) {
+            java.time.LocalDateTime startDateTime = startDate.atStartOfDay();
+            java.time.LocalDateTime endDateTime = endDate.atTime(java.time.LocalTime.MAX);
 
             String hql = "SELECT SUM(t.amount) FROM Transaction t " +
-                    "WHERE t.status = 'COMPLETED' AND t.createdAt BETWEEN :startDateTime AND :endDateTime";
+                    "WHERE t.status IN ('COMPLETED', 'FORFEITED') AND t.createdAt BETWEEN :startDateTime AND :endDateTime";
 
-            Query<Object> query = session.createQuery(hql, Object.class);
+            org.hibernate.query.Query<Object> query = session.createQuery(hql, Object.class);
             query.setParameter("startDateTime", startDateTime);
             query.setParameter("endDateTime", endDateTime);
 
             Object result = query.uniqueResult();
-            return result != null ? new BigDecimal(result.toString()) : BigDecimal.ZERO;
+            return result != null ? new java.math.BigDecimal(result.toString()) : java.math.BigDecimal.ZERO;
         } catch (Exception e) {
             e.printStackTrace();
-            return BigDecimal.ZERO;
+            return java.math.BigDecimal.ZERO;
         }
     }
 }

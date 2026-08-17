@@ -1,5 +1,5 @@
 package com.qlbds.constant;
 
 public enum PropertyStatusEnum {
-    AVAILABLE, SOLD, DEPOSITED
+    AVAILABLE, SOLD, DEPOSITED, DELETED
 }

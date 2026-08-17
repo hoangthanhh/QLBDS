@@ -24,9 +24,9 @@ public class AdminDashboardController extends HttpServlet {
         DashboardDTO dashboardData = reportService.getDashboardData(startDate, endDate);
 
         // Đẩy đúng các biến sang JSP
-        request.setAttribute("totalDeposited", dashboardData.getTotalDepositedBDS());
+        request.setAttribute("totalAvailable", dashboardData.getTotalAvailableBDS());
+        request.setAttribute("totalDepositAmount", dashboardData.getTotalDepositAmount());
         request.setAttribute("totalSold", dashboardData.getTotalSoldBDS());
-        request.setAttribute("totalTransactions", dashboardData.getTotalTransactions());
         request.setAttribute("totalRevenue", dashboardData.getTotalRevenue());
         request.setAttribute("monthlyData", dashboardData.getMonthlyData().toString());
 

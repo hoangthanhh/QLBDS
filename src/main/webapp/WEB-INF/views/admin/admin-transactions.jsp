@@ -81,6 +81,8 @@
                     <option value="COMPLETED" ${currentStatus == 'COMPLETED' ? 'selected' : ''}>🟢 Hoàn thành</option>
                     <option value="CANCELLED" ${currentStatus == 'CANCELLED' ? 'selected' : ''}>⚪ Khách hủy</option>
                     <option value="REJECTED" ${currentStatus == 'REJECTED' ? 'selected' : ''}>🔴 Bị từ chối</option>
+                    <option value="FORFEITED" ${currentStatus == 'FORFEITED' ? 'selected' : ''}>🟣 Đã thu cọc(Khách hủy cọc)</option>
+                        </select>
                 </select>
             </form>
         </div>
@@ -141,6 +143,9 @@
                                                 <span class="badge bg-danger badge-custom">Từ chối</span><br>
                                                 <small class="text-muted d-block mt-1" style="font-size: 11px;" title="${tx.rejectReason}">Lý do đính kèm</small>
                                             </c:when>
+                                            <c:when test="${tx.status == 'FORFEITED'}">
+                                                            <span class="badge px-2 py-1" style="background-color: #6f42c1; color: white;" title="Khách hủy kèo, công ty thu cọc">Đã thu cọc (Khách hủy cọc) </span>
+                                                        </c:when>
                                             <c:otherwise><span class="badge bg-secondary badge-custom">Khách hủy</span></c:otherwise>
                                         </c:choose>
                                     </td>

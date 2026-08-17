@@ -15,10 +15,10 @@ public class ReportService {
         DashboardDTO dto = new DashboardDTO();
 
         // 1. Thống kê 4 thẻ tổng quan
-        dto.setTotalDepositedBDS(reportRepo.countDepositedBDS());
+        dto.setTotalAvailableBDS(reportRepo.countAvailableBDS());
+        dto.setTotalDepositAmount(reportRepo.getTotalDepositAmount());
         dto.setTotalSoldBDS(reportRepo.countSoldBDS());
-        dto.setTotalTransactions(reportRepo.countTotalSuccessfulTransactions()); //
-        dto.setTotalRevenue(reportRepo.getTotalRevenue()); //
+        dto.setTotalRevenue(reportRepo.getTotalRevenue());
 
         // 2. Thống kê biểu đồ 12 tháng năm hiện tại
         int currentYear = LocalDate.now().getYear(); //

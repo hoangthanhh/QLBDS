@@ -1,5 +1,6 @@
 package com.qlbds.repository;
 
+import com.qlbds.constant.PropertyStatusEnum;
 import com.qlbds.constant.PropertyTypeEnum;
 import com.qlbds.entity.Property;
 import com.qlbds.entity.PropertyImage;
@@ -8,14 +9,13 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PropertyRepository {
 
-    // =========================================================================
-    // KHU VỰC 1: DÙNG CHUNG / CUSTOMER (Trang chủ, Tìm kiếm, Lọc BĐS, Chi tiết)
-    // =========================================================================
+    // Customer
 
     // 1. Hàm đếm tổng số BĐS CÓ LỌC (Để tính số trang chính xác khi tìm kiếm)
     public long countAvailableProperties(String address, String priceRange, String propertyType) {
@@ -118,9 +118,7 @@ public class PropertyRepository {
         }
     }
 
-    // =========================================================================
-    // KHU VỰC 2: TẦNG QUẢN TRỊ ADMIN (Thêm mới, Cập nhật, Ràng buộc, Xóa mềm)
-    // =========================================================================
+    // Staff & Admin
 
     // 1. Admin thêm mới BĐS kèm danh sách ảnh upload
     public boolean saveProperty(Property property, List<PropertyImage> images) {
@@ -206,6 +204,167 @@ public class PropertyRepository {
             Property p = session.get(Property.class, propertyId);
             if (p != null) {
                 p.setIsDeleted(true);
+                session.update(p);
+                tx.commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 6. Xóa một ảnh cụ thể của BĐS theo ID ảnh
+    public boolean deleteImageById(Integer imageId) {
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            PropertyImage img = session.get(PropertyImage.class, imageId);
+            if (img != null) {
+                session.delete(img);
+                tx.commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 7. Lấy danh sách BĐS quản lý có phân trang và lọc theo trạng thái / xóa mềm (ĐÃ FIX LAZY LOAD)
+    public List<Property> findPropertiesByPage(int page, int pageSize, String keyword, String priceRange, String propertyType, String statusFilter) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+            // BƯỚC 1: Chỉ lấy danh sách ID của các BĐS thỏa mãn điều kiện và phân trang
+            StringBuilder idHql = new StringBuilder("SELECT p.id FROM Property p WHERE 1=1");
+
+            boolean isSpecificStatus = statusFilter != null && !statusFilter.trim().isEmpty()
+                    && !"ALL".equalsIgnoreCase(statusFilter)
+                    && !"DELETED".equalsIgnoreCase(statusFilter)
+                    && !"HIDDEN".equalsIgnoreCase(statusFilter);
+
+            if ("DELETED".equalsIgnoreCase(statusFilter) || "HIDDEN".equalsIgnoreCase(statusFilter)) {
+                idHql.append(" AND p.isDeleted = true");
+            } else {
+                idHql.append(" AND p.isDeleted = false");
+                if (isSpecificStatus) {
+                    idHql.append(" AND p.status = :status");
+                }
+            }
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                idHql.append(" AND (LOWER(p.title) LIKE :kw OR LOWER(p.address) LIKE :kw)");
+            }
+            if (propertyType != null && !propertyType.trim().isEmpty()) {
+                idHql.append(" AND p.propertyType = :ptype");
+            }
+            if ("UNDER_1B".equals(priceRange)) idHql.append(" AND p.price < 1000000000");
+            else if ("1B_3B".equals(priceRange)) idHql.append(" AND p.price >= 1000000000 AND p.price <= 3000000000");
+            else if ("3B_7B".equals(priceRange)) idHql.append(" AND p.price > 3000000000 AND p.price <= 7000000000");
+            else if ("OVER_7B".equals(priceRange)) idHql.append(" AND p.price > 7000000000");
+
+            idHql.append(" ORDER BY p.id DESC");
+
+            Query<Integer> idQuery = session.createQuery(idHql.toString(), Integer.class);
+
+            // Set tham số cho Bước 1
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                idQuery.setParameter("kw", "%" + keyword.toLowerCase().trim() + "%");
+            }
+            if (propertyType != null && !propertyType.trim().isEmpty()) {
+                idQuery.setParameter("ptype", PropertyTypeEnum.valueOf(propertyType));
+            }
+            if (isSpecificStatus) {
+                idQuery.setParameter("status", PropertyStatusEnum.valueOf(statusFilter));
+            }
+
+            // Phân trang ở Bước 1 (Chỉ phân trang trên ID nên rất nhẹ)
+            idQuery.setFirstResult((page - 1) * pageSize);
+            idQuery.setMaxResults(pageSize);
+
+            List<Integer> propertyIds = idQuery.getResultList();
+
+            // Nếu không có BĐS nào thỏa mãn điều kiện, trả về list rỗng luôn để tránh lỗi
+            if (propertyIds.isEmpty()) {
+                return new ArrayList<>();
+            }
+
+            // BƯỚC 2: Dùng danh sách ID lấy được để truy vấn Property kèm theo Images (Dùng JOIN FETCH)
+            String hql = "SELECT DISTINCT p FROM Property p LEFT JOIN FETCH p.images WHERE p.id IN (:ids) ORDER BY p.id DESC";
+            Query<Property> query = session.createQuery(hql, Property.class);
+            query.setParameterList("ids", propertyIds);
+
+            return query.getResultList();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    // 8. Đếm tổng số BĐS quản lý để phân trang
+    public long countTotalProperties(String keyword, String priceRange, String propertyType, String statusFilter) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            StringBuilder hql = new StringBuilder("SELECT COUNT(p) FROM Property p WHERE 1=1");
+
+            boolean isSpecificStatus = statusFilter != null && !statusFilter.trim().isEmpty()
+                    && !"ALL".equalsIgnoreCase(statusFilter)
+                    && !"DELETED".equalsIgnoreCase(statusFilter)
+                    && !"HIDDEN".equalsIgnoreCase(statusFilter);
+
+            if ("DELETED".equalsIgnoreCase(statusFilter) || "HIDDEN".equalsIgnoreCase(statusFilter)) {
+                hql.append(" AND p.isDeleted = true");
+            } else {
+                hql.append(" AND p.isDeleted = false");
+                if (isSpecificStatus) {
+                    hql.append(" AND p.status = :status");
+                }
+            }
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                hql.append(" AND (LOWER(p.title) LIKE :kw OR LOWER(p.address) LIKE :kw)");
+            }
+            if (propertyType != null && !propertyType.trim().isEmpty()) {
+                hql.append(" AND p.propertyType = :ptype");
+            }
+            if ("UNDER_1B".equals(priceRange)) hql.append(" AND p.price < 1000000000");
+            else if ("1B_3B".equals(priceRange)) hql.append(" AND p.price >= 1000000000 AND p.price <= 3000000000");
+            else if ("3B_7B".equals(priceRange)) hql.append(" AND p.price > 3000000000 AND p.price <= 7000000000");
+            else if ("OVER_7B".equals(priceRange)) hql.append(" AND p.price > 7000000000");
+
+            Query<Long> query = session.createQuery(hql.toString(), Long.class);
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                query.setParameter("kw", "%" + keyword.toLowerCase().trim() + "%");
+            }
+            if (propertyType != null && !propertyType.trim().isEmpty()) {
+                query.setParameter("ptype", PropertyTypeEnum.valueOf(propertyType));
+            }
+            if (isSpecificStatus) {
+                query.setParameter("status", PropertyStatusEnum.valueOf(statusFilter));
+            }
+
+            Long count = query.uniqueResult();
+            return count != null ? count : 0L;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    // Admin khôi phục BĐS đã xóa mềm
+    public boolean restoreProperty(Integer propertyId) {
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            // Dùng session.get để lấy được cả BĐS đã bị ẩn (isDeleted = true)
+            Property p = session.get(Property.class, propertyId);
+            if (p != null) {
+                p.setIsDeleted(false);
                 session.update(p);
                 tx.commit();
                 return true;

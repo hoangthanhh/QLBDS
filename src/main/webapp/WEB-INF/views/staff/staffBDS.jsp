@@ -36,7 +36,7 @@
                     <input type="text" name="keyword" class="form-control rounded-pill px-3 shadow-none"
                            placeholder="Nhập địa chỉ, tiêu đề..." value="${keyword}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select name="propertyType" class="form-select rounded-pill px-3 shadow-none">
                         <option value="">-- Tất cả loại hình --</option>
                         <option value="APARTMENT" ${propertyType == 'APARTMENT' ? 'selected' : ''}>Căn hộ (APARTMENT)
@@ -45,7 +45,7 @@
                         <option value="LAND" ${propertyType == 'LAND' ? 'selected' : ''}>Đất nền (LAND)</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select name="priceRange" class="form-select rounded-pill px-3 shadow-none">
                         <option value="">-- Tất cả khoảng giá --</option>
                         <option value="UNDER_1B" ${priceRange == 'UNDER_1B' ? 'selected' : ''}>Dưới 1 Tỷ</option>
@@ -54,12 +54,26 @@
                         <option value="OVER_7B" ${priceRange == 'OVER_7B' ? 'selected' : ''}>Trên 7 Tỷ</option>
                     </select>
                 </div>
-                <div class="col-md-3 text-end">
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <div class="col-md-3">
+                    <select name="status" class="form-select rounded-pill px-3 shadow-none">
+                        <option value="ALL" ${currentStatus == 'ALL' ? 'selected' : ''}>-- Tất cả BĐS đang hoạt động
+                            --
+                        </option>
+                        <option value="AVAILABLE" ${currentStatus == 'AVAILABLE' ? 'selected' : ''}>🟢 Đang mở bán
+                        </option>
+                        <option value="DEPOSITED" ${currentStatus == 'DEPOSITED' ? 'selected' : ''}>🟡 Đã nhận cọc
+                        </option>
+                        <option value="SOLD" ${currentStatus == 'SOLD' ? 'selected' : ''}>🔴 Đã bán đứt</option>
+                        <option value="DELETED" ${currentStatus == 'DELETED' ? 'selected' : ''}>⚪ Đã xóa (Xóa mềm)
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2 text-end">
+                    <button type="submit" class="btn btn-primary rounded-pill px-3 shadow-sm">
                         <i class="fa-solid fa-magnifying-glass me-1"></i> Tìm kiếm
                     </button>
                     <a href="${pageContext.request.contextPath}/staff/bds"
-                       class="btn btn-outline-secondary rounded-pill px-3 ms-1 shadow-sm" title="Tải lại">
+                       class="btn btn-outline-secondary rounded-pill px-2 ms-1 shadow-sm" title="Tải lại">
                         <i class="fa-solid fa-rotate-left"></i>
                     </a>
                 </div>
@@ -67,29 +81,30 @@
         </div>
     </div>
 
-    <!-- BẢNG DANH SÁCH BĐS (1 ẢNH THUMBNAIL ĐẠI DIỆN) -->
+    <!-- BẢNG DANH SÁCH BĐS -->
     <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0 text-center">
                     <thead class="table-light">
                     <tr>
-                        <th style="width: 5%;">STT</th>
-                        <th style="width: 8%;">Ảnh</th>
-                        <th style="width: 25%;">Tiêu đề BĐS</th>
-                        <th style="width: 22%;">Địa chỉ chi tiết</th>
-                        <th style="width: 10%;">Loại hình</th>
-                        <th style="width: 8%;">Diện tích</th>
-                        <th style="width: 10%;">Giá bán</th>
-                        <th style="width: 12%;">Hành động</th>
+                        <th style="width: 5%;" class="text-center">STT</th>
+                        <th style="width: 8%;" class="text-center">Ảnh</th>
+                        <th style="width: 22%;" class="text-center">Tiêu đề BĐS</th>
+                        <th style="width: 18%;" class="text-center">Địa chỉ chi tiết</th>
+                        <th style="width: 9%;" class="text-center">Loại hình</th>
+                        <th style="width: 8%;" class="text-center">Diện tích</th>
+                        <th style="width: 10%;" class="text-center">Giá bán</th>
+                        <th style="width: 10%;" class="text-center">Trạng thái</th>
+                        <th style="width: 10%;" class="text-center">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:set var="startIndex" value="${(currentPage - 1) * (empty pageSize ? 5 : pageSize)}"/>
                     <c:forEach var="p" items="${productList}" varStatus="loop">
                         <tr>
-                            <td class="fw-bold">${startIndex + loop.index + 1}</td>
-                            <td>
+                            <td class="fw-bold text-center">${startIndex + loop.index + 1}</td>
+                            <td class="text-center">
                                 <c:set var="imgPath" value="${p.thumbnail}"/>
                                 <c:choose>
                                     <c:when test="${not empty imgPath && (fn:startsWith(imgPath, 'http://') || fn:startsWith(imgPath, 'https://'))}">
@@ -112,38 +127,100 @@
                             </td>
                             <td class="fw-bold text-dark text-start">${p.title}</td>
                             <td class="text-start text-dark fw-medium">${p.address}</td>
-                            <td><span class="badge bg-info text-dark px-2 py-1">${p.propertyType}</span></td>
-                            <td class="fw-bold">${p.area} m²</td>
-                            <td class="text-danger fw-bold">
+                            <td class="text-center">
+                                <span class="badge bg-info text-dark px-2 py-1">${p.propertyType}</span>
+                            </td>
+                            <td class="fw-bold text-center">${p.area} m²</td>
+                            <td class="text-danger fw-bold text-center">
                                 <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="đ"
                                                   maxFractionDigits="0"/>
                             </td>
-                            <td>
-                                <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <button type="button" class="btn btn-warning btn-sm text-white shadow-sm"
-                                            onclick="openEditModal(${p.id})" title="Chỉnh sửa & Xem toàn bộ ảnh"
-                                            style="border-radius: 6px; padding: 4px 8px;">
-                                        <i class="fa-solid fa-pen-to-square"></i> Sửa
-                                    </button>
 
-                                    <!-- Chỉ cho phép xóa nếu chưa phát sinh giao dịch -->
-                                    <form action="${pageContext.request.contextPath}/staff/bds" method="post"
-                                          class="d-inline m-0"
-                                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa BĐS này không?\nHệ thống sẽ từ chối xóa nếu BĐS đã phát sinh giao dịch.');">
-                                        <input type="hidden" name="action" value="delete"/>
-                                        <input type="hidden" name="id" value="${p.id}"/>
-                                        <button type="submit" class="btn btn-danger btn-sm shadow-sm" title="Xóa BĐS"
-                                                style="border-radius: 6px; padding: 4px 8px;">
-                                            <i class="fa-solid fa-trash"></i> Xóa
-                                        </button>
-                                    </form>
-                                </div>
+                            <!-- CỘT TRẠNG THÁI -->
+                            <td class="text-center">
+                                <c:choose>
+                                    <c:when test="${p.status == 'AVAILABLE'}">
+                                        <span class="badge bg-success px-2 py-1">Đang mở bán</span>
+                                    </c:when>
+                                    <c:when test="${p.status == 'DEPOSITED'}">
+                                        <span class="badge bg-warning text-dark px-2 py-1">Đã nhận cọc</span>
+                                    </c:when>
+                                    <c:when test="${p.status == 'SOLD'}">
+                                        <span class="badge bg-danger px-2 py-1">Đã bán</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="badge bg-secondary px-2 py-1">Đã xóa</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
+
+                            <!-- CỘT HÀNH ĐỘNG -->
+                                                        <td class="text-center">
+                                                            <div class="d-flex align-items-center justify-content-center gap-1">
+                                                                <c:choose>
+                                                                    <%-- 1. Khi BĐS đang AVAILABLE: Cho phép Sửa và Xóa --%>
+                                                                    <c:when test="${p.status == 'AVAILABLE'}">
+                                                                        <button type="button" class="btn btn-warning btn-sm text-white shadow-sm"
+                                                                                onclick="openEditModal(${p.id})" title="Chỉnh sửa & Xem toàn bộ ảnh"
+                                                                                style="border-radius: 6px; padding: 4px 8px;">
+                                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                                        </button>
+
+                                                                        <form action="${pageContext.request.contextPath}/staff/bds" method="post"
+                                                                              class="d-inline m-0"
+                                                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa BĐS này không?\nHệ thống sẽ chuyển BĐS vào trạng thái Đã xóa (Xóa mềm).');">
+                                                                            <input type="hidden" name="action" value="delete"/>
+                                                                            <input type="hidden" name="id" value="${p.id}"/>
+                                                                            <button type="submit" class="btn btn-danger btn-sm shadow-sm"
+                                                                                    title="Xóa mềm"
+                                                                                    style="border-radius: 6px; padding: 4px 8px;">
+                                                                                <i class="fa-solid fa-trash"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    </c:when>
+
+                                                                    <%-- 2. Khi BĐS đang DEPOSITED: Cho phép Hủy cọc / Mở bán lại --%>
+                                                                    <c:when test="${p.status == 'DEPOSITED'}">
+                                                                        <form action="${pageContext.request.contextPath}/staff/bds" method="post"
+                                                                              class="d-inline m-0"
+                                                                              onsubmit="return confirm('Xác nhận: Khách hàng đã hủy kèo (chấp nhận mất cọc)?\nBĐS này sẽ được đưa về trạng thái Đang Mở Bán để tiếp tục giao dịch.');">
+                                                                            <input type="hidden" name="action" value="reopen"/>
+                                                                            <input type="hidden" name="id" value="${p.id}"/>
+                                                                            <button type="submit"
+                                                                                    class="btn btn-info btn-sm text-white shadow-sm fw-bold"
+                                                                                    title="Hủy cọc -> Mở bán lại"
+                                                                                    style="border-radius: 6px; padding: 4px 8px; font-size: 12px;">
+                                                                                <i class="fa-solid fa-rotate-left me-1"></i> Mở lại
+                                                                            </button>
+                                                                        </form>
+                                                                    </c:when>
+
+                                                                    <%-- 3. Khi BĐS đã bị DELETED: Cho phép Khôi phục --%>
+                                                                    <c:when test="${p.status == 'DELETED'}">
+                                                                        <form action="${pageContext.request.contextPath}/staff/bds" method="post" class="d-inline m-0"
+                                                                              onsubmit="return confirm('Bạn có chắc chắn muốn khôi phục và mở bán lại BĐS này không?');">
+                                                                            <input type="hidden" name="action" value="restore"/>
+                                                                            <input type="hidden" name="id" value="${p.id}"/>
+                                                                            <button type="submit" class="btn btn-success btn-sm shadow-sm" title="Khôi phục BĐS"
+                                                                                    style="border-radius: 6px; padding: 4px 8px;">
+                                                                                <i class="fa-solid fa-trash-arrow-up"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    </c:when>
+
+                                                                    <%-- 4. Các trường hợp còn lại (SOLD): Khóa thao tác --%>
+                                                                    <c:otherwise>
+                                                                        <span class="text-muted small" title="Đã khóa thao tác"><i
+                                                                                class="fa-solid fa-lock"></i> Đã khóa</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </div>
+                                                        </td>
                         </tr>
                     </c:forEach>
                     <c:if test="${empty productList}">
                         <tr>
-                            <td colspan="8" class="text-center text-muted py-4">Không tìm thấy Bất Động Sản nào phù
+                            <td colspan="9" class="text-center text-muted py-4">Không tìm thấy Bất Động Sản nào phù
                                 hợp.
                             </td>
                         </tr>
@@ -157,7 +234,7 @@
     <!-- PHÂN TRANG -->
     <c:set var="maxPage" value="${totalPage > 0 ? totalPage : 1}"/>
     <c:set var="kwParam"
-           value="${not empty keyword ? '&keyword='.concat(keyword) : ''}${not empty propertyType ? '&propertyType='.concat(propertyType) : ''}${not empty priceRange ? '&priceRange='.concat(priceRange) : ''}"/>
+           value="${not empty keyword ? '&keyword='.concat(keyword) : ''}${not empty propertyType ? '&propertyType='.concat(propertyType) : ''}${not empty priceRange ? '&priceRange='.concat(priceRange) : ''}${not empty currentStatus ? '&status='.concat(currentStatus) : ''}"/>
     <nav class="mt-3">
         <ul class="pagination pagination-sm justify-content-end mb-0">
             <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">

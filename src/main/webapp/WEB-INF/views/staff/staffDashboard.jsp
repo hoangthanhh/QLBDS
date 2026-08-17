@@ -10,47 +10,58 @@
     </div>
 
     <!-- 4 THẺ TỔNG QUAN -->
-    <div class="row g-4 mb-4">
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-white rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-primary">
-                <div>
-                    <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">BĐS Đã Đặt Cọc</p>
-                    <h4 class="mb-0 fw-bold text-dark">${totalDeposited}</h4>
+        <div class="row g-4 mb-4">
+            <!-- BĐS Đang bán -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-primary">
+                    <div>
+                        <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">BĐS Đang bán</p>
+                        <h4 class="mb-0 fw-bold text-dark">${totalAvailable}</h4>
+                    </div>
+                    <!-- Sửa thành icon Tòa nhà -->
+                    <i class="fa-solid fa-building fa-2x text-primary opacity-75"></i>
                 </div>
-                <i class="fa-solid fa-bookmark fa-2x text-primary opacity-75"></i>
+            </div>
+
+            <!-- Tiền cọc đã nhận -->
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-success">
+                            <div>
+                                <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Tiền cọc đã nhận</p>
+                                <h4 class="mb-0 fw-bold text-dark">
+                                    <fmt:formatNumber value="${totalDepositAmount}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                                </h4>
+                            </div>
+                            <!-- Sửa thành icon Túi tiền -->
+                            <i class="fa-solid fa-sack-dollar fa-2x text-success opacity-75"></i>
+                        </div>
+                    </div>
+
+            <!-- BĐS Đã bán -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-info">
+                    <div>
+                        <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">BĐS Đã mua</p>
+                        <h4 class="mb-0 fw-bold text-dark">${totalSold}</h4>
+                    </div>
+                    <!-- Sửa thành icon Ngôi nhà có dấu tích -->
+                    <i class="fa-solid fa-house-circle-check fa-2x text-info opacity-75"></i>
+                </div>
+            </div>
+
+            <!-- Tổng doanh thu (Giữ nguyên) -->
+            <div class="col-sm-6 col-xl-3">
+                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-warning">
+                    <div>
+                        <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Tổng doanh thu</p>
+                        <h4 class="mb-0 fw-bold text-dark">
+                            <fmt:formatNumber value="${totalRevenue}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                        </h4>
+                    </div>
+                    <i class="fa-solid fa-money-bill-wave fa-2x text-warning opacity-75"></i>
+                </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-white rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-success">
-                <div>
-                    <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">BĐS Đã Bán Mua</p>
-                    <h4 class="mb-0 fw-bold text-dark">${totalSold}</h4>
-                </div>
-                <i class="fa-solid fa-key fa-2x text-success opacity-75"></i>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-white rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-info">
-                <div>
-                    <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Giao dịch thành công</p>
-                    <h4 class="mb-0 fw-bold text-dark">${totalTransactions}</h4>
-                </div>
-                <i class="fa-solid fa-handshake fa-2x text-info opacity-75"></i>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="bg-white rounded d-flex align-items-center justify-content-between p-4 shadow-sm border-start border-4 border-warning">
-                <div>
-                    <p class="mb-2 text-uppercase text-muted fw-bold" style="font-size: 12px;">Tổng doanh thu</p>
-                    <h4 class="mb-0 fw-bold text-dark">
-                        <fmt:formatNumber value="${totalRevenue}" type="currency" currencySymbol="đ"
-                                          maxFractionDigits="0"/>
-                    </h4>
-                </div>
-                <i class="fa-solid fa-money-bill-wave fa-2x text-warning opacity-75"></i>
-            </div>
-        </div>
-    </div>
 
     <!-- CÁC LỐI TẮT HÀNH ĐỘNG NHANH -->
     <div class="row g-4">
