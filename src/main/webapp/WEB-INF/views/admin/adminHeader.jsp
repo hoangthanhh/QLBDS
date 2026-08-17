@@ -36,7 +36,7 @@
     <!-- Sidebar Navbar -->
     <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- LOGO REMS KÈM ICON NGÔI NHÀ CỐ ĐỊNH (KHÔNG CLICK, KHÔNG GẠCH CHÂN) -->
+        <!-- LOGO REMS KÈM ICON NGÔI NHÀ CỐ ĐỊNH -->
         <div class="sidebar-brand d-flex align-items-center justify-content-center sidebar-brand-static py-3">
             <i class="fa-solid fa-house-chimney fa-2x me-2 text-white"></i>
             <div class="sidebar-brand-text text-white text-start">
@@ -104,13 +104,18 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
             <!-- Topbar Navigation -->
-            <nav class="navbar topbar mb-0 shadow-sm">
+            <nav class="navbar topbar mb-0 shadow-sm bg-white">
                 <div class="d-flex align-items-center justify-content-between w-100 px-4">
                     <div>
-                        <strong>REMS</strong> <span class="text-muted">/ HỆ THỐNG QUẢN LÝ BẤT ĐỘNG SẢN</span>
+                        <strong class="text-primary">REMS</strong> <span class="text-muted">/ HỆ THỐNG QUẢN LÝ BẤT ĐỘNG SẢN</span>
                     </div>
-                    <div class="text-muted">
-                        <i class="fas fa-user-circle me-1"></i> ${sessionScope.currentUser.fullName}
+                    <div class="text-muted d-flex align-items-center">
+                        <span class="badge bg-danger text-white px-2 py-1 me-2 shadow-sm"
+                              style="font-size: 11px; letter-spacing: 0.5px; border-radius: 6px;">
+                            <i class="fa-solid fa-shield-halved me-1"></i> ADMIN
+                        </span>
+                        <i class="fas fa-user-circle me-1"></i> <span
+                            class="fw-semibold text-dark">${sessionScope.currentUser.fullName}</span>
                     </div>
                 </div>
             </nav>

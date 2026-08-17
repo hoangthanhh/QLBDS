@@ -3,13 +3,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@ include file="adminHeader.jsp" %>
+<%@ include file="staffHeader.jsp" %>
 
 <div class="container-fluid pt-3">
     <!-- TIÊU ĐỀ & NÚT THÊM MỚI -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3 mb-0 text-dark fw-bold"><i class="fa-solid fa-building me-2 text-primary"></i>Quản lý Bất Động Sản
-        </h1>
+            (Staff)</h1>
         <button type="button" class="btn btn-success fw-bold px-3 shadow-sm" onclick="openAddModal()">
             <i class="fa-solid fa-plus me-1"></i> Thêm BĐS Mới
         </button>
@@ -31,7 +31,7 @@
     <!-- FORM TÌM KIẾM NÂNG CAO -->
     <div class="card shadow-sm mb-4 border-0" style="border-radius: 12px;">
         <div class="card-body p-3">
-            <form action="${pageContext.request.contextPath}/admin/bds" method="get" class="row g-2 align-items-center">
+            <form action="${pageContext.request.contextPath}/staff/bds" method="get" class="row g-2 align-items-center">
                 <div class="col-md-3">
                     <input type="text" name="keyword" class="form-control rounded-pill px-3 shadow-none"
                            placeholder="Nhập địa chỉ, tiêu đề..." value="${keyword}">
@@ -58,7 +58,7 @@
                     <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
                         <i class="fa-solid fa-magnifying-glass me-1"></i> Tìm kiếm
                     </button>
-                    <a href="${pageContext.request.contextPath}/admin/bds"
+                    <a href="${pageContext.request.contextPath}/staff/bds"
                        class="btn btn-outline-secondary rounded-pill px-3 ms-1 shadow-sm" title="Tải lại">
                         <i class="fa-solid fa-rotate-left"></i>
                     </a>
@@ -67,29 +67,29 @@
         </div>
     </div>
 
-    <!-- BẢNG DANH SÁCH BĐS (HIỂN THỊ 1 ẢNH ĐẠI DIỆN CHÍNH) -->
+    <!-- BẢNG DANH SÁCH BĐS (1 ẢNH THUMBNAIL ĐẠI DIỆN) -->
     <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0 text-center">
                     <thead class="table-light">
                     <tr>
-                        <th style="width: 5%;" class="text-center">STT</th>
-                        <th style="width: 8%;" class="text-center">Ảnh</th>
-                        <th style="width: 25%;" class="text-center">Tiêu đề BĐS</th>
-                        <th style="width: 22%;" class="text-center">Địa chỉ chi tiết</th>
-                        <th style="width: 10%;" class="text-center">Loại hình</th>
-                        <th style="width: 8%;" class="text-center">Diện tích</th>
-                        <th style="width: 10%;" class="text-center">Giá bán</th>
-                        <th style="width: 12%;" class="text-center">Hành động</th>
+                        <th style="width: 5%;">STT</th>
+                        <th style="width: 8%;">Ảnh</th>
+                        <th style="width: 25%;">Tiêu đề BĐS</th>
+                        <th style="width: 22%;">Địa chỉ chi tiết</th>
+                        <th style="width: 10%;">Loại hình</th>
+                        <th style="width: 8%;">Diện tích</th>
+                        <th style="width: 10%;">Giá bán</th>
+                        <th style="width: 12%;">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:set var="startIndex" value="${(currentPage - 1) * (empty pageSize ? 5 : pageSize)}"/>
                     <c:forEach var="p" items="${productList}" varStatus="loop">
                         <tr>
-                            <td class="fw-bold text-center">${startIndex + loop.index + 1}</td>
-                            <td class="text-center">
+                            <td class="fw-bold">${startIndex + loop.index + 1}</td>
+                            <td>
                                 <c:set var="imgPath" value="${p.thumbnail}"/>
                                 <c:choose>
                                     <c:when test="${not empty imgPath && (fn:startsWith(imgPath, 'http://') || fn:startsWith(imgPath, 'https://'))}">
@@ -110,26 +110,24 @@
                                      style="object-fit: cover;"
                                      onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/customer/img/property-1.jpg';"/>
                             </td>
-                            <td class="fw-bold text-dark text-center">${p.title}</td>
-                            <td class="text-center text-dark fw-medium">${p.address}</td>
-                            <td class="text-center"><span
-                                    class="badge bg-info text-dark px-2 py-1">${p.propertyType}</span></td>
-                            <td class="fw-bold text-center">${p.area} m²</td>
-                            <td class="text-danger fw-bold text-center">
+                            <td class="fw-bold text-dark text-start">${p.title}</td>
+                            <td class="text-start text-dark fw-medium">${p.address}</td>
+                            <td><span class="badge bg-info text-dark px-2 py-1">${p.propertyType}</span></td>
+                            <td class="fw-bold">${p.area} m²</td>
+                            <td class="text-danger fw-bold">
                                 <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="đ"
                                                   maxFractionDigits="0"/>
                             </td>
-                            <td class="text-center">
+                            <td>
                                 <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <button type="button"
-                                            class="btn btn-warning btn-sm text-white shadow-sm"
-                                            onclick="openEditModal(${p.id})"
-                                            title="Chỉnh sửa & Xem toàn bộ ảnh"
+                                    <button type="button" class="btn btn-warning btn-sm text-white shadow-sm"
+                                            onclick="openEditModal(${p.id})" title="Chỉnh sửa & Xem toàn bộ ảnh"
                                             style="border-radius: 6px; padding: 4px 8px;">
                                         <i class="fa-solid fa-pen-to-square"></i> Sửa
                                     </button>
 
-                                    <form action="${pageContext.request.contextPath}/admin/bds" method="post"
+                                    <!-- Chỉ cho phép xóa nếu chưa phát sinh giao dịch -->
+                                    <form action="${pageContext.request.contextPath}/staff/bds" method="post"
                                           class="d-inline m-0"
                                           onsubmit="return confirm('Bạn có chắc chắn muốn xóa BĐS này không?\nHệ thống sẽ từ chối xóa nếu BĐS đã phát sinh giao dịch.');">
                                         <input type="hidden" name="action" value="delete"/>
@@ -164,23 +162,23 @@
         <ul class="pagination pagination-sm justify-content-end mb-0">
             <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
                 <a class="page-link"
-                   href="${pageContext.request.contextPath}/admin/bds?page=${currentPage - 1}${kwParam}">Trước</a>
+                   href="${pageContext.request.contextPath}/staff/bds?page=${currentPage - 1}${kwParam}">Trước</a>
             </li>
             <c:forEach begin="1" end="${maxPage}" var="i">
                 <li class="page-item ${i == currentPage ? 'active' : ''}">
                     <a class="page-link"
-                       href="${pageContext.request.contextPath}/admin/bds?page=${i}${kwParam}">${i}</a>
+                       href="${pageContext.request.contextPath}/staff/bds?page=${i}${kwParam}">${i}</a>
                 </li>
             </c:forEach>
             <li class="page-item ${currentPage >= maxPage ? 'disabled' : ''}">
                 <a class="page-link"
-                   href="${pageContext.request.contextPath}/admin/bds?page=${currentPage + 1}${kwParam}">Sau</a>
+                   href="${pageContext.request.contextPath}/staff/bds?page=${currentPage + 1}${kwParam}">Sau</a>
             </li>
         </ul>
     </nav>
 </div>
 
-<!-- MODAL CẤU TRÚC THÊM / SỬA / XEM CHI TIẾT ẢNH -->
+<!-- MODAL THÊM / SỬA / XEM TOÀN BỘ ẢNH -->
 <div class="modal fade" id="bdsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
@@ -239,14 +237,14 @@
                                       placeholder="Nhập thông tin pháp lý, tiện ích nội ngoại khu..."></textarea>
                         </div>
 
-                        <!-- KHU VỰC HIỂN THỊ TẤT CẢ ẢNH HIỆN TẠI (KHI XEM / SỬA) -->
+                        <!-- XEM TOÀN BỘ ẢNH KÈM NÚT XÓA TỪNG ẢNH -->
                         <div class="col-md-12 d-none" id="currentImagesArea">
                             <label class="form-label fw-bold">Ảnh hiện tại của BĐS (Xem toàn bộ):</label>
                             <div class="d-flex flex-wrap gap-2 p-2 border rounded bg-light"
                                  id="currentImagesGallery"></div>
                         </div>
 
-                        <!-- UPLOAD ẢNH (TỐI ĐA 5 ẢNH) -->
+                        <!-- TẢI LÊN ẢNH (TỐI ĐA 5 ẢNH) -->
                         <div class="col-md-12">
                             <label class="form-label fw-bold" id="imageLabel">Tải lên ảnh minh họa (Tối đa 5 ảnh) <span
                                     class="text-danger" id="imageRequiredNote">*</span></label>
@@ -270,7 +268,6 @@
 <script>
     var contextPath = "${pageContext.request.contextPath}";
 
-    // 1. KIỂM TRA CHẶN TỐI ĐA 5 ẢNH TỪ TRÌNH DUYỆT
     function checkMaxFiles(input) {
         if (input.files && input.files.length > 5) {
             alert('⚠️ Bạn chỉ được chọn tối đa 5 ảnh! Vui lòng chọn lại.');
@@ -278,17 +275,14 @@
         }
     }
 
-    // 2. FORMAT GIÁ BÁN & ĐỌC BẰNG CHỮ
     function handlePriceInput(inputElem) {
         var rawValue = inputElem.value.replace(/\D/g, '');
-
         if (!rawValue) {
             inputElem.value = '';
             document.getElementById('bdsPriceInputReal').value = '';
             document.getElementById('priceTextPreview').innerText = '';
             return;
         }
-
         document.getElementById('bdsPriceInputReal').value = rawValue;
         inputElem.value = Number(rawValue).toLocaleString('vi-VN');
         formatPriceText(rawValue);
@@ -300,30 +294,21 @@
             preview.innerText = '';
             return;
         }
-
         var num = parseFloat(val);
         var ty = Math.floor(num / 1000000000);
-        var remainderTy = num % 1000000000;
-        var meo = Math.floor(remainderTy / 1000000);
-
+        var meo = Math.floor((num % 1000000000) / 1000000);
         var str = '👉 Bằng chữ: ';
         if (ty > 0) str += ty + ' tỷ ';
         if (meo > 0) str += meo + ' triệu ';
-        if (ty === 0 && meo === 0) {
-            str += Number(num).toLocaleString('vi-VN') + ' VNĐ';
-        } else {
-            str += 'VNĐ';
-        }
-
+        if (ty === 0 && meo === 0) str += Number(num).toLocaleString('vi-VN') + ' VNĐ';
+        else str += 'VNĐ';
         preview.innerText = str;
     }
 
-    // 3. MỞ MODAL THÊM MỚI
     function openAddModal() {
         $('#formAction').val('create');
         $('#bdsId').val('');
         $('#bdsForm')[0].reset();
-
         document.getElementById('bdsPriceInputReal').value = '';
         document.getElementById('bdsPriceInputDisplay').value = '';
         document.getElementById('priceTextPreview').innerText = '';
@@ -331,13 +316,10 @@
         $('#modalHeader').removeClass('bg-warning').addClass('bg-success');
         $('#modalTitle').html('<i class="fa-solid fa-house-medical me-2"></i>Thêm Bất Động Sản Mới');
         $('#btnSubmitForm').removeClass('btn-warning text-white').addClass('btn-success').text('Lưu BĐS');
-
         $('#currentImagesArea').addClass('d-none');
         $('#currentImagesGallery').html('');
-
         $('#imageRequiredNote').show();
         $('#bdsImagesInput').prop('required', true);
-        $('#imageHelpText').html('💡 Giữ <kbd>Ctrl</kbd> hoặc <kbd>Shift</kbd> để chọn tối đa 5 ảnh.');
         $('#modalAlert').addClass('d-none').html('');
 
         var modalElement = document.getElementById('bdsModal');
@@ -345,20 +327,15 @@
         modalInstance.show();
     }
 
-    // 4. MỞ MODAL SỬA & XEM TOÀN BỘ ẢNH BẰNG AJAX
     function openEditModal(id) {
         $.ajax({
-            url: contextPath + '/admin/bds',
+            url: contextPath + '/staff/bds',
             type: 'GET',
-            data: {
-                action: 'get-detail',
-                id: id
-            },
+            data: {action: 'get-detail', id: id},
             dataType: 'json',
             success: function (data) {
                 $('#formAction').val('update');
                 $('#bdsId').val(data.id);
-
                 $('#bdsTitleInput').val(data.title);
                 $('#bdsAddressInput').val(data.address);
                 $('#bdsTypeInput').val(data.propertyType);
@@ -370,23 +347,24 @@
                     document.getElementById('bdsPriceInputReal').value = data.price;
                     document.getElementById('bdsPriceInputDisplay').value = Number(data.price).toLocaleString('vi-VN');
                     formatPriceText(data.price);
-                } else {
-                    document.getElementById('bdsPriceInputReal').value = '';
-                    document.getElementById('bdsPriceInputDisplay').value = '';
-                    document.getElementById('priceTextPreview').innerText = '';
                 }
 
-                // Hiển thị toàn bộ ảnh của BĐS
                 if (data.images && data.images.length > 0) {
                     var galleryHtml = '';
                     for (var i = 0; i < data.images.length; i++) {
-                        var imgSrc = data.images[i];
+                        var img = data.images[i];
+                        var imgSrc = img.path;
                         if (!imgSrc.startsWith('http://') && !imgSrc.startsWith('https://')) {
                             imgSrc = contextPath + '/' + (imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc);
                         }
-                        galleryHtml += '<a href="' + imgSrc + '" target="_blank" title="Xem ảnh gốc">' +
-                            '<img src="' + imgSrc + '" class="rounded border shadow-sm" style="width: 75px; height: 75px; object-fit: cover;" onerror="this.src=\'' + contextPath + '/assets/customer/img/property-1.jpg\'"/>' +
-                            '</a>';
+                        galleryHtml += '<div class="position-relative d-inline-block m-1" id="img-box-' + img.id + '">' +
+                            '  <img src="' + imgSrc + '" class="rounded border shadow-sm" style="width: 80px; height: 80px; object-fit: cover;" onerror="this.src=\'' + contextPath + '/assets/customer/img/property-1.jpg\'"/>' +
+                            '  <button type="button" class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 p-0 d-flex align-items-center justify-content-center" ' +
+                            '          style="width: 22px; height: 22px; transform: translate(30%, -30%);" ' +
+                            '          onclick="deleteSingleImage(' + img.id + ')" title="Xóa ảnh này">' +
+                            '    <i class="fa-solid fa-xmark" style="font-size: 11px;"></i>' +
+                            '  </button>' +
+                            '</div>';
                     }
                     $('#currentImagesGallery').html(galleryHtml);
                     $('#currentImagesArea').removeClass('d-none');
@@ -397,23 +375,39 @@
                 $('#modalHeader').removeClass('bg-success').addClass('bg-warning');
                 $('#modalTitle').html('<i class="fa-solid fa-pen-to-square me-2"></i>Chỉnh Sửa BĐS #' + data.id);
                 $('#btnSubmitForm').removeClass('btn-success').addClass('btn-warning text-white').text('Lưu Thay Đổi');
-
                 $('#imageRequiredNote').hide();
                 $('#bdsImagesInput').prop('required', false);
-                $('#imageHelpText').html('💡 Chọn tối đa 5 ảnh mới nếu muốn thay đổi. Để trống nếu muốn giữ nguyên ảnh cũ.');
                 $('#modalAlert').addClass('d-none').html('');
 
                 var modalElement = document.getElementById('bdsModal');
                 var modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
                 modalInstance.show();
-            },
-            error: function (xhr, status, error) {
-                alert('Không thể lấy chi tiết BĐS #' + id + '. Vui lòng kiểm tra lại!');
             }
         });
     }
 
-    // 5. SUBMIT FORM QUA AJAX
+    function deleteSingleImage(imageId) {
+        if (!confirm('Bạn có chắc chắn muốn xóa ảnh này không?')) return;
+        $.ajax({
+            url: contextPath + '/staff/bds',
+            type: 'POST',
+            data: {action: 'delete-image', imageId: imageId},
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    $('#img-box-' + imageId).fadeOut(300, function () {
+                        $(this).remove();
+                        if ($('#currentImagesGallery').children().length === 0) {
+                            $('#currentImagesArea').addClass('d-none');
+                        }
+                    });
+                } else {
+                    alert('Không thể xóa ảnh. Vui lòng thử lại!');
+                }
+            }
+        });
+    }
+
     $(document).ready(function () {
         $('#bdsForm').on('submit', function (e) {
             e.preventDefault();
@@ -421,7 +415,7 @@
             $('#btnSubmitForm').prop('disabled', true);
 
             $.ajax({
-                url: contextPath + '/admin/bds',
+                url: contextPath + '/staff/bds',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -438,14 +432,10 @@
                         html += '</ul>';
                         $('#modalAlert').removeClass('d-none').html(html);
                     }
-                },
-                error: function () {
-                    $('#btnSubmitForm').prop('disabled', false);
-                    alert('Lỗi kết nối máy chủ khi tải lên ảnh!');
                 }
             });
         });
     });
 </script>
 
-<%@ include file="adminFooter.jsp" %>
+<%@ include file="staffFooter.jsp" %>

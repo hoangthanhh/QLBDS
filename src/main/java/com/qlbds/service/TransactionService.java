@@ -20,16 +20,19 @@ public class TransactionService {
     private PropertyRepository propertyRepository = new PropertyRepository();
     private TransactionRepository transactionRepository = new TransactionRepository();
 
+    // Customer
+
+    // Khởi tạo yêu cầu Đặt cọc (10%) hoặc Mua BĐS (Pending)
     public String processTransaction(Integer userId, Integer propertyId, String type) {
         Property property = propertyRepository.findById(propertyId);
         if (property == null) return "Bất động sản không tồn tại hoặc đã bị xóa!";
 
-        // QUY TẮC 1: Nếu khách đã bấm cọc/mua và đang chờ (PENDING) -> Chặn không cho bấm tiếp
+        // Kiểm tra nếu khách đang có giao dịch Pending cho BĐS này
         if (transactionRepository.hasPendingTransaction(userId, propertyId)) {
             return "Bạn đang có một yêu cầu chờ xác nhận cho Bất động sản này. Vui lòng chờ phản hồi hoặc hủy yêu cầu cũ trước khi thực hiện giao dịch mới!";
         }
 
-        // QUY TẮC 2 & 3: Kiểm tra dựa trên trạng thái Bất động sản
+        // Kiểm tra trạng thái BĐS đã bán hoặc đã cọc
         if (property.getStatus() == PropertyStatusEnum.SOLD) {
             return "Rất tiếc, Bất động sản này đã được bán thành công cho khách hàng khác!";
         }
@@ -39,7 +42,6 @@ public class TransactionService {
                 return "Bất động sản này đã được đặt cọc, bạn không thể cọc thêm!";
             }
             if ("BUY".equals(type)) {
-                // Chỉ cho phép MUA nếu chính user này là người đã cọc thành công
                 if (!transactionRepository.hasCompletedDeposit(userId, propertyId)) {
                     return "Bất động sản này đang được đặt cọc bởi khách hàng khác, bạn không thể mua!";
                 }
@@ -49,7 +51,6 @@ public class TransactionService {
         double calculatedAmount = "DEPOSIT".equals(type) ? (property.getPrice() * 0.1) : property.getPrice();
         Long finalAmount = (long) calculatedAmount;
 
-        // Dùng Entity Mapping để gán khóa ngoại nhanh, không cần query lại bảng User
         User userMapping = new User();
         userMapping.setId(userId);
 
@@ -61,16 +62,15 @@ public class TransactionService {
         tx.setCustomer(userMapping);
         tx.setProperty(property);
 
-        // ĐÃ XÓA LOGIC GỬI EMAIL Ở ĐÂY. Sẽ chuyển sang luồng của Admin khi duyệt.
-
         return transactionRepository.save(tx) ? "SUCCESS" : "Lỗi hệ thống khi khởi tạo giao dịch!";
     }
 
-    // Thêm vào TransactionService.java
+    // Khách hàng hủy giao dịch đang Pending
     public boolean cancelTransaction(Integer userId, Integer propertyId) {
         return transactionRepository.cancelPendingTransaction(userId, propertyId);
     }
 
+    // Lấy danh sách lịch sử giao dịch đóng gói vào DTO
     public List<TransactionHistoryDTO> getTransactionHistory(Integer userId, int page, int pageSize) {
         List<Transaction> entities = transactionRepository.findTransactionsByUserId(userId, page, pageSize);
         List<TransactionHistoryDTO> dtos = new ArrayList<>();
@@ -98,16 +98,17 @@ public class TransactionService {
         return dtos;
     }
 
+    // Tính tổng số trang lịch sử giao dịch của khách hàng
     public int getTotalTransactionPages(Integer userId, int pageSize) {
         long totalRecords = transactionRepository.countTransactionsByUserId(userId);
         return (int) Math.ceil((double) totalRecords / pageSize);
     }
 
-    // --- CÁC HÀM DÀNH CHO ADMIN ---
+    // Staff & Admin
 
-    // 1. Lấy danh sách hiển thị
-    public List<AdminTransactionDTO> getTransactionsForAdmin(String statusFilter, int page, int pageSize) {
-        List<Transaction> entities = transactionRepository.findAllForAdmin(statusFilter, page, pageSize);
+    // Lấy danh sách giao dịch quản lý đóng gói vào AdminTransactionDTO (có lọc đa điều kiện)
+    public List<AdminTransactionDTO> getManagementTransactions(String keyword, String startDate, String endDate, String statusFilter, int page, int pageSize) {
+        List<Transaction> entities = transactionRepository.findTransactionsWithFilter(keyword, startDate, endDate, statusFilter, page, pageSize);
         List<AdminTransactionDTO> dtos = new ArrayList<>();
         for (Transaction tx : entities) {
             AdminTransactionDTO dto = new AdminTransactionDTO();
@@ -117,6 +118,7 @@ public class TransactionService {
             dto.setType(tx.getTransactionType());
             dto.setStatus(tx.getStatus());
             dto.setCreatedAt(tx.getCreatedAt());
+            dto.setRejectReason(tx.getRejectReason());
 
             if (tx.getCustomer() != null) {
                 dto.setCustomerName(tx.getCustomer().getFullName());
@@ -132,39 +134,38 @@ public class TransactionService {
         return dtos;
     }
 
-    public int getTotalPagesForAdmin(String statusFilter, int pageSize) {
-        long total = transactionRepository.countAll(statusFilter);
+    // Tính tổng số trang quản lý giao dịch theo bộ lọc
+    public int getTotalManagementPages(String keyword, String startDate, String endDate, String statusFilter, int pageSize) {
+        long total = transactionRepository.countTransactionsWithFilter(keyword, startDate, endDate, statusFilter);
         return (int) Math.ceil((double) total / pageSize);
     }
 
-    // 2. Logic Duyệt Giao Dịch
+    // Duyệt giao dịch: Cập nhật trạng thái BĐS, gửi mail thành công và tự động từ chối các đơn sau
     public String approveTransaction(Integer txId) {
         Transaction tx = transactionRepository.findById(txId);
-        if (tx == null || tx.getStatus() != com.qlbds.constant.TransactionStatusEnum.PENDING) {
+        if (tx == null || tx.getStatus() != TransactionStatusEnum.PENDING) {
             return "Giao dịch không tồn tại hoặc đã được xử lý!";
         }
 
-        // --- BƯỚC CHẶN: KIỂM TRA LUẬT FIRST COME FIRST SERVE ---
+        // Kiểm tra luật ưu tiên First-Come First-Served
         if (transactionRepository.hasOlderPendingTransaction(tx.getProperty().getId(), tx.getCreatedAt())) {
             return "Cảnh báo: Có khách hàng khác đã gửi yêu cầu cho BĐS này TRƯỚC. Vui lòng kéo xuống dưới để ưu tiên duyệt cho giao dịch cũ hơn!";
         }
-        // --------------------------------------------------------
 
-        // 1. Nếu không có ai đặt trước -> Tiến hành cập nhật trạng thái
-        tx.setStatus(com.qlbds.constant.TransactionStatusEnum.COMPLETED);
+        tx.setStatus(TransactionStatusEnum.COMPLETED);
         Property p = tx.getProperty();
-        if (tx.getTransactionType() == com.qlbds.constant.TransactionTypeEnum.DEPOSIT) {
-            p.setStatus(com.qlbds.constant.PropertyStatusEnum.DEPOSITED);
-        } else if (tx.getTransactionType() == com.qlbds.constant.TransactionTypeEnum.BUY) {
-            p.setStatus(com.qlbds.constant.PropertyStatusEnum.SOLD);
+        if (tx.getTransactionType() == TransactionTypeEnum.DEPOSIT) {
+            p.setStatus(PropertyStatusEnum.DEPOSITED);
+        } else if (tx.getTransactionType() == TransactionTypeEnum.BUY) {
+            p.setStatus(PropertyStatusEnum.SOLD);
         }
 
         propertyRepository.update(p);
         if (!transactionRepository.update(tx)) return "Lỗi cập nhật CSDL!";
 
-        // Gửi Email Thành công cho người Thắng
+        // Gửi email xác nhận thành công
         new Thread(() -> {
-            com.qlbds.util.EmailUtil.sendTransactionEmail(
+            EmailUtil.sendTransactionEmail(
                     tx.getCustomer().getEmail(),
                     tx.getCustomer().getFullName(),
                     p.getTitle(),
@@ -173,24 +174,24 @@ public class TransactionService {
             );
         }).start();
 
-        // 2. TỰ ĐỘNG XỬ LÝ NHỮNG NGƯỜI ĐẾN SAU (TỪ CHỐI & GỬI EMAIL)
+        // Tự động từ chối những người nộp đơn sau
         List<Transaction> loserTransactions = transactionRepository.findOtherPendingTransactions(p.getId(), tx.getId());
         String autoRejectReason = "Rất tiếc, Bất động sản này vừa được chốt giao dịch với một khách hàng đã tạo yêu cầu trước bạn. Mong bạn thông cảm!";
 
         for (Transaction loserTx : loserTransactions) {
-            loserTx.setStatus(com.qlbds.constant.TransactionStatusEnum.REJECTED);
+            loserTx.setStatus(TransactionStatusEnum.REJECTED);
             loserTx.setRejectReason(autoRejectReason);
             transactionRepository.update(loserTx);
 
             new Thread(() -> {
-                 EmailUtil.sendRejectEmail(loserTx.getCustomer().getEmail(), loserTx.getCustomer().getFullName(), p.getTitle(), autoRejectReason);
+                EmailUtil.sendRejectEmail(loserTx.getCustomer().getEmail(), loserTx.getCustomer().getFullName(), p.getTitle(), autoRejectReason);
             }).start();
         }
 
         return "SUCCESS";
     }
 
-    // 3. Logic Từ Chối Giao Dịch
+    // Từ chối giao dịch kèm lý do và gửi mail thông báo
     public String rejectTransaction(Integer txId, String reason) {
         Transaction tx = transactionRepository.findById(txId);
         if (tx == null || tx.getStatus() != TransactionStatusEnum.PENDING) {
@@ -198,10 +199,10 @@ public class TransactionService {
         }
 
         tx.setStatus(TransactionStatusEnum.REJECTED);
+        tx.setRejectReason(reason);
 
         if (!transactionRepository.update(tx)) return "Lỗi cập nhật CSDL!";
 
-        // Gửi Email Từ chối bất đồng bộ (Cần thêm hàm sendRejectEmail vào EmailUtil)
         new Thread(() -> {
             EmailUtil.sendRejectEmail(tx.getCustomer().getEmail(), tx.getCustomer().getFullName(), tx.getProperty().getTitle(), reason);
         }).start();

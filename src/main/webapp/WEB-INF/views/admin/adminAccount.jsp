@@ -55,6 +55,32 @@
         </button>
     </div>
 
+    <!-- KHU VỰC TÌM KIẾM & LÀM MỚI -->
+    <div class="card shadow-sm border-0 mb-3" style="border-radius: 12px;">
+        <div class="card-body p-3">
+            <form action="${pageContext.request.contextPath}/admin/user" method="get"
+                  class="row g-2 align-items-center">
+                <div class="col-md-5 col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted"><i
+                                class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" name="keyword" class="form-control border-start-0 shadow-none"
+                               placeholder="Tìm kiếm theo họ tên, email, SĐT..." value="${param.keyword}">
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary fw-bold px-3 shadow-sm">
+                        <i class="fa-solid fa-search me-1"></i> Tìm kiếm
+                    </button>
+                    <a href="${pageContext.request.contextPath}/admin/user"
+                       class="btn btn-outline-secondary fw-bold px-3 shadow-sm" title="Làm mới danh sách">
+                        <i class="fa-solid fa-rotate me-1"></i> Refresh
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Thông báo Alert ngoài màn hình -->
     <c:if test="${not empty sessionScope.msg}">
         <div class="alert alert-dismissible fade show shadow-sm border-0 mb-3 py-2 px-3" role="alert"
@@ -69,29 +95,30 @@
     </c:if>
 
     <!-- BẢNG DANH SÁCH -->
-    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
+    <div class="card shadow-sm border-0 mb-3" style="border-radius: 12px; overflow: hidden;">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover mb-0 align-middle">
                     <thead class="table-light">
                     <tr>
+                        <th style="width: 5%;" class="text-center">STT</th>
                         <th style="width: 15%;">Họ tên</th>
-                        <th style="width: 13%;">Tên đăng nhập</th>
-                        <th style="width: 20%;">Email</th>
-                        <th style="width: 12%;">Địa chỉ</th>
+                        <th style="width: 20%;">Tên đăng nhập</th>
+                        <th style="width: 13%;">Số điện thoại</th>
+                        <th style="width: 10%;">Địa chỉ</th>
                         <th style="width: 13%;">Vai trò</th>
                         <th style="width: 10%;">Trạng thái</th>
-                        <th style="width: 17%;">Hành động</th>
+                        <th style="width: 14%;">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="acc" items="${userList}">
+                    <c:set var="startIndex" value="${(currentPage - 1) * 5}"/>
+                    <c:forEach var="acc" items="${userList}" varStatus="loop">
                         <tr>
+                            <td class="text-center fw-bold text-muted">${startIndex + loop.index + 1}</td>
                             <td class="fw-bold text-dark">${acc.fullName}</td>
-
-                            <c:set var="emailParts" value="${fn:split(acc.email, '@')}"/>
-                            <td>${emailParts[0]}</td>
                             <td class="text-break">${acc.email}</td>
+                            <td>${not empty acc.phone ? acc.phone : 'N/A'}</td>
                             <td>Việt Nam</td>
 
                             <td>
@@ -139,7 +166,6 @@
                                         <i class="fa-solid fa-key"></i> Đổi MK
                                     </button>
 
-                                    <!-- NÚT KHÓA / MỞ KHÓA TRỰC TIẾP FORM POST (100% ĂN NGAY) -->
                                     <c:choose>
                                         <c:when test="${acc.role == 'ADMIN'}">
                                             <span class="badge bg-secondary text-light ms-1"
@@ -169,7 +195,9 @@
 
                     <c:if test="${empty userList}">
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-4">Chưa có dữ liệu tài khoản.</td>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                <i class="fa-solid fa-folder-open me-1"></i> Không tìm thấy dữ liệu tài khoản phù hợp.
+                            </td>
                         </tr>
                     </c:if>
                     </tbody>
@@ -178,29 +206,33 @@
         </div>
     </div>
 
-    <!-- Phân trang -->
+    <!-- NÚT PHÂN TRANG -->
+    <c:set var="maxPage" value="${totalPage > 0 ? totalPage : 1}"/>
     <c:set var="start" value="${currentPage - 2 < 1 ? 1 : currentPage - 2}"/>
-    <c:set var="end" value="${currentPage + 2 > totalPage ? totalPage : currentPage + 2}"/>
-    <c:if test="${totalPage > 1}">
-        <nav class="mt-3">
-            <ul class="pagination pagination-sm justify-content-end mb-0">
-                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                    <a class="page-link" href="${pageContext.request.contextPath}/admin/user?page=${currentPage - 1}">Trước</a>
+    <c:set var="end" value="${currentPage + 2 > maxPage ? maxPage : currentPage + 2}"/>
+    <c:set var="kwParam" value="${not empty param.keyword ? '&keyword='.concat(param.keyword) : ''}"/>
+
+    <nav class="mt-3">
+        <ul class="pagination pagination-sm justify-content-end mb-0">
+            <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                <a class="page-link"
+                   href="${pageContext.request.contextPath}/admin/user?page=${currentPage - 1}${kwParam}">Trước</a>
+            </li>
+            <c:forEach begin="${start}" end="${end}" var="i">
+                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                    <a class="page-link"
+                       href="${pageContext.request.contextPath}/admin/user?page=${i}${kwParam}">${i}</a>
                 </li>
-                <c:forEach begin="${start}" end="${end}" var="i">
-                    <li class="page-item ${i == currentPage ? 'active' : ''}">
-                        <a class="page-link" href="${pageContext.request.contextPath}/admin/user?page=${i}">${i}</a>
-                    </li>
-                </c:forEach>
-                <li class="page-item ${currentPage == totalPage ? 'disabled' : ''}">
-                    <a class="page-link" href="${pageContext.request.contextPath}/admin/user?page=${currentPage + 1}">Sau</a>
-                </li>
-            </ul>
-        </nav>
-    </c:if>
+            </c:forEach>
+            <li class="page-item ${currentPage >= maxPage ? 'disabled' : ''}">
+                <a class="page-link"
+                   href="${pageContext.request.contextPath}/admin/user?page=${currentPage + 1}${kwParam}">Sau</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
-<!-- MODAL THÊM MỚI TÀI KHOẢN (Chỉ hiển thị tùy chọn Staff & Admin) -->
+<!-- MODAL THÊM MỚI TÀI KHOẢN -->
 <div class="modal fade" id="addAccountModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg custom-modal-content">
@@ -424,12 +456,15 @@
     }
 
     $(document).ready(function () {
+        // Reset form và alert khi đóng bất kỳ Modal nào
         $('.modal').on('hidden.bs.modal', function () {
             $(this).find('form')[0].reset();
             $(this).find('.alert').addClass('d-none').removeClass('alert-success alert-danger').html('');
+            $(this).find('button[type="submit"]').prop('disabled', false);
+            $(this).find('.spinner-border').addClass('d-none');
         });
 
-        // AJAX THÊM MỚI
+        // 1. AJAX THÊM MỚI TÀI KHOẢN
         $('#addAccountForm').on('submit', function (e) {
             e.preventDefault();
             $('#btnAddSubmit').prop('disabled', true);
@@ -440,25 +475,32 @@
                 type: 'POST',
                 data: $(this).serialize(),
                 dataType: 'json',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
                 success: function (res) {
                     $('#btnAddSubmit').prop('disabled', false);
                     $('#btnAddSpinner').addClass('d-none');
 
-                    if (res.success) {
+                    if (res && res.success) {
                         $('#addModalAlert').removeClass('d-none alert-danger').addClass('alert-success')
                             .html('<div class="fw-bold"><i class="fa-solid fa-circle-check text-success me-2" style="font-size: 16px;"></i> Thêm tài khoản thành công!</div>');
                         setTimeout(function () {
                             location.reload();
-                        }, 1200);
+                        }, 1000);
                     } else {
-                        var errorHtml = renderErrorBox(res.errors);
+                        var errorHtml = renderErrorBox(res ? res.errors : ['Không thể thêm tài khoản!']);
                         $('#addModalAlert').removeClass('d-none alert-success').addClass('alert-danger').html(errorHtml);
                     }
+                },
+                error: function (xhr) {
+                    $('#btnAddSubmit').prop('disabled', false);
+                    $('#btnAddSpinner').addClass('d-none');
+                    $('#addModalAlert').removeClass('d-none alert-success').addClass('alert-danger')
+                        .html('<div class="fw-bold text-danger"><i class="fa-solid fa-circle-xmark me-2"></i> Lỗi máy chủ (' + xhr.status + '). Vui lòng thử lại!</div>');
                 }
             });
         });
 
-        // AJAX SỬA
+        // 2. AJAX SỬA TÀI KHOẢN
         $('#editAccountForm').on('submit', function (e) {
             e.preventDefault();
             $('#btnEditSubmit').prop('disabled', true);
@@ -469,25 +511,32 @@
                 type: 'POST',
                 data: $(this).serialize(),
                 dataType: 'json',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
                 success: function (res) {
                     $('#btnEditSubmit').prop('disabled', false);
                     $('#btnEditSpinner').addClass('d-none');
 
-                    if (res.success) {
+                    if (res && res.success) {
                         $('#editModalAlert').removeClass('d-none alert-danger').addClass('alert-success')
                             .html('<div class="fw-bold"><i class="fa-solid fa-circle-check text-success me-2" style="font-size: 16px;"></i> Cập nhật thành công!</div>');
                         setTimeout(function () {
                             location.reload();
-                        }, 1200);
+                        }, 1000);
                     } else {
-                        var errorHtml = renderErrorBox(res.errors);
+                        var errorHtml = renderErrorBox(res ? res.errors : ['Không thể cập nhật tài khoản!']);
                         $('#editModalAlert').removeClass('d-none alert-success').addClass('alert-danger').html(errorHtml);
                     }
+                },
+                error: function (xhr) {
+                    $('#btnEditSubmit').prop('disabled', false);
+                    $('#btnEditSpinner').addClass('d-none');
+                    $('#editModalAlert').removeClass('d-none alert-success').addClass('alert-danger')
+                        .html('<div class="fw-bold text-danger"><i class="fa-solid fa-circle-xmark me-2"></i> Lỗi máy chủ (' + xhr.status + '). Vui lòng thử lại!</div>');
                 }
             });
         });
 
-        // AJAX ĐỔI MẬT KHẨU
+        // 3. AJAX ĐỔI MẬT KHẨU
         $('#changePasswordForm').on('submit', function (e) {
             e.preventDefault();
             $('#btnPwdSubmit').prop('disabled', true);
@@ -498,20 +547,27 @@
                 type: 'POST',
                 data: $(this).serialize(),
                 dataType: 'json',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
                 success: function (res) {
                     $('#btnPwdSubmit').prop('disabled', false);
                     $('#btnPwdSpinner').addClass('d-none');
 
-                    if (res.success) {
+                    if (res && res.success) {
                         $('#pwdModalAlert').removeClass('d-none alert-danger').addClass('alert-success')
                             .html('<div class="fw-bold"><i class="fa-solid fa-circle-check text-success me-2" style="font-size: 16px;"></i> Đổi mật khẩu thành công!</div>');
                         setTimeout(function () {
                             location.reload();
-                        }, 1200);
+                        }, 1000);
                     } else {
-                        var errorHtml = renderErrorBox(res.errors);
+                        var errorHtml = renderErrorBox(res ? res.errors : ['Không thể đổi mật khẩu!']);
                         $('#pwdModalAlert').removeClass('d-none alert-success').addClass('alert-danger').html(errorHtml);
                     }
+                },
+                error: function (xhr) {
+                    $('#btnPwdSubmit').prop('disabled', false);
+                    $('#btnPwdSpinner').addClass('d-none');
+                    $('#pwdModalAlert').removeClass('d-none alert-success').addClass('alert-danger')
+                        .html('<div class="fw-bold text-danger"><i class="fa-solid fa-circle-xmark me-2"></i> Lỗi máy chủ (' + xhr.status + '). Vui lòng thử lại!</div>');
                 }
             });
         });

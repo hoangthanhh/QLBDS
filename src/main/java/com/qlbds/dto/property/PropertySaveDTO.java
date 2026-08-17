@@ -1,20 +1,19 @@
 package com.qlbds.dto.property;
 
-import java.math.BigDecimal;
+import javax.servlet.http.Part;
 import java.util.List;
 
-public class PropertyDetailDTO {
+public class PropertySaveDTO {
     private Integer id;
     private String title;
     private String address;
-    private Long price;
-    private BigDecimal area;
     private String propertyType;
-    private String status;
+    private Double price;
+    private Double area;
     private String description;
-    private List<String> imageUrls; // Chuyển Entity List thành String List
+    private List<Part> imageParts;
 
-    public PropertyDetailDTO() {
+    public PropertySaveDTO() {
     }
 
     public Integer getId() {
@@ -41,22 +40,6 @@ public class PropertyDetailDTO {
         this.address = address;
     }
 
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
-    public BigDecimal getArea() {
-        return area;
-    }
-
-    public void setArea(BigDecimal area) {
-        this.area = area;
-    }
-
     public String getPropertyType() {
         return propertyType;
     }
@@ -65,12 +48,20 @@ public class PropertyDetailDTO {
         this.propertyType = propertyType;
     }
 
-    public String getStatus() {
-        return status;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getArea() {
+        return area;
+    }
+
+    public void setArea(Double area) {
+        this.area = area;
     }
 
     public String getDescription() {
@@ -81,11 +72,11 @@ public class PropertyDetailDTO {
         this.description = description;
     }
 
-    public List<String> getImageUrls() {
-        return imageUrls;
+    public List<Part> getImageParts() {
+        return imageParts;
     }
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setImageParts(List<Part> imageParts) {
+        this.imageParts = imageParts;
     }
 }

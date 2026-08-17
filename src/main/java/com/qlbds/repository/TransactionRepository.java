@@ -1,16 +1,22 @@
 package com.qlbds.repository;
 
+import com.qlbds.constant.TransactionStatusEnum;
 import com.qlbds.entity.Transaction;
 import com.qlbds.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionRepository {
 
+    // Chung (CRUD)
+
+    // Lưu mới giao dịch vào CSDL
     public boolean save(Transaction transaction) {
         org.hibernate.Transaction hbTx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -25,7 +31,37 @@ public class TransactionRepository {
         }
     }
 
-    // Kiểm tra xem khách hàng này có giao dịch nào đang CHỜ DUYỆT cho BĐS này không
+    // Tìm giao dịch theo ID kèm thông tin Khách hàng và BĐS
+    public Transaction findById(Integer id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT t FROM Transaction t JOIN FETCH t.customer JOIN FETCH t.property WHERE t.id = :id";
+            Query<Transaction> query = session.createQuery(hql, Transaction.class);
+            query.setParameter("id", id);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Cập nhật trạng thái hoặc thông tin giao dịch
+    public boolean update(Transaction transaction) {
+        org.hibernate.Transaction hbTx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            hbTx = session.beginTransaction();
+            session.update(transaction);
+            hbTx.commit();
+            return true;
+        } catch (Exception e) {
+            if (hbTx != null) hbTx.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Customer
+
+    // Kiểm tra xem khách hàng có yêu cầu nào đang Chờ duyệt (PENDING) cho BĐS này không
     public boolean hasPendingTransaction(Integer userId, Integer propertyId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.customer.id = :userId AND t.property.id = :propertyId AND t.status = 'PENDING'";
@@ -35,11 +71,11 @@ public class TransactionRepository {
             return query.getSingleResult() > 0;
         } catch (Exception e) {
             e.printStackTrace();
-            return true; // Trả về true để chặn an toàn nếu có lỗi DB
+            return true;
         }
     }
 
-    // Kiểm tra xem khách hàng này ĐÃ CỌC THÀNH CÔNG BĐS này chưa (Để cho phép mua)
+    // Kiểm tra xem khách hàng đã Đặt cọc thành công BĐS này chưa (để cho phép Mua)
     public boolean hasCompletedDeposit(Integer userId, Integer propertyId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.customer.id = :userId AND t.property.id = :propertyId AND t.transactionType = 'DEPOSIT' AND t.status = 'COMPLETED'";
@@ -53,7 +89,7 @@ public class TransactionRepository {
         }
     }
 
-    // Thêm vào TransactionRepository.java
+    // Khách hàng tự hủy yêu cầu giao dịch đang ở trạng thái PENDING
     public boolean cancelPendingTransaction(Integer userId, Integer propertyId) {
         org.hibernate.Transaction hbTx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -72,7 +108,7 @@ public class TransactionRepository {
         }
     }
 
-    // Lấy danh sách giao dịch của 1 User (Có phân trang)
+    // Lấy danh sách lịch sử giao dịch của 1 khách hàng (kèm ảnh và phân trang)
     public List<Transaction> findTransactionsByUserId(Integer userId, int page, int pageSize) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT t FROM Transaction t JOIN FETCH t.property p LEFT JOIN FETCH p.images WHERE t.customer.id = :userId ORDER BY t.id DESC";
@@ -87,7 +123,7 @@ public class TransactionRepository {
         }
     }
 
-    // Đếm tổng số giao dịch để tính trang
+    // Đếm tổng số giao dịch của khách hàng để phân trang
     public long countTransactionsByUserId(Integer userId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.customer.id = :userId";
@@ -100,20 +136,39 @@ public class TransactionRepository {
         }
     }
 
-    // Lấy toàn bộ giao dịch cho Admin (Sắp xếp mới nhất lên đầu)
-    // 1. Trả lại thứ tự MỚI NHẤT LÊN ĐẦU
-    public List<Transaction> findAllForAdmin(String statusFilter, int page, int pageSize) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            StringBuilder hql = new StringBuilder("SELECT t FROM Transaction t JOIN FETCH t.customer JOIN FETCH t.property");
+    // Staff & Admin
 
-            if (statusFilter != null && !statusFilter.isEmpty() && !statusFilter.equals("ALL")) {
-                hql.append(" WHERE t.status = :status");
+    // Lấy danh sách giao dịch có lọc nâng cao (Từ khóa, Khoảng ngày, Trạng thái) kèm phân trang
+    public List<Transaction> findTransactionsWithFilter(String keyword, String startDate, String endDate, String statusFilter, int page, int pageSize) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            StringBuilder hql = new StringBuilder("SELECT t FROM Transaction t JOIN FETCH t.customer c JOIN FETCH t.property p WHERE 1=1");
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                hql.append(" AND (LOWER(c.fullName) LIKE :kw OR LOWER(c.email) LIKE :kw OR c.phone LIKE :kw OR LOWER(t.transactionCode) LIKE :kw)");
+            }
+            if (statusFilter != null && !statusFilter.isEmpty() && !"ALL".equals(statusFilter)) {
+                hql.append(" AND t.status = :status");
+            }
+            if (startDate != null && !startDate.trim().isEmpty()) {
+                hql.append(" AND t.createdAt >= :startDate");
+            }
+            if (endDate != null && !endDate.trim().isEmpty()) {
+                hql.append(" AND t.createdAt <= :endDate");
             }
             hql.append(" ORDER BY t.id DESC");
 
-            org.hibernate.query.Query<Transaction> query = session.createQuery(hql.toString(), Transaction.class);
-            if (statusFilter != null && !statusFilter.isEmpty() && !statusFilter.equals("ALL")) {
-                query.setParameter("status", com.qlbds.constant.TransactionStatusEnum.valueOf(statusFilter));
+            Query<Transaction> query = session.createQuery(hql.toString(), Transaction.class);
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                query.setParameter("kw", "%" + keyword.trim().toLowerCase() + "%");
+            }
+            if (statusFilter != null && !statusFilter.isEmpty() && !"ALL".equals(statusFilter)) {
+                query.setParameter("status", TransactionStatusEnum.valueOf(statusFilter));
+            }
+            if (startDate != null && !startDate.trim().isEmpty()) {
+                query.setParameter("startDate", LocalDate.parse(startDate.trim()).atStartOfDay());
+            }
+            if (endDate != null && !endDate.trim().isEmpty()) {
+                query.setParameter("endDate", LocalDate.parse(endDate.trim()).atTime(LocalTime.MAX));
             }
 
             query.setFirstResult((page - 1) * pageSize);
@@ -125,13 +180,52 @@ public class TransactionRepository {
         }
     }
 
-    // 2. THÊM MỚI: Lấy danh sách các giao dịch PENDING của những người "chậm chân"
+    // Đếm tổng số giao dịch theo bộ lọc nâng cao để tính số trang
+    public long countTransactionsWithFilter(String keyword, String startDate, String endDate, String statusFilter) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            StringBuilder hql = new StringBuilder("SELECT COUNT(t) FROM Transaction t JOIN t.customer c WHERE 1=1");
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                hql.append(" AND (LOWER(c.fullName) LIKE :kw OR LOWER(c.email) LIKE :kw OR c.phone LIKE :kw OR LOWER(t.transactionCode) LIKE :kw)");
+            }
+            if (statusFilter != null && !statusFilter.isEmpty() && !"ALL".equals(statusFilter)) {
+                hql.append(" AND t.status = :status");
+            }
+            if (startDate != null && !startDate.trim().isEmpty()) {
+                hql.append(" AND t.createdAt >= :startDate");
+            }
+            if (endDate != null && !endDate.trim().isEmpty()) {
+                hql.append(" AND t.createdAt <= :endDate");
+            }
+
+            Query<Long> query = session.createQuery(hql.toString(), Long.class);
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                query.setParameter("kw", "%" + keyword.trim().toLowerCase() + "%");
+            }
+            if (statusFilter != null && !statusFilter.isEmpty() && !"ALL".equals(statusFilter)) {
+                query.setParameter("status", TransactionStatusEnum.valueOf(statusFilter));
+            }
+            if (startDate != null && !startDate.trim().isEmpty()) {
+                query.setParameter("startDate", LocalDate.parse(startDate.trim()).atStartOfDay());
+            }
+            if (endDate != null && !endDate.trim().isEmpty()) {
+                query.setParameter("endDate", LocalDate.parse(endDate.trim()).atTime(LocalTime.MAX));
+            }
+
+            Long count = query.uniqueResult();
+            return count != null ? count : 0L;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    // Tìm các giao dịch PENDING khác trên cùng 1 BĐS (dùng để tự động từ chối những người đến sau)
     public List<Transaction> findOtherPendingTransactions(Integer propertyId, Integer approvedTxId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Lấy các giao dịch cùng Property, nhưng KHÁC ID với giao dịch vừa được duyệt, và đang PENDING
             String hql = "SELECT t FROM Transaction t JOIN FETCH t.customer JOIN FETCH t.property " +
                     "WHERE t.property.id = :propId AND t.id != :approvedId AND t.status = 'PENDING'";
-            org.hibernate.query.Query<Transaction> query = session.createQuery(hql, Transaction.class);
+            Query<Transaction> query = session.createQuery(hql, Transaction.class);
             query.setParameter("propId", propertyId);
             query.setParameter("approvedId", approvedTxId);
             return query.getResultList();
@@ -141,66 +235,17 @@ public class TransactionRepository {
         }
     }
 
-    // 2. THÊM MỚI: Hàm kiểm tra xem có giao dịch nào CŨ HƠN đang chờ duyệt không
+    // Kiểm tra luật ưu tiên: Có yêu cầu nào gửi trước (thời gian tạo nhỏ hơn) đang chờ duyệt không
     public boolean hasOlderPendingTransaction(Integer propertyId, LocalDateTime currentTxTime) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Tìm giao dịch cùng BĐS, trạng thái PENDING, và thời gian tạo < thời gian của giao dịch đang xét
             String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.property.id = :propId AND t.status = 'PENDING' AND t.createdAt < :txTime";
-            org.hibernate.query.Query<Long> query = session.createQuery(hql, Long.class);
+            Query<Long> query = session.createQuery(hql, Long.class);
             query.setParameter("propId", propertyId);
             query.setParameter("txTime", currentTxTime);
             return query.getSingleResult() > 0;
         } catch (Exception e) {
             e.printStackTrace();
-            return true; // Trả về true để chặn an toàn nếu có lỗi DB
-        }
-    }
-
-    // Đếm tổng giao dịch
-    public long countAll(String statusFilter) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            StringBuilder hql = new StringBuilder("SELECT COUNT(t) FROM Transaction t");
-            if (statusFilter != null && !statusFilter.isEmpty() && !statusFilter.equals("ALL")) {
-                hql.append(" WHERE t.status = :status");
-            }
-
-            org.hibernate.query.Query<Long> query = session.createQuery(hql.toString(), Long.class);
-            if (statusFilter != null && !statusFilter.isEmpty() && !statusFilter.equals("ALL")) {
-                query.setParameter("status", com.qlbds.constant.TransactionStatusEnum.valueOf(statusFilter));
-            }
-            return query.getSingleResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    // Lấy giao dịch theo ID (Dùng khi duyệt)
-    public Transaction findById(Integer id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Lấy kèm Customer và Property để lát gửi Email
-            String hql = "SELECT t FROM Transaction t JOIN FETCH t.customer JOIN FETCH t.property WHERE t.id = :id";
-            Query<Transaction> query = session.createQuery(hql, Transaction.class);
-            query.setParameter("id", id);
-            return query.uniqueResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    // Cập nhật giao dịch (Duyệt/Từ chối)
-    public boolean update(Transaction transaction) {
-        org.hibernate.Transaction hbTx = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            hbTx = session.beginTransaction();
-            session.update(transaction);
-            hbTx.commit();
             return true;
-        } catch (Exception e) {
-            if (hbTx != null) hbTx.rollback();
-            e.printStackTrace();
-            return false;
         }
     }
 }

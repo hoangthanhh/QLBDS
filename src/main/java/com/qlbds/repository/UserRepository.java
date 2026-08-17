@@ -14,6 +14,9 @@ import java.util.List;
 
 public class UserRepository {
 
+
+    // CUSTOMER (Đăng nhập, Đăng ký, Profile, OTP)
+
     public User findById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(User.class, id);
@@ -47,7 +50,6 @@ public class UserRepository {
         }
     }
 
-    // Đã chuẩn hóa tên hàm thành insertUser để đồng nhất với Service của Hưng
     public boolean insertUser(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -62,7 +64,6 @@ public class UserRepository {
         }
     }
 
-    // Đã chuẩn hóa tên hàm thành updateUser để đồng nhất
     public boolean updateUser(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -77,10 +78,22 @@ public class UserRepository {
         }
     }
 
-    public List<User> findAllUsers(int offset, int limit) {
+
+    //  ADMIN (Danh sách, Phân trang, Tìm kiếm, Đổi Role, Khóa tài khoản)
+    // 1. Lấy danh sách tài khoản theo từ khóa tìm kiếm (Họ tên, Email, SĐT) và Phân trang
+    public List<User> searchUsers(String keyword, int offset, int limit) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM User u ORDER BY u.id DESC";
-            Query<User> query = session.createQuery(hql, User.class);
+            StringBuilder hql = new StringBuilder("FROM User u WHERE 1=1");
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                hql.append(" AND (LOWER(u.fullName) LIKE :kw OR LOWER(u.email) LIKE :kw OR u.phone LIKE :kw)");
+            }
+            hql.append(" ORDER BY u.id DESC");
+
+            Query<User> query = session.createQuery(hql.toString(), User.class);
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                query.setParameter("kw", "%" + keyword.trim().toLowerCase() + "%");
+            }
             query.setFirstResult(offset);
             query.setMaxResults(limit);
             return query.list();
@@ -90,10 +103,20 @@ public class UserRepository {
         }
     }
 
-    public int countTotalUsers() {
+    // 2. Đếm tổng số tài khoản khớp với từ khóa tìm kiếm để tính tổng số trang chính xác
+    public int countSearchUsers(String keyword) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT COUNT(u) FROM User u";
-            Long count = (Long) session.createQuery(hql).uniqueResult();
+            StringBuilder hql = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1=1");
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                hql.append(" AND (LOWER(u.fullName) LIKE :kw OR LOWER(u.email) LIKE :kw OR u.phone LIKE :kw)");
+            }
+
+            Query<Long> query = session.createQuery(hql.toString(), Long.class);
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                query.setParameter("kw", "%" + keyword.trim().toLowerCase() + "%");
+            }
+            Long count = query.uniqueResult();
             return count != null ? count.intValue() : 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,6 +124,17 @@ public class UserRepository {
         }
     }
 
+    // 3. Lấy toàn bộ danh sách tài khoản mặc định (khi không nhập từ khóa)
+    public List<User> findAllUsers(int offset, int limit) {
+        return searchUsers(null, offset, limit);
+    }
+
+    // 4. Đếm tổng số tài khoản toàn hệ thống
+    public int countTotalUsers() {
+        return countSearchUsers(null);
+    }
+
+    // 5. Cập nhật Vai trò (Customer / Staff / Admin)
     public boolean updateRole(int id, RoleTypeEnum role) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -120,7 +154,7 @@ public class UserRepository {
         }
     }
 
-    // XÓA MỀM: ĐỔI TRẠNG THÁI ACTIVE <-> INACTIVE BẰNG HIBERNATE
+    // 6. Xóa mềm: Chuyển đổi trạng thái tài khoản giữa ACTIVE (Hoạt động) <-> INACTIVE (Khóa)
     public boolean toggleStatus(int id) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

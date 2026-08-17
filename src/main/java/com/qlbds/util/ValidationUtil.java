@@ -1,6 +1,8 @@
 package com.qlbds.util;
 
-import com.qlbds.dto.user.UserCreateDTO;
+import com.qlbds.dto.admin.AdminUserDTO;
+import com.qlbds.dto.property.PropertySaveDTO;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -38,13 +40,18 @@ public class ValidationUtil {
         return passErrors;
     }
 
-    // ĐÃ SỬA: Dùng UserCreateDTO
-    public static List<String> validateAdminCreate(UserCreateDTO dto) {
+    public static List<String> validateAdminCreate(AdminUserDTO.Create dto) {
         List<String> errors = new ArrayList<>();
-        if (dto.getFullName() == null || dto.getFullName().trim().isEmpty()) errors.add("Họ tên không được để trống!");
-        if (!isValidEmail(dto.getEmail())) errors.add("Email không hợp lệ!");
+        if (dto.getFullName() == null || dto.getFullName().trim().isEmpty()) {
+            errors.add("Họ tên không được để trống!");
+        }
+        if (!isValidEmail(dto.getEmail())) {
+            errors.add("Email không hợp lệ!");
+        }
         if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
-            if (!isValidPhone(dto.getPhone())) errors.add("Số điện thoại phải từ 10 đến 11 chữ số và bắt đầu bằng số 0!");
+            if (!isValidPhone(dto.getPhone())) {
+                errors.add("Số điện thoại phải từ 10 đến 11 chữ số và bắt đầu bằng số 0!");
+            }
         }
         errors.addAll(checkPassword(dto.getPassword()));
         return errors;
@@ -72,4 +79,48 @@ public class ValidationUtil {
         if (start.isAfter(end)) return "Từ ngày không được lớn hơn Đến ngày!";
         return null;
     }
+
+    public static List<String> validateProperty(PropertySaveDTO dto, boolean isCreate) {
+        List<String> errors = new ArrayList<>();
+        if (dto == null) {
+            errors.add("Dữ liệu không hợp lệ!");
+            return errors;
+        }
+
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            errors.add("Tiêu đề BĐS không được để trống!");
+        }
+
+        if (dto.getAddress() == null || dto.getAddress().trim().isEmpty()) {
+            errors.add("Địa chỉ BĐS không được để trống!");
+        }
+
+        if (dto.getPrice() == null || dto.getPrice() <= 0) {
+            errors.add("Giá BĐS phải lớn hơn 0!");
+        }
+
+        if (dto.getArea() == null || dto.getArea() <= 0) {
+            errors.add("Diện tích BĐS phải lớn hơn 0!");
+        }
+
+        if (dto.getPropertyType() == null || dto.getPropertyType().trim().isEmpty()) {
+            errors.add("Vui lòng chọn loại BĐS!");
+        }
+
+        // Bắt buộc ảnh khi tạo mới
+        if (isCreate) {
+            if (dto.getImageParts() == null || dto.getImageParts().isEmpty()) {
+                errors.add("Vui lòng tải lên ít nhất một ảnh cho BĐS!");
+            }
+        }
+
+        // Chặn tối đa 5 ảnh
+        if (dto.getImageParts() != null && dto.getImageParts().size() > 5) {
+            errors.add("Chỉ được phép tải lên tối đa 5 ảnh cho mỗi BĐS!");
+        }
+
+        return errors;
+    }
 }
+
+

@@ -1,4 +1,4 @@
-package com.qlbds.controller.admin;
+package com.qlbds.controller.staff;
 
 import com.qlbds.dto.admin.AdminTransactionDTO;
 import com.qlbds.service.TransactionService;
@@ -11,16 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/transactions")
-public class AdminTransactionController extends HttpServlet {
+@WebServlet("/staff/transactions")
+public class StaffTransactionController extends HttpServlet {
 
-    private TransactionService transactionService = new TransactionService();
+    private final TransactionService transactionService = new TransactionService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int page = 1;
         int pageSize = 10;
 
+        String keyword = req.getParameter("keyword");
+        String startDate = req.getParameter("startDate");
+        String endDate = req.getParameter("endDate");
         String statusFilter = req.getParameter("status");
         if (statusFilter == null || statusFilter.trim().isEmpty()) {
             statusFilter = "ALL";
@@ -28,22 +31,22 @@ public class AdminTransactionController extends HttpServlet {
 
         String pageParam = req.getParameter("page");
         if (pageParam != null && !pageParam.trim().isEmpty()) {
-            try {
-                page = Integer.parseInt(pageParam);
-            } catch (NumberFormatException ignored) {
-            }
+            try { page = Integer.parseInt(pageParam); } catch (NumberFormatException ignored) {}
         }
 
-        // Gọi đúng tên hàm dùng chung trong TransactionService
-        List<AdminTransactionDTO> txList = transactionService.getManagementTransactions(null, null, null, statusFilter, page, pageSize);
-        int totalPages = transactionService.getTotalManagementPages(null, null, null, statusFilter, pageSize);
+        // Gọi đúng tên hàm getManagementTransactions và getTotalManagementPages
+        List<AdminTransactionDTO> txList = transactionService.getManagementTransactions(keyword, startDate, endDate, statusFilter, page, pageSize);
+        int totalPages = transactionService.getTotalManagementPages(keyword, startDate, endDate, statusFilter, pageSize);
 
         req.setAttribute("txList", txList);
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPages", totalPages);
+        req.setAttribute("keyword", keyword);
+        req.setAttribute("startDate", startDate);
+        req.setAttribute("endDate", endDate);
         req.setAttribute("currentStatus", statusFilter);
 
-        req.getRequestDispatcher("/WEB-INF/views/admin/admin-transactions.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/staff/staffTransactions.jsp").forward(req, resp);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class AdminTransactionController extends HttpServlet {
             if ("APPROVE".equals(action)) {
                 result = transactionService.approveTransaction(txId);
                 if ("SUCCESS".equals(result)) {
-                    req.getSession().setAttribute("msgSuccess", "Duyệt giao dịch thành công! Đã gửi Email xác nhận cho khách hàng.");
+                    req.getSession().setAttribute("msgSuccess", "Đã duyệt giao dịch thành công và gửi Email xác nhận bằng JavaMail API!");
                 } else {
                     req.getSession().setAttribute("msgError", result);
                 }
@@ -70,7 +73,7 @@ public class AdminTransactionController extends HttpServlet {
                 } else {
                     result = transactionService.rejectTransaction(txId, reason);
                     if ("SUCCESS".equals(result)) {
-                        req.getSession().setAttribute("msgSuccess", "Đã từ chối giao dịch và gửi Email thông báo.");
+                        req.getSession().setAttribute("msgSuccess", "Đã từ chối giao dịch và gửi Email thông báo!");
                     } else {
                         req.getSession().setAttribute("msgError", result);
                     }
@@ -80,6 +83,6 @@ public class AdminTransactionController extends HttpServlet {
             req.getSession().setAttribute("msgError", "Dữ liệu yêu cầu không hợp lệ!");
         }
 
-        resp.sendRedirect(req.getContextPath() + "/admin/transactions");
+        resp.sendRedirect(req.getContextPath() + "/staff/transactions");
     }
 }
