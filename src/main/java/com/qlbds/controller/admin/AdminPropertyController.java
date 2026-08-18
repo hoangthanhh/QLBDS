@@ -41,9 +41,16 @@ public class AdminPropertyController extends HttpServlet {
                     resp.setContentType("application/json;charset=UTF-8");
 
                     StringBuilder imgJson = new StringBuilder("[");
-                    if (detail.getImageUrls() != null) {
+                    if (detail.getImageItems() != null && !detail.getImageItems().isEmpty()) {
+                        for (int i = 0; i < detail.getImageItems().size(); i++) {
+                            PropertyDetailDTO.ImageItem item = detail.getImageItems().get(i);
+                            imgJson.append("{\"id\":").append(item.getId())
+                                    .append(",\"path\":\"").append(escapeJson(item.getPath())).append("\"}");
+                            if (i < detail.getImageItems().size() - 1) imgJson.append(",");
+                        }
+                    } else if (detail.getImageUrls() != null) {
                         for (int i = 0; i < detail.getImageUrls().size(); i++) {
-                            imgJson.append("\"").append(escapeJson(detail.getImageUrls().get(i))).append("\"");
+                            imgJson.append("{\"id\":null,\"path\":\"").append(escapeJson(detail.getImageUrls().get(i))).append("\"}");
                             if (i < detail.getImageUrls().size() - 1) imgJson.append(",");
                         }
                     }

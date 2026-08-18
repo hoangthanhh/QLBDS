@@ -155,67 +155,71 @@
                             </td>
 
                             <!-- HÀNH ĐỘNG -->
-                                                        <td class="text-center">
-                                                            <div class="d-flex align-items-center justify-content-center gap-1">
-                                                                <c:choose>
-                                                                    <%-- 1. Khi BĐS đang AVAILABLE: Cho phép Sửa và Xóa --%>
-                                                                    <c:when test="${p.status == 'AVAILABLE'}">
-                                                                        <button type="button"
-                                                                                class="btn btn-warning btn-sm text-white shadow-sm"
-                                                                                onclick="openEditModal(${p.id})"
-                                                                                title="Chỉnh sửa BĐS"
-                                                                                style="border-radius: 6px; padding: 4px 8px;">
-                                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                                        </button>
+                            <td class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <c:choose>
+                                        <%-- 1. Khi BĐS đang AVAILABLE: Cho phép Sửa và Xóa --%>
+                                        <c:when test="${p.status == 'AVAILABLE'}">
+                                            <button type="button"
+                                                    class="btn btn-warning btn-sm text-white shadow-sm"
+                                                    onclick="openEditModal(${p.id})"
+                                                    title="Chỉnh sửa BĐS"
+                                                    style="border-radius: 6px; padding: 4px 8px;">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
 
-                                                                        <form action="${pageContext.request.contextPath}/admin/bds" method="post" class="d-inline m-0"
-                                                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa BĐS này không?\nHệ thống sẽ chuyển BĐS vào trạng thái Đã xóa (Xóa mềm).');">
-                                                                            <input type="hidden" name="action" value="delete"/>
-                                                                            <input type="hidden" name="id" value="${p.id}"/>
-                                                                            <button type="submit" class="btn btn-danger btn-sm shadow-sm"
-                                                                                    title="Xóa mềm"
-                                                                                    style="border-radius: 6px; padding: 4px 8px;">
-                                                                                <i class="fa-solid fa-trash"></i>
-                                                                            </button>
-                                                                        </form>
-                                                                    </c:when>
+                                            <form action="${pageContext.request.contextPath}/admin/bds" method="post"
+                                                  class="d-inline m-0"
+                                                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa BĐS này không?\nHệ thống sẽ chuyển BĐS vào trạng thái Đã xóa (Xóa mềm).');">
+                                                <input type="hidden" name="action" value="delete"/>
+                                                <input type="hidden" name="id" value="${p.id}"/>
+                                                <button type="submit" class="btn btn-danger btn-sm shadow-sm"
+                                                        title="Xóa mềm"
+                                                        style="border-radius: 6px; padding: 4px 8px;">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </c:when>
 
-                                                                    <%-- 2. Khi BĐS đang DEPOSITED: Cho phép Hủy cọc / Mở bán lại --%>
-                                                                    <c:when test="${p.status == 'DEPOSITED'}">
-                                                                        <form action="${pageContext.request.contextPath}/admin/bds" method="post"
-                                                                              class="d-inline m-0"
-                                                                              onsubmit="return confirm('Xác nhận: Khách hàng đã hủy kèo (chấp nhận mất cọc)?\nBĐS này sẽ được đưa về trạng thái Đang Mở Bán để tiếp tục giao dịch.');">
-                                                                            <input type="hidden" name="action" value="reopen"/>
-                                                                            <input type="hidden" name="id" value="${p.id}"/>
-                                                                            <button type="submit"
-                                                                                    class="btn btn-info btn-sm text-white shadow-sm fw-bold"
-                                                                                    title="Hủy cọc -> Mở bán lại"
-                                                                                    style="border-radius: 6px; padding: 4px 8px; font-size: 12px;">
-                                                                                <i class="fa-solid fa-rotate-left me-1"></i> Mở lại
-                                                                            </button>
-                                                                        </form>
-                                                                    </c:when>
+                                        <%-- 2. Khi BĐS đang DEPOSITED: Cho phép Hủy cọc / Mở bán lại --%>
+                                        <c:when test="${p.status == 'DEPOSITED'}">
+                                            <form action="${pageContext.request.contextPath}/admin/bds" method="post"
+                                                  class="d-inline m-0"
+                                                  onsubmit="return confirm('Xác nhận: Khách hàng đã hủy kèo (chấp nhận mất cọc)?\nBĐS này sẽ được đưa về trạng thái Đang Mở Bán để tiếp tục giao dịch.');">
+                                                <input type="hidden" name="action" value="reopen"/>
+                                                <input type="hidden" name="id" value="${p.id}"/>
+                                                <button type="submit"
+                                                        class="btn btn-info btn-sm text-white shadow-sm fw-bold"
+                                                        title="Hủy cọc -> Mở bán lại"
+                                                        style="border-radius: 6px; padding: 4px 8px; font-size: 12px;">
+                                                    <i class="fa-solid fa-rotate-left me-1"></i> Mở lại
+                                                </button>
+                                            </form>
+                                        </c:when>
 
-                                                                    <%-- 3. Khi BĐS đã bị DELETED: Cho phép Khôi phục --%>
-                                                                    <c:when test="${p.status == 'DELETED'}">
-                                                                        <form action="${pageContext.request.contextPath}/admin/bds" method="post" class="d-inline m-0"
-                                                                              onsubmit="return confirm('Bạn có chắc chắn muốn khôi phục và mở bán lại BĐS này không?');">
-                                                                            <input type="hidden" name="action" value="restore"/>
-                                                                            <input type="hidden" name="id" value="${p.id}"/>
-                                                                            <button type="submit" class="btn btn-success btn-sm shadow-sm" title="Khôi phục BĐS"
-                                                                                    style="border-radius: 6px; padding: 4px 8px;">
-                                                                                <i class="fa-solid fa-trash-arrow-up"></i>
-                                                                            </button>
-                                                                        </form>
-                                                                    </c:when>
+                                        <%-- 3. Khi BĐS đã bị DELETED: Cho phép Khôi phục --%>
+                                        <c:when test="${p.status == 'DELETED'}">
+                                            <form action="${pageContext.request.contextPath}/admin/bds" method="post"
+                                                  class="d-inline m-0"
+                                                  onsubmit="return confirm('Bạn có chắc chắn muốn khôi phục và mở bán lại BĐS này không?');">
+                                                <input type="hidden" name="action" value="restore"/>
+                                                <input type="hidden" name="id" value="${p.id}"/>
+                                                <button type="submit" class="btn btn-success btn-sm shadow-sm"
+                                                        title="Khôi phục BĐS"
+                                                        style="border-radius: 6px; padding: 4px 8px;">
+                                                    <i class="fa-solid fa-trash-arrow-up"></i>
+                                                </button>
+                                            </form>
+                                        </c:when>
 
-                                                                    <%-- 4. Các trường hợp còn lại (SOLD): Khóa thao tác --%>
-                                                                    <c:otherwise>
-                                                                        <span class="text-muted small" title="Đã khóa thao tác"><i class="fa-solid fa-lock"></i> Đã khóa</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </div>
-                                                        </td>
+                                        <%-- 4. Các trường hợp còn lại (SOLD): Khóa thao tác --%>
+                                        <c:otherwise>
+                                            <span class="text-muted small" title="Đã khóa thao tác"><i
+                                                    class="fa-solid fa-lock"></i> Đã khóa</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </td>
                         </tr>
                     </c:forEach>
                     <c:if test="${empty productList}">
@@ -314,7 +318,7 @@
                                       placeholder="Nhập thông tin pháp lý, tiện ích nội ngoại khu..."></textarea>
                         </div>
 
-                        <!-- KHU VỰC HIỂN THỊ TẤT CẢ ẢNH HIỆN TẠI (KHI XEM / SỬA) -->
+                        <!-- KHU VỰC HIỂN THỊ TẤT CẢ ẢNH HIỆN TẠI (KÈM NÚT XÓA LẺ) -->
                         <div class="col-md-12 d-none" id="currentImagesArea">
                             <label class="form-label fw-bold">Ảnh hiện tại của BĐS (Xem toàn bộ):</label>
                             <div class="d-flex flex-wrap gap-2 p-2 border rounded bg-light"
@@ -447,26 +451,35 @@
                     document.getElementById('priceTextPreview').innerText = '';
                 }
 
+                // Render danh sách ảnh và nút xóa (x)
                 if (data.images && data.images.length > 0) {
-                                    var galleryHtml = '';
-                                    for (var i = 0; i < data.images.length; i++) {
-                                        var img = data.images[i];
-                                        // Xử lý lấy ID và Path từ JSON (Cần đảm bảo API trả về object chứa id và path)
-                                        // Do API get-detail hiện tại đang trả về mảng String URL,
-                                        // tạm thời hiển thị ảnh, nếu muốn xóa lẻ cần update API get-detail trả về ID ảnh.
-                                        var imgSrc = img;
-                                        if (!imgSrc.startsWith('http://') && !imgSrc.startsWith('https://')) {
-                                            imgSrc = contextPath + '/' + (imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc);
-                                        }
-                                        galleryHtml += '<div class="position-relative d-inline-block m-1">' +
-                                            '  <img src="' + imgSrc + '" class="rounded border shadow-sm" style="width: 80px; height: 80px; object-fit: cover;" onerror="this.src=\'' + contextPath + '/assets/customer/img/property-1.jpg\'"/>' +
-                                            '</div>';
-                                    }
-                                    $('#currentImagesGallery').html(galleryHtml);
-                                    $('#currentImagesArea').removeClass('d-none');
-                                } else {
-                                    $('#currentImagesArea').addClass('d-none');
-                                }
+                    var galleryHtml = '';
+                    for (var i = 0; i < data.images.length; i++) {
+                        var imgObj = data.images[i];
+                        var imgSrc = typeof imgObj === 'object' ? imgObj.path : imgObj;
+                        var imgId = typeof imgObj === 'object' ? imgObj.id : null;
+
+                        if (imgSrc && !imgSrc.startsWith('http://') && !imgSrc.startsWith('https://')) {
+                            imgSrc = contextPath + '/' + (imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc);
+                        }
+
+                        galleryHtml += '<div class="position-relative d-inline-block m-1" id="img-box-' + imgId + '">' +
+                            '  <img src="' + imgSrc + '" class="rounded border shadow-sm" style="width: 80px; height: 80px; object-fit: cover;" onerror="this.src=\'' + contextPath + '/assets/customer/img/property-1.jpg\'"/>';
+
+                        if (imgId) {
+                            galleryHtml += '  <button type="button" class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 p-0 d-flex align-items-center justify-content-center shadow" ' +
+                                '          style="width: 22px; height: 22px; transform: translate(30%, -30%); font-size: 11px;" ' +
+                                '          onclick="deleteSingleImage(' + imgId + ')" title="Xóa ảnh này">' +
+                                '    <i class="fa-solid fa-xmark"></i>' +
+                                '  </button>';
+                        }
+                        galleryHtml += '</div>';
+                    }
+                    $('#currentImagesGallery').html(galleryHtml);
+                    $('#currentImagesArea').removeClass('d-none');
+                } else {
+                    $('#currentImagesArea').addClass('d-none');
+                }
 
                 $('#modalHeader').removeClass('bg-success').addClass('bg-warning');
                 $('#modalTitle').html('<i class="fa-solid fa-pen-to-square me-2"></i>Chỉnh Sửa BĐS #' + data.id);
@@ -483,6 +496,33 @@
             },
             error: function () {
                 alert('Không thể lấy chi tiết BĐS #' + id + '. Vui lòng kiểm tra lại!');
+            }
+        });
+    }
+
+    // Hàm gọi AJAX xóa từng ảnh
+    function deleteSingleImage(imageId) {
+        if (!confirm('Bạn có chắc chắn muốn xóa ảnh này không?')) return;
+
+        $.ajax({
+            url: contextPath + '/admin/bds',
+            type: 'POST',
+            data: {action: 'delete-image', imageId: imageId},
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    $('#img-box-' + imageId).fadeOut(300, function () {
+                        $(this).remove();
+                        if ($('#currentImagesGallery').children(':visible').length === 0) {
+                            $('#currentImagesArea').addClass('d-none');
+                        }
+                    });
+                } else {
+                    alert('Không thể xóa ảnh. Vui lòng thử lại!');
+                }
+            },
+            error: function () {
+                alert('Lỗi kết nối máy chủ khi xóa ảnh!');
             }
         });
     }

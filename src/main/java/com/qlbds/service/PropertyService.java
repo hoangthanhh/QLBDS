@@ -56,7 +56,7 @@ public class PropertyService {
         return dtos;
     }
 
-    // Lấy chi tiết BĐS kèm toàn bộ danh sách ảnh cho trang xem chi tiết
+    // Lấy chi tiết BĐS kèm toàn bộ danh sách ảnh cho trang xem chi tiết & modal sửa
     public PropertyDetailDTO getPropertyDetail(Integer id) {
         Property p = propertyRepository.findById(id);
         if (p == null) return null;
@@ -73,12 +73,16 @@ public class PropertyService {
 
         // Lấy tất cả ảnh cho trang / modal chi tiết
         List<String> imageUrls = new ArrayList<>();
+        List<PropertyDetailDTO.ImageItem> imageItems = new ArrayList<>();
+
         if (p.getImages() != null) {
             for (PropertyImage img : p.getImages()) {
                 imageUrls.add(img.getImagePath());
+                imageItems.add(new PropertyDetailDTO.ImageItem(img.getId(), img.getImagePath()));
             }
         }
         dto.setImageUrls(imageUrls);
+        dto.setImageItems(imageItems);
 
         return dto;
     }

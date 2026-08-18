@@ -31,7 +31,7 @@ public class StaffPropertyController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
-        // 1. AJAX LẤY CHI TIẾT BĐS VÀ TOÀN BỘ DANH SÁCH ẢNH (KÈM ID)
+        // 1. AJAX LẤY CHI TIẾT BĐS VÀ TOÀN BỘ DANH SÁCH ẢNH (KÈM ID) ĐỂ ĐỔ LÊN MODAL
         if ("get-detail".equals(action)) {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
@@ -40,11 +40,17 @@ public class StaffPropertyController extends HttpServlet {
                 if (detail != null) {
                     resp.setContentType("application/json;charset=UTF-8");
 
-                    // ĐÃ FIX: Trả về mảng JSON chứa cả ID và Path để xóa lẻ từng ảnh
                     StringBuilder imgJson = new StringBuilder("[");
-                    if (detail.getImageUrls() != null) {
+                    if (detail.getImageItems() != null && !detail.getImageItems().isEmpty()) {
+                        for (int i = 0; i < detail.getImageItems().size(); i++) {
+                            PropertyDetailDTO.ImageItem item = detail.getImageItems().get(i);
+                            imgJson.append("{\"id\":").append(item.getId())
+                                    .append(",\"path\":\"").append(escapeJson(item.getPath())).append("\"}");
+                            if (i < detail.getImageItems().size() - 1) imgJson.append(",");
+                        }
+                    } else if (detail.getImageUrls() != null) {
                         for (int i = 0; i < detail.getImageUrls().size(); i++) {
-                            imgJson.append("\"").append(escapeJson(detail.getImageUrls().get(i))).append("\"");
+                            imgJson.append("{\"id\":null,\"path\":\"").append(escapeJson(detail.getImageUrls().get(i))).append("\"}");
                             if (i < detail.getImageUrls().size() - 1) imgJson.append(",");
                         }
                     }
@@ -70,11 +76,12 @@ public class StaffPropertyController extends HttpServlet {
             return;
         }
 
-        // 2. HIỂN THỊ DANH SÁCH & PHÂN TRANG / LỌC (ĐÃ FIX THÊM LỌC TRẠNG THÁI)
+        // 2. HIỂN THỊ DANH SÁCH & PHÂN TRANG / LỌC
         int page = 1;
         try {
             page = Math.max(1, Integer.parseInt(req.getParameter("page")));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         int pageSize = 5;
         String keyword = req.getParameter("keyword");
@@ -115,14 +122,21 @@ public class StaffPropertyController extends HttpServlet {
             if ("update".equals(action)) {
                 try {
                     dto.setId(Integer.parseInt(req.getParameter("id")));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
             dto.setTitle(req.getParameter("title"));
             dto.setAddress(req.getParameter("address"));
             dto.setPropertyType(req.getParameter("propertyType"));
 
-            try { dto.setPrice(Double.parseDouble(req.getParameter("price"))); } catch (Exception ignored) {}
-            try { dto.setArea(Double.parseDouble(req.getParameter("area"))); } catch (Exception ignored) {}
+            try {
+                dto.setPrice(Double.parseDouble(req.getParameter("price")));
+            } catch (Exception ignored) {
+            }
+            try {
+                dto.setArea(Double.parseDouble(req.getParameter("area")));
+            } catch (Exception ignored) {
+            }
             dto.setDescription(req.getParameter("description"));
 
             List<Part> imageParts = new ArrayList<>();
@@ -132,7 +146,8 @@ public class StaffPropertyController extends HttpServlet {
                         imageParts.add(part);
                     }
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             dto.setImageParts(imageParts);
 
             String rootPath = req.getServletContext().getRealPath("");
@@ -169,7 +184,7 @@ public class StaffPropertyController extends HttpServlet {
             return;
         }
 
-        // 3. ĐÃ THÊM: FORM BỂ KÈO (MỞ BÁN LẠI)
+        // 3. FORM BỂ KÈO (MỞ BÁN LẠI)
         if ("reopen".equals(action)) {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
@@ -184,7 +199,7 @@ public class StaffPropertyController extends HttpServlet {
             return;
         }
 
-        // 4. ĐÃ THÊM: KHÔI PHỤC BĐS ĐÃ XÓA MỀM
+        // 4. KHÔI PHỤC BĐS ĐÃ XÓA MỀM
         if ("restore".equals(action)) {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
@@ -199,7 +214,7 @@ public class StaffPropertyController extends HttpServlet {
             return;
         }
 
-        // 5. ĐÃ THÊM: AJAX XÓA TỪNG ẢNH
+        // 5. AJAX XÓA TỪNG ẢNH
         if ("delete-image".equals(action)) {
             try {
                 int imageId = Integer.parseInt(req.getParameter("imageId"));

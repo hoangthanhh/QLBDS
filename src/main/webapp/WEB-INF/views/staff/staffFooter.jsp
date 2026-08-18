@@ -8,7 +8,7 @@
 <footer class="sticky-footer bg-white shadow-sm mt-4">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
-            <span>Copyright &copy; REMS Real Estate System 2026</span>
+            <span>Tuấn Hưng & Hoàng Thành</span>
         </div>
     </div>
 </footer>
