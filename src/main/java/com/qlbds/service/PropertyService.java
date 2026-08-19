@@ -254,7 +254,7 @@ public class PropertyService {
         return "Lỗi hệ thống khi mở bán lại!";
     }
 
-    // Lưu tối đa 5 file ảnh tải lên vào thư mục máy chủ
+    // ĐÃ NÂNG CẤP: Lưu tối đa 10 file ảnh tải lên vào thư mục máy chủ
     private List<PropertyImage> saveUploadedFiles(List<Part> parts, String uploadRealPath) {
         List<PropertyImage> images = new ArrayList<>();
         if (parts == null || parts.isEmpty()) return images;
@@ -264,7 +264,7 @@ public class PropertyService {
 
         int count = 0;
         for (Part part : parts) {
-            if (count >= 5) break; // Khóa chặt không vượt quá 5 ảnh
+            if (count >= 10) break; // Khóa chặt tối đa 10 ảnh
 
             if (part != null && part.getSize() > 0 && part.getSubmittedFileName() != null && !part.getSubmittedFileName().trim().isEmpty()) {
                 String originalFilename = part.getSubmittedFileName();
