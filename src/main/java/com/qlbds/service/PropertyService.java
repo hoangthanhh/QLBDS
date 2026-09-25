@@ -153,6 +153,16 @@ public class PropertyService {
             return errors;
         }
 
+        // BACKEND CHECK: Kiểm tra tổng số lượng ảnh cũ đang có + ảnh mới tải lên không vượt quá 10 ảnh
+        int currentImagesCount = (p.getImages() != null) ? p.getImages().size() : 0;
+        int newImagesCount = (dto.getImageParts() != null) ? dto.getImageParts().size() : 0;
+
+        if (currentImagesCount + newImagesCount > 10) {
+            int remainingAllowed = Math.max(0, 10 - currentImagesCount);
+            errors.add("Tổng số lượng ảnh của BĐS không được vượt quá 10 ảnh! Hiện có " + currentImagesCount + " ảnh cũ, chỉ có thể tải lên thêm tối đa " + remainingAllowed + " ảnh mới.");
+            return errors;
+        }
+
         p.setTitle(dto.getTitle().trim());
         p.setAddress(dto.getAddress().trim());
         p.setPrice(dto.getPrice() != null ? dto.getPrice().longValue() : 0L);

@@ -114,9 +114,9 @@ public class ValidationUtil {
             }
         }
 
-        // Chặn tối đa 5 ảnh
-        if (dto.getImageParts() != null && dto.getImageParts().size() > 5) {
-            errors.add("Chỉ được phép tải lên tối đa 5 ảnh cho mỗi BĐS!");
+        // Chặn tối đa 10 ảnh
+        if (dto.getImageParts() != null && dto.getImageParts().size() > 10) {
+            errors.add("Chỉ được phép tải lên tối đa 10 ảnh cho mỗi BĐS!");
         }
 
         return errors;

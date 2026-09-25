@@ -8,7 +8,8 @@
 <div class="container-fluid pt-3">
     <!-- TIÊU ĐỀ & NÚT THÊM MỚI -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0 text-dark fw-bold"><i class="fa-solid fa-building me-2 text-primary"></i>Quản lý Bất Động Sản</h1>
+        <h1 class="h3 mb-0 text-dark fw-bold"><i class="fa-solid fa-building me-2 text-primary"></i>Quản lý Bất Động Sản
+        </h1>
         <button type="button" class="btn btn-success fw-bold px-3 shadow-sm" onclick="openAddModal()">
             <i class="fa-solid fa-plus me-1"></i> Thêm BĐS Mới
         </button>
@@ -38,7 +39,8 @@
                 <div class="col-md-2">
                     <select name="propertyType" class="form-select rounded-pill px-3 shadow-none">
                         <option value="">-- Tất cả loại hình --</option>
-                        <option value="APARTMENT" ${propertyType == 'APARTMENT' ? 'selected' : ''}>Căn hộ (APARTMENT)</option>
+                        <option value="APARTMENT" ${propertyType == 'APARTMENT' ? 'selected' : ''}>Căn hộ (APARTMENT)
+                        </option>
                         <option value="HOUSE" ${propertyType == 'HOUSE' ? 'selected' : ''}>Nhà riêng (HOUSE)</option>
                         <option value="LAND" ${propertyType == 'LAND' ? 'selected' : ''}>Đất nền (LAND)</option>
                     </select>
@@ -54,11 +56,16 @@
                 </div>
                 <div class="col-md-3">
                     <select name="status" class="form-select rounded-pill px-3 shadow-none">
-                        <option value="ALL" ${currentStatus == 'ALL' ? 'selected' : ''}>-- Tất cả BĐS đang hoạt động --</option>
-                        <option value="AVAILABLE" ${currentStatus == 'AVAILABLE' ? 'selected' : ''}>🟢 Đang mở bán</option>
-                        <option value="DEPOSITED" ${currentStatus == 'DEPOSITED' ? 'selected' : ''}>🟡 Đã nhận cọc</option>
+                        <option value="ALL" ${currentStatus == 'ALL' ? 'selected' : ''}>-- Tất cả BĐS đang hoạt động
+                            --
+                        </option>
+                        <option value="AVAILABLE" ${currentStatus == 'AVAILABLE' ? 'selected' : ''}>🟢 Đang mở bán
+                        </option>
+                        <option value="DEPOSITED" ${currentStatus == 'DEPOSITED' ? 'selected' : ''}>🟡 Đã nhận cọc
+                        </option>
                         <option value="SOLD" ${currentStatus == 'SOLD' ? 'selected' : ''}>🔴 Đã bán đứt</option>
-                        <option value="DELETED" ${currentStatus == 'DELETED' ? 'selected' : ''}>⚪ Đã xóa (Xóa mềm)</option>
+                        <option value="DELETED" ${currentStatus == 'DELETED' ? 'selected' : ''}>⚪ Đã xóa (Xóa mềm)
+                        </option>
                     </select>
                 </div>
                 <div class="col-md-2 text-end">
@@ -110,7 +117,8 @@
                                         <c:set var="finalSrc" value="${pageContext.request.contextPath}/${imgPath}"/>
                                     </c:when>
                                     <c:otherwise>
-                                        <c:set var="finalSrc" value="${pageContext.request.contextPath}/assets/customer/img/property-1.jpg"/>
+                                        <c:set var="finalSrc"
+                                               value="${pageContext.request.contextPath}/assets/customer/img/property-1.jpg"/>
                                     </c:otherwise>
                                 </c:choose>
                                 <img src="${finalSrc}" alt="${p.title}" width="55" height="55" class="rounded shadow-sm"
@@ -124,7 +132,8 @@
                             </td>
                             <td class="fw-bold text-center">${p.area} m²</td>
                             <td class="text-danger fw-bold text-center">
-                                <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                                <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="đ"
+                                                  maxFractionDigits="0"/>
                             </td>
 
                             <!-- TRẠNG THÁI BĐS -->
@@ -215,7 +224,9 @@
                     </c:forEach>
                     <c:if test="${empty productList}">
                         <tr>
-                            <td colspan="9" class="text-center text-muted py-4">Không tìm thấy Bất Động Sản nào phù hợp.</td>
+                            <td colspan="9" class="text-center text-muted py-4">Không tìm thấy Bất Động Sản nào phù
+                                hợp.
+                            </td>
                         </tr>
                     </c:if>
                     </tbody>
@@ -253,8 +264,10 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
             <div id="modalHeader" class="modal-header text-white px-4 py-3 bg-success">
-                <h5 class="modal-title fw-bold" id="modalTitle"><i class="fa-solid fa-house-medical me-2"></i>Thêm Bất Động Sản Mới</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold" id="modalTitle"><i class="fa-solid fa-house-medical me-2"></i>Thêm Bất
+                    Động Sản Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
 
             <form id="bdsForm" method="post" enctype="multipart/form-data">
@@ -270,7 +283,8 @@
                                    placeholder="Nhập tiêu đề BĐS..." required>
                         </div>
                         <div class="col-md-12">
-                            <label class="form-label fw-bold">Địa chỉ chi tiết <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold">Địa chỉ chi tiết <span
+                                    class="text-danger">*</span></label>
                             <input type="text" name="address" id="bdsAddressInput" class="form-control"
                                    placeholder="Nhập số nhà, đường, phường/xã, quận/huyện..." required>
                         </div>
@@ -294,7 +308,8 @@
                             <input type="hidden" name="price" id="bdsPriceInputReal">
                             <input type="text" id="bdsPriceInputDisplay" class="form-control"
                                    placeholder="Ví dụ: 2.500.000.000" required oninput="handlePriceInput(this)">
-                            <small id="priceTextPreview" class="fw-bold text-success d-block mt-1" style="min-height: 20px;"></small>
+                            <small id="priceTextPreview" class="fw-bold text-success d-block mt-1"
+                                   style="min-height: 20px;"></small>
                         </div>
 
                         <div class="col-md-12">
@@ -306,20 +321,24 @@
                         <!-- KHU VỰC HIỂN THỊ TẤT CẢ ẢNH HIỆN TẠI (KÈM NÚT XÓA LẺ) -->
                         <div class="col-md-12 d-none" id="currentImagesArea">
                             <label class="form-label fw-bold">Ảnh hiện tại của BĐS (Xem toàn bộ):</label>
-                            <div class="d-flex flex-wrap gap-2 p-2 border rounded bg-light" id="currentImagesGallery"></div>
+                            <div class="d-flex flex-wrap gap-2 p-2 border rounded bg-light"
+                                 id="currentImagesGallery"></div>
                         </div>
 
                         <!-- UPLOAD ẢNH (TỐI ĐA 10 ẢNH: 1 CHÍNH + 9 PHỤ) -->
                         <div class="col-md-12">
-                            <label class="form-label fw-bold" id="imageLabel">Tải lên ảnh minh họa (Tối đa 10 ảnh: 1 ảnh chính + 9 ảnh phụ) <span
+                            <label class="form-label fw-bold" id="imageLabel">Tải lên ảnh minh họa (Tối đa 10 ảnh) <span
                                     class="text-danger" id="imageRequiredNote">*</span></label>
                             <input type="file" name="images" id="bdsImagesInput" class="form-control" multiple
                                    accept="image/*" onchange="handleImageSelection(this)">
-                            <small class="text-muted d-block mt-1" id="imageHelpText">💡 Ảnh đầu tiên bạn chọn sẽ là <strong>Ảnh đại diện chính</strong>, các ảnh còn lại là <strong>Ảnh phụ</strong> (Tối đa 10 ảnh).</small>
+                            <small class="text-muted d-block mt-1" id="imageHelpText">💡 Ảnh đầu tiên bạn chọn sẽ là
+                                <strong>Ảnh đại diện chính</strong>, các ảnh còn lại là <strong>Ảnh phụ</strong> (Tổng
+                                tối đa 10 ảnh).</small>
 
                             <!-- KHUNG XEM TRƯỚC ẢNH SẮP TẢI LÊN (KÈM NÚT XÓA TỪNG ẢNH TRƯỚC KHI LƯU) -->
                             <div id="newImagesPreviewArea" class="d-none mt-2 p-2 border rounded bg-white">
-                                <small class="fw-bold text-primary d-block mb-1">Ảnh đã chọn tải lên (Bấm dấu x để bỏ ảnh chọn nhầm):</small>
+                                <small class="fw-bold text-primary d-block mb-1">Ảnh đã chọn tải lên (Bấm dấu x để bỏ
+                                    ảnh chọn nhầm):</small>
                                 <div class="d-flex flex-wrap gap-2" id="newImagesPreviewList"></div>
                             </div>
                         </div>
@@ -339,12 +358,19 @@
     var contextPath = "${pageContext.request.contextPath}";
     var selectedFilesDT = new DataTransfer();
 
+    // Hàm kiểm tra và giới hạn tối đa 10 ảnh (cả lúc thêm mới và lúc sửa)
     function handleImageSelection(input) {
         if (!input.files || input.files.length === 0) return;
 
-        // ĐÃ NÂNG CẤP: Chặn khi chọn quá 10 ảnh
-        if (input.files.length > 10) {
-            alert('⚠️ Bạn chỉ được chọn tối đa 10 ảnh (1 ảnh chính và tối đa 9 ảnh phụ)! Vui lòng chọn lại.');
+        var existingImagesCount = $('#currentImagesGallery').children(':visible').length;
+        var allowedMax = 10 - existingImagesCount;
+
+        if (input.files.length > allowedMax) {
+            if (existingImagesCount > 0) {
+                alert('⚠️ BĐS này đã có ' + existingImagesCount + ' ảnh cũ. Bạn chỉ được tải lên thêm tối đa ' + allowedMax + ' ảnh nữa (Tổng không quá 10 ảnh)!');
+            } else {
+                alert('⚠️ Bạn chỉ được chọn tối đa 10 ảnh (1 ảnh chính và tối đa 9 ảnh phụ)! Vui lòng chọn lại.');
+            }
             input.value = '';
             selectedFilesDT = new DataTransfer();
             renderNewImagesPreview();
@@ -374,13 +400,16 @@
 
         previewArea.removeClass('d-none');
 
+        // Xác định xem đã có ảnh cũ trong DB chưa để dán nhãn cho đúng
+        var existingImagesCount = $('#currentImagesGallery').children(':visible').length;
+
         Array.from(selectedFilesDT.files).forEach(function (file, index) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                var isMain = (index === 0);
+                var isMain = (existingImagesCount === 0 && index === 0);
                 var badgeHtml = isMain
                     ? '<span class="badge bg-primary position-absolute top-0 start-0 m-1" style="font-size: 10px;">Ảnh chính</span>'
-                    : '<span class="badge bg-secondary position-absolute top-0 start-0 m-1" style="font-size: 10px;">Ảnh phụ ' + index + '</span>';
+                    : '<span class="badge bg-secondary position-absolute top-0 start-0 m-1" style="font-size: 10px;">Ảnh bổ sung</span>';
 
                 var borderClass = isMain ? 'border-primary border-2' : 'border';
 
@@ -546,7 +575,9 @@
 
                 $('#imageRequiredNote').hide();
                 $('#bdsImagesInput').prop('required', false);
-                $('#imageHelpText').html('💡 Chọn tối đa 10 ảnh mới nếu muốn bổ sung. Để trống nếu muốn giữ nguyên ảnh cũ.');
+
+                var currentCount = (data.images ? data.images.length : 0);
+                $('#imageHelpText').html('💡 BĐS đang có <strong>' + currentCount + ' ảnh</strong>. Bạn có thể chọn thêm tối đa <strong>' + (10 - currentCount) + ' ảnh</strong> nữa (Tổng tối đa 10 ảnh).');
                 $('#modalAlert').addClass('d-none').html('');
 
                 var modalElement = document.getElementById('bdsModal');
@@ -571,9 +602,11 @@
                 if (res.success) {
                     $('#img-box-' + imageId).fadeOut(300, function () {
                         $(this).remove();
-                        if ($('#currentImagesGallery').children(':visible').length === 0) {
+                        var count = $('#currentImagesGallery').children(':visible').length;
+                        if (count === 0) {
                             $('#currentImagesArea').addClass('d-none');
                         }
+                        $('#imageHelpText').html('💡 BĐS đang có <strong>' + count + ' ảnh</strong>. Bạn có thể chọn thêm tối đa <strong>' + (10 - count) + ' ảnh</strong> nữa (Tổng tối đa 10 ảnh).');
                     });
                 } else {
                     alert('Không thể xóa ảnh. Vui lòng thử lại!');
@@ -588,6 +621,15 @@
     $(document).ready(function () {
         $('#bdsForm').on('submit', function (e) {
             e.preventDefault();
+
+            // Chặn lần cuối trước khi submit Form
+            var existingImagesCount = $('#currentImagesGallery').children(':visible').length;
+            var newImagesCount = selectedFilesDT.files.length;
+            if (existingImagesCount + newImagesCount > 10) {
+                alert('⚠️ Tổng số lượng ảnh cũ và ảnh mới vượt quá 10 ảnh! Vui lòng bỏ bớt ảnh.');
+                return;
+            }
+
             var formData = new FormData(this);
             $('#btnSubmitForm').prop('disabled', true);
 
