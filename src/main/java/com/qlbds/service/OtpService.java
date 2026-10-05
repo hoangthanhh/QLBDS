@@ -22,7 +22,7 @@ public class OtpService {
             return "Phiên làm việc đã hết hạn, vui lòng đăng nhập lại!";
         }
 
-        // BẢO MẬT: Giới hạn tối đa 5 lần tạo mã OTP trong ngày
+        // Giới hạn tối đa 5 lần tạo mã OTP trong ngày
         long otpCountToday = otpRepository.countOtpGeneratedToday(currentUserDTO.getId());
         if (otpCountToday >= 5) {
             return "Tài khoản đã vượt quá giới hạn yêu cầu nhận mã OTP trong ngày hôm nay (Tối đa 5 lần/ngày). Vui lòng thử lại vào ngày mai!";
@@ -39,7 +39,7 @@ public class OtpService {
             // Sinh chuỗi 6 số ngẫu nhiên
             String generatedOtp = String.format("%06d", new Random().nextInt(999999));
 
-            // Cần 1 thực thể User ảo chứa ID để map mối quan hệ Hibernate quan bảng OtpCode
+            // tạo 1 thực thể User ảo chứa ID để map mối quan hệ Hibernate quan bảng OtpCode
             User userMapping = new User();
             userMapping.setId(currentUserDTO.getId());
 
@@ -101,7 +101,7 @@ public class OtpService {
         otp.setIsUsed(true);
         otpRepository.updateOtp(otp);
 
-        // Chuẩn kiến trúc: Gọi tầng Repo để cập nhật Entity User thật dưới CSDL
+        //  Gọi tầng Repo để cập nhật Entity User thật dưới CSDL
         User actualUser = userRepository.findById(currentUserDTO.getId());
         if (actualUser != null) {
             actualUser.setIsVerified(true);

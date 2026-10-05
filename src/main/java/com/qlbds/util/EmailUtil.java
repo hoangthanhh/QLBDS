@@ -11,7 +11,7 @@ public class EmailUtil {
     private static final String SENDER_EMAIL = "thanhkuka72005@gmail.com";
     private static final String SENDER_PASSWORD = "yivd lvip oave ceps";
 
-    // Hàm thiết lập cấu hình SMTP dùng chung cho gọn và tối ưu code
+    // Hàm thiết lập cấu hình SMTP dùng chung
     private static Session getMailSession() {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

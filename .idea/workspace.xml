@@ -10,16 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c72cd1d6-664b-4963-bc25-846c88365e16" name="Changes" comment="update web.xml">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminPropertyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminPropertyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/staff/StaffPropertyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/staff/StaffPropertyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/property/PropertyDetailDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/property/PropertyDetailDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/PropertyRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/PropertyRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/PropertyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/PropertyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminBDS.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminBDS.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/staff/staffBDS.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/staff/staffBDS.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/OtpCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/OtpCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/OtpService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/OtpService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/EmailUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

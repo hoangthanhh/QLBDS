@@ -15,7 +15,7 @@ public class OtpCode {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "otp_code", length = 10, nullable = false)
+    @Column(name = "otp_code", length = 6, nullable = false)
     private String otpCode;
 
     @Column(name = "expires_at", nullable = false)
