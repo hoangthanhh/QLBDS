@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class ReportService {
 
-    private ReportRepository reportRepo = new ReportRepository();
+    private final ReportRepository reportRepo = new ReportRepository();
 
     public DashboardDTO getDashboardData(String startDateStr, String endDateStr) {
         DashboardDTO dto = new DashboardDTO();

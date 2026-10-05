@@ -14,8 +14,6 @@ import java.util.List;
 
 public class TransactionRepository {
 
-    // Chung (CRUD)
-
     // Lưu mới giao dịch vào CSDL
     public boolean save(Transaction transaction) {
         org.hibernate.Transaction hbTx = null;

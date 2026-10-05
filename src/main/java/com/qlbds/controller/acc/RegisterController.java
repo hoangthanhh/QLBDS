@@ -38,7 +38,7 @@ public class RegisterController extends HttpServlet {
         } else {
             request.setAttribute("error", result);
             request.setAttribute("registerDto", registerDto);
-            request.setAttribute("userDto", registerDto); // Giữ biến này để tương thích với file register.jsp hiện tại
+            request.setAttribute("userDto", registerDto);
             request.getRequestDispatcher("/WEB-INF/views/acc/register.jsp").forward(request, response);
         }
     }

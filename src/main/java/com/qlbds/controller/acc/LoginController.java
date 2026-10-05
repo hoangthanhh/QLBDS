@@ -47,7 +47,7 @@ public class LoginController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
             }
         } else {
-            request.setAttribute("error", "Email hoặc mật khẩu không chính xác, hoặc tài khoản đã bị khóa!");
+            request.setAttribute("error", "Email hoặc mật khẩu không chính xác!");
             request.setAttribute("email", loginDto.getEmail());
             request.getRequestDispatcher("/WEB-INF/views/acc/login.jsp").forward(request, response);
         }

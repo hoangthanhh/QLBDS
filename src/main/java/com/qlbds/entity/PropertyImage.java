@@ -15,7 +15,7 @@ public class PropertyImage {
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
 
-    @Column(name = "image_path", length = 255, nullable = false)
+    @Column(name = "image_path", length = 250, nullable = false)
     private String imagePath;
 
     @Column(name = "display_order", nullable = false)

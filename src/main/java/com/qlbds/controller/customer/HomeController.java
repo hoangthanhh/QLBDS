@@ -38,7 +38,6 @@ public class HomeController extends HttpServlet {
         String propertyType = req.getParameter("propertyType");
 
         // Gọi Service có truyền tham số lọc
-        // Đổi List<Property> thành List<PropertySummaryDTO>
         List<PropertySummaryDTO> propertyList = propertyService.getPropertiesByPage(page, pageSize, address, priceRange, propertyType);
         int totalPages = propertyService.getTotalPages(pageSize, address, priceRange, propertyType);
 

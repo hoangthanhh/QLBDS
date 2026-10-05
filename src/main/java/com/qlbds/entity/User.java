@@ -23,7 +23,7 @@ public class User {
     @Column(name = "phone", length = 20, unique = true)
     private String phone;
 
-    @Column(name = "password", length = 255, nullable = false)
+    @Column(name = "password", length = 6, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -86,12 +86,4 @@ public class User {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-
-    // Hàm lấy username thông minh từ nhánh của Hưng
-    public String getUsername() {
-        if (this.email != null && this.email.contains("@")) {
-            return this.email.split("@")[0];
-        }
-        return this.email;
-    }
 }

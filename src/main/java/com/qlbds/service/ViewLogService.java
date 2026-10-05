@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewLogService {
-    private ViewLogRepository viewLogRepo = new ViewLogRepository();
+    private final ViewLogRepository viewLogRepo = new ViewLogRepository();
 
     public void logPropertyView(Integer userId, Integer propertyId) {
         viewLogRepo.deleteOldLog(userId, propertyId);
@@ -26,7 +26,7 @@ public class ViewLogService {
         viewLogRepo.saveLog(log);
     }
 
-    // ĐÃ SỬA: Truyền thêm tham số page, pageSize xuống Repository
+    //  Truyền thêm tham số page, pageSize xuống Repository
     public List<ViewHistoryDTO> getViewHistory(Integer userId, int page, int pageSize) {
         List<ViewLog> logs = viewLogRepo.findLogsByUserId(userId, page, pageSize);
         List<ViewHistoryDTO> dtos = new ArrayList<>();
@@ -54,7 +54,6 @@ public class ViewLogService {
     }
 
     public List<AdminViewLogDTO> getLogsForAdmin(int page, int pageSize) {
-        // Truyền RoleTypeEnum.CUSTOMER (hoặc USER) vào để chỉ lấy log của khách hàng
         List<ViewLog> logs = viewLogRepo.findAllLogsForAdmin(RoleTypeEnum.CUSTOMER, page, pageSize);
         List<AdminViewLogDTO> dtos = new ArrayList<>();
 
@@ -73,7 +72,6 @@ public class ViewLogService {
     }
 
     public int getTotalPagesForAdmin(int pageSize) {
-        // Truyền RoleTypeEnum.CUSTOMER (hoặc USER) vào để đếm số trang chuẩn xác
         long totalRecords = viewLogRepo.countAllLogs(RoleTypeEnum.CUSTOMER);
         return (int) Math.ceil((double) totalRecords / pageSize);
     }

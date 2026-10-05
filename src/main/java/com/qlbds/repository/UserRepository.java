@@ -124,16 +124,6 @@ public class UserRepository {
         }
     }
 
-    // 3. Lấy toàn bộ danh sách tài khoản mặc định (khi không nhập từ khóa)
-    public List<User> findAllUsers(int offset, int limit) {
-        return searchUsers(null, offset, limit);
-    }
-
-    // 4. Đếm tổng số tài khoản toàn hệ thống
-    public int countTotalUsers() {
-        return countSearchUsers(null);
-    }
-
     // 5. Cập nhật Vai trò (Customer / Staff / Admin)
     public boolean updateRole(int id, RoleTypeEnum role) {
         Transaction transaction = null;

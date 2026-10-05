@@ -182,20 +182,6 @@ public class PropertyRepository {
         }
     }
 
-    // 4. Kiểm tra ràng buộc nghiệp vụ: BĐS đã phát sinh giao dịch chưa
-    public boolean hasTransactions(Integer propertyId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.property.id = :pid";
-            Query<Long> query = session.createQuery(hql, Long.class);
-            query.setParameter("pid", propertyId);
-            Long count = query.uniqueResult();
-            return count != null && count > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return true; // Trả về true để bảo vệ an toàn dữ liệu nếu lỗi DB
-        }
-    }
-
     // 5. Admin xóa mềm BĐS (Đánh dấu isDeleted = true)
     public boolean deleteProperty(Integer propertyId) {
         Transaction tx = null;
@@ -244,10 +230,9 @@ public class PropertyRepository {
 
             boolean isSpecificStatus = statusFilter != null && !statusFilter.trim().isEmpty()
                     && !"ALL".equalsIgnoreCase(statusFilter)
-                    && !"DELETED".equalsIgnoreCase(statusFilter)
-                    && !"HIDDEN".equalsIgnoreCase(statusFilter);
+                    && !"DELETED".equalsIgnoreCase(statusFilter);
 
-            if ("DELETED".equalsIgnoreCase(statusFilter) || "HIDDEN".equalsIgnoreCase(statusFilter)) {
+            if ("DELETED".equalsIgnoreCase(statusFilter)) {
                 idHql.append(" AND p.isDeleted = true");
             } else {
                 idHql.append(" AND p.isDeleted = false");
@@ -313,10 +298,9 @@ public class PropertyRepository {
 
             boolean isSpecificStatus = statusFilter != null && !statusFilter.trim().isEmpty()
                     && !"ALL".equalsIgnoreCase(statusFilter)
-                    && !"DELETED".equalsIgnoreCase(statusFilter)
-                    && !"HIDDEN".equalsIgnoreCase(statusFilter);
+                    && !"DELETED".equalsIgnoreCase(statusFilter);
 
-            if ("DELETED".equalsIgnoreCase(statusFilter) || "HIDDEN".equalsIgnoreCase(statusFilter)) {
+            if ("DELETED".equalsIgnoreCase(statusFilter)) {
                 hql.append(" AND p.isDeleted = true");
             } else {
                 hql.append(" AND p.isDeleted = false");

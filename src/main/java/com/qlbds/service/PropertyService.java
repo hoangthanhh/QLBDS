@@ -279,7 +279,7 @@ public class PropertyService {
             if (part != null && part.getSize() > 0 && part.getSubmittedFileName() != null && !part.getSubmittedFileName().trim().isEmpty()) {
                 String originalFilename = part.getSubmittedFileName();
                 String fileExt = originalFilename.contains(".") ? originalFilename.substring(originalFilename.lastIndexOf(".")) : ".jpg";
-                String newFileName = UUID.randomUUID().toString() + fileExt;
+                String newFileName = UUID.randomUUID() + fileExt;
 
                 File fileToSave = new File(uploadDir, newFileName);
                 try (InputStream input = part.getInputStream()) {

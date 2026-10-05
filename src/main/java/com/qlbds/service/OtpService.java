@@ -13,8 +13,8 @@ import java.util.Random;
 
 public class OtpService {
 
-    private OtpRepository otpRepository = new OtpRepository();
-    private UserRepository userRepository = new UserRepository(); // Khai báo UserRepository để xử lý DB chuẩn tầng
+    private final OtpRepository otpRepository = new OtpRepository();
+    private final UserRepository userRepository = new UserRepository(); // Khai báo UserRepository để xử lý DB chuẩn tầng
 
     // NGHIỆP VỤ 1: Nhận UserDTO từ Session, khởi tạo OTP mới và kích hoạt gửi email ngầm
     public String generateAndSendOtp(UserDTO currentUserDTO) {

@@ -17,8 +17,8 @@ import java.util.List;
 
 public class TransactionService {
 
-    private PropertyRepository propertyRepository = new PropertyRepository();
-    private TransactionRepository transactionRepository = new TransactionRepository();
+    private final PropertyRepository propertyRepository = new PropertyRepository();
+    private final TransactionRepository transactionRepository = new TransactionRepository();
 
     // Customer
 
