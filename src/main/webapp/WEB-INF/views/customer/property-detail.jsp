@@ -68,6 +68,10 @@
                 <div class="main-gallery-card mb-4">
                     <div class="position-relative bg-dark" style="height: 460px;">
                         <c:choose>
+                            <c:when test="${not empty property.thumbnailUrl}">
+                                <img id="mainImage" src="${pageContext.request.contextPath}/${property.thumbnailUrl}"
+                                     class="w-100 h-100 object-fit-cover" alt="Main Property Image">
+                            </c:when>
                             <c:when test="${not empty property.imageUrls}">
                                 <img id="mainImage" src="${pageContext.request.contextPath}/${property.imageUrls[0]}"
                                      class="w-100 h-100 object-fit-cover" alt="Main Property Image">
@@ -87,8 +91,9 @@
                         <div class="p-3 bg-light border-top">
                             <div class="d-flex gap-2 overflow-auto py-1" style="scrollbar-width: thin;">
                                 <c:forEach var="imgUrl" items="${property.imageUrls}" varStatus="status">
+                                    <c:set var="isActive" value="${imgUrl eq property.thumbnailUrl || (empty property.thumbnailUrl && status.first)}"/>
                                     <img src="${pageContext.request.contextPath}/${imgUrl}"
-                                         class="thumb-img rounded-3 cursor-pointer ${status.first ? 'active-thumb' : ''}"
+                                         class="thumb-img rounded-3 cursor-pointer ${isActive ? 'active-thumb' : ''}"
                                          style="width: 90px; height: 65px; object-fit: cover;"
                                          onclick="changeMainImage(this, '${pageContext.request.contextPath}/${imgUrl}', ${status.index + 1})"
                                          alt="Thumbnail ${status.index + 1}">

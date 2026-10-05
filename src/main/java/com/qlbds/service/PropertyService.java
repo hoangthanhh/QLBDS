@@ -28,6 +28,27 @@ public class PropertyService {
 
     // Customer
 
+    // ==========================================
+    // HELPER: THUẬT TOÁN XÁC ĐỊNH THUMBNAIL AN TOÀN
+    // ==========================================
+    private String extractThumbnailUrl(List<PropertyImage> images) {
+        if (images == null || images.isEmpty()) {
+            return "assets/customer/img/property-1.jpg";
+        }
+
+        // Ưu tiên 1: Tìm ảnh được đánh dấu isThumbnail == true
+        for (PropertyImage img : images) {
+            if (Boolean.TRUE.equals(img.getIsThumbnail())) {
+                return img.getImagePath();
+            }
+        }
+
+        // Fallback: Trả về ảnh có displayOrder nhỏ nhất (ảnh đầu tiên của danh sách đã sort)
+        return images.get(0).getImagePath();
+    }
+
+    // Customer
+
     // Lấy danh sách BĐS khả dụng hiển thị ngoài trang chủ và trang tìm kiếm của Khách hàng
     public List<PropertySummaryDTO> getPropertiesByPage(int page, int pageSize, String address, String priceRange, String propertyType) {
         List<Property> entities = propertyRepository.findAllAvailableByPage(page, pageSize, address, priceRange, propertyType);
@@ -43,13 +64,7 @@ public class PropertyService {
                 dto.setArea(p.getArea());
                 dto.setPropertyType(p.getPropertyType() != null ? p.getPropertyType().name() : "");
                 dto.setStatus(p.getStatus() != null ? p.getStatus().name() : "");
-
-                // Lấy ảnh đầu tiên làm ảnh chính đại diện
-                if (p.getImages() != null && !p.getImages().isEmpty()) {
-                    dto.setThumbnail(p.getImages().get(0).getImagePath());
-                } else {
-                    dto.setThumbnail("assets/customer/img/property-1.jpg");
-                }
+                dto.setThumbnail(extractThumbnailUrl(p.getImages()));
                 dtos.add(dto);
             }
         }
@@ -70,6 +85,7 @@ public class PropertyService {
         dto.setPropertyType(p.getPropertyType() != null ? p.getPropertyType().name() : "");
         dto.setStatus(p.getStatus() != null ? p.getStatus().name() : "");
         dto.setDescription(p.getDescription());
+        dto.setThumbnailUrl(extractThumbnailUrl(p.getImages()));
 
         // Lấy tất cả ảnh cho trang / modal chi tiết
         List<String> imageUrls = new ArrayList<>();
@@ -78,7 +94,12 @@ public class PropertyService {
         if (p.getImages() != null) {
             for (PropertyImage img : p.getImages()) {
                 imageUrls.add(img.getImagePath());
-                imageItems.add(new PropertyDetailDTO.ImageItem(img.getId(), img.getImagePath()));
+                imageItems.add(new PropertyDetailDTO.ImageItem(
+                    img.getId(), 
+                    img.getImagePath(), 
+                    img.getDisplayOrder(), 
+                    Boolean.TRUE.equals(img.getIsThumbnail())
+                ));
             }
         }
         dto.setImageUrls(imageUrls);
@@ -112,7 +133,7 @@ public class PropertyService {
             p.setStatus(PropertyStatusEnum.AVAILABLE);
             p.setIsDeleted(false);
 
-            List<PropertyImage> images = saveUploadedFiles(dto.getImageParts(), uploadRealPath);
+            List<PropertyImage> images = saveUploadedFiles(dto.getImageParts(), uploadRealPath, 1, false);
 
             if (!propertyRepository.saveProperty(p, images)) {
                 errors.add("Lỗi hệ thống khi lưu BĐS vào cơ sở dữ liệu!");
@@ -172,7 +193,9 @@ public class PropertyService {
 
         List<PropertyImage> newImages = null;
         if (dto.getImageParts() != null && !dto.getImageParts().isEmpty()) {
-            newImages = saveUploadedFiles(dto.getImageParts(), uploadRealPath);
+            int maxOrder = propertyRepository.getMaxDisplayOrder(p.getId());
+            boolean hasThumbnail = p.getImages() != null && p.getImages().stream().anyMatch(img -> Boolean.TRUE.equals(img.getIsThumbnail()));
+            newImages = saveUploadedFiles(dto.getImageParts(), uploadRealPath, maxOrder + 1, hasThumbnail);
         }
 
         if (!propertyRepository.updateProperty(p, newImages)) {
@@ -221,11 +244,7 @@ public class PropertyService {
                     dto.setStatus(p.getStatus() != null ? p.getStatus().name() : "");
                 }
 
-                if (p.getImages() != null && !p.getImages().isEmpty()) {
-                    dto.setThumbnail(p.getImages().get(0).getImagePath());
-                } else {
-                    dto.setThumbnail("assets/customer/img/property-1.jpg");
-                }
+                dto.setThumbnail(extractThumbnailUrl(p.getImages()));
                 dtos.add(dto);
             }
         }
@@ -264,8 +283,8 @@ public class PropertyService {
         return "Lỗi hệ thống khi mở bán lại!";
     }
 
-    // ĐÃ NÂNG CẤP: Lưu tối đa 10 file ảnh tải lên vào thư mục máy chủ
-    private List<PropertyImage> saveUploadedFiles(List<Part> parts, String uploadRealPath) {
+    // ĐÃ NÂNG CẤP: Lưu tối đa 10 file ảnh tải lên vào thư mục máy chủ và gán order/cờ thumbnail
+    private List<PropertyImage> saveUploadedFiles(List<Part> parts, String uploadRealPath, int startOrder, boolean hasExistingThumbnail) {
         List<PropertyImage> images = new ArrayList<>();
         if (parts == null || parts.isEmpty()) return images;
 
@@ -273,6 +292,8 @@ public class PropertyService {
         if (!uploadDir.exists()) uploadDir.mkdirs();
 
         int count = 0;
+        int currentOrder = startOrder;
+
         for (Part part : parts) {
             if (count >= 10) break; // Khóa chặt tối đa 10 ảnh
 
@@ -287,6 +308,14 @@ public class PropertyService {
 
                     PropertyImage img = new PropertyImage();
                     img.setImagePath("uploads/properties/" + newFileName);
+                    img.setDisplayOrder(currentOrder++);
+
+                    if (!hasExistingThumbnail && images.isEmpty()) {
+                        img.setIsThumbnail(true);
+                    } else {
+                        img.setIsThumbnail(false);
+                    }
+
                     images.add(img);
                     count++;
                 } catch (Exception e) {

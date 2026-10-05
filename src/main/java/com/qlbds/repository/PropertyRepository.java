@@ -72,7 +72,7 @@ public class PropertyRepository {
     // 3. Hàm lấy chi tiết BĐS kèm ảnh theo ID
     public Property findById(Integer id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT DISTINCT p FROM Property p LEFT JOIN FETCH p.images WHERE p.id = :id AND p.isDeleted = false";
+            String hql = "SELECT DISTINCT p FROM Property p LEFT JOIN FETCH p.images img WHERE p.id = :id AND p.isDeleted = false ORDER BY img.displayOrder ASC";
             Query<Property> query = session.createQuery(hql, Property.class);
             query.setParameter("id", id);
             return query.uniqueResult();
@@ -202,14 +202,34 @@ public class PropertyRepository {
         }
     }
 
-    // 6. Xóa một ảnh cụ thể của BĐS theo ID ảnh
+    // 6. Xóa một ảnh cụ thể của BĐS theo ID ảnh và tự bầu Thumbnail mới nếu xóa trúng Thumbnail
     public boolean deleteImageById(Integer imageId) {
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
             PropertyImage img = session.get(PropertyImage.class, imageId);
             if (img != null) {
+                Property property = img.getProperty();
+                boolean wasThumbnail = Boolean.TRUE.equals(img.getIsThumbnail());
+
                 session.delete(img);
+                session.flush();
+
+                // Nếu ảnh bị xóa là Thumbnail, tự động bầu ảnh có displayOrder nhỏ nhất còn lại làm Thumbnail mới
+                if (wasThumbnail && property != null) {
+                    String hql = "FROM PropertyImage img WHERE img.property.id = :pid ORDER BY img.displayOrder ASC";
+                    List<PropertyImage> remainImages = session.createQuery(hql, PropertyImage.class)
+                            .setParameter("pid", property.getId())
+                            .setMaxResults(1)
+                            .getResultList();
+
+                    if (!remainImages.isEmpty()) {
+                        PropertyImage newThumb = remainImages.get(0);
+                        newThumb.setIsThumbnail(true);
+                        session.update(newThumb);
+                    }
+                }
+
                 tx.commit();
                 return true;
             }
@@ -218,6 +238,20 @@ public class PropertyRepository {
             if (tx != null) tx.rollback();
             e.printStackTrace();
             return false;
+        }
+    }
+
+    // Lấy MAX(displayOrder) hiện tại của BĐS để cộng dồn thứ tự khi upload thêm ảnh
+    public int getMaxDisplayOrder(Integer propertyId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COALESCE(MAX(img.displayOrder), 0) FROM PropertyImage img WHERE img.property.id = :pid";
+            Query<Integer> query = session.createQuery(hql, Integer.class);
+            query.setParameter("pid", propertyId);
+            Integer max = query.uniqueResult();
+            return max != null ? max : 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 

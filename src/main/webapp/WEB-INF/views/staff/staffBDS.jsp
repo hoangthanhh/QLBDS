@@ -530,13 +530,20 @@
                         var imgObj = data.images[i];
                         var imgSrc = typeof imgObj === 'object' ? imgObj.path : imgObj;
                         var imgId = typeof imgObj === 'object' ? imgObj.id : null;
+                        var isThumb = typeof imgObj === 'object' ? (imgObj.isThumbnail === true) : (i === 0);
 
                         if (imgSrc && !imgSrc.startsWith('http://') && !imgSrc.startsWith('https://')) {
                             imgSrc = contextPath + '/' + (imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc);
                         }
 
+                        var badgeHtml = isThumb
+                            ? '<span class="badge bg-primary position-absolute top-0 start-0 m-1" style="font-size: 10px;">Ảnh chính</span>'
+                            : '<span class="badge bg-secondary position-absolute top-0 start-0 m-1" style="font-size: 10px;">Ảnh phụ</span>';
+                        var borderClass = isThumb ? 'border-primary border-2' : 'border';
+
                         galleryHtml += '<div class="position-relative d-inline-block m-1" id="img-box-' + imgId + '">' +
-                            '  <img src="' + imgSrc + '" class="rounded border shadow-sm" style="width: 80px; height: 80px; object-fit: cover;" onerror="this.src=\'' + contextPath + '/assets/customer/img/property-1.jpg\'"/>';
+                            '  <img src="' + imgSrc + '" class="rounded ' + borderClass + ' shadow-sm" style="width: 80px; height: 80px; object-fit: cover;" onerror="this.src=\'' + contextPath + '/assets/customer/img/property-1.jpg\'"/>' +
+                            badgeHtml;
 
                         if (imgId) {
                             galleryHtml += '  <button type="button" class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 p-0 d-flex align-items-center justify-content-center shadow" ' +

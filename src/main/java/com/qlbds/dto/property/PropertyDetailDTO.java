@@ -13,6 +13,7 @@ public class PropertyDetailDTO {
     private String propertyType;
     private String status;
     private String description;
+    private String thumbnailUrl;
     private List<String> imageUrls; // Chuyển Entity List thành String List
 
     // Thêm danh sách chứa cả ID và Path của từng ảnh để xóa riêng lẻ
@@ -21,6 +22,8 @@ public class PropertyDetailDTO {
     public static class ImageItem {
         private Integer id;
         private String path;
+        private Integer displayOrder;
+        private Boolean isThumbnail;
 
         public ImageItem() {
         }
@@ -28,6 +31,13 @@ public class PropertyDetailDTO {
         public ImageItem(Integer id, String path) {
             this.id = id;
             this.path = path;
+        }
+
+        public ImageItem(Integer id, String path, Integer displayOrder, Boolean isThumbnail) {
+            this.id = id;
+            this.path = path;
+            this.displayOrder = displayOrder;
+            this.isThumbnail = isThumbnail;
         }
 
         public Integer getId() {
@@ -44,6 +54,22 @@ public class PropertyDetailDTO {
 
         public void setPath(String path) {
             this.path = path;
+        }
+
+        public Integer getDisplayOrder() {
+            return displayOrder;
+        }
+
+        public void setDisplayOrder(Integer displayOrder) {
+            this.displayOrder = displayOrder;
+        }
+
+        public Boolean getIsThumbnail() {
+            return isThumbnail;
+        }
+
+        public void setIsThumbnail(Boolean isThumbnail) {
+            this.isThumbnail = isThumbnail;
         }
     }
 
@@ -112,6 +138,14 @@ public class PropertyDetailDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public List<String> getImageUrls() {

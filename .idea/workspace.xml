@@ -11,42 +11,15 @@
   <component name="ChangeListManager">
     <list default="true" id="c72cd1d6-664b-4963-bc25-846c88365e16" name="Changes" comment="update web.xml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/acc/RegisterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/customer/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminPropertyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/admin/AdminPropertyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/staff/StaffPropertyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/controller/staff/StaffPropertyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/property/PropertyDetailDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/dto/property/PropertyDetailDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/Property.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/PropertyImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/PropertyImage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/TransactionPropertySnapshot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/TransactionPropertySnapshot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/entity/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/PropertyRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/PropertyRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/ReportRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/ReportRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/TransactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/TransactionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/OtpService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/OtpService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/PropertyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/PropertyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/ReportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/ReportService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/TransactionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/TransactionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/service/ViewLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/service/ViewLogService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/qlbds/util/ValidationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/qlbds/util/ValidationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/05379133-225a-450b-8db1-4947775ba8fb.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/0981d83a-83e0-4786-84eb-5c9e36381faa.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/16bad7b9-f523-42c6-8192-030178b39ad2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/261fdd48-f15b-4289-8473-266dd5dd915f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/340b9ba4-ef18-4049-a149-c8795c5d79c6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/35ad8556-cdc3-42d7-b56f-652b1bc6b57c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/543e8d82-227c-4a78-be1d-6219c565e619.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/54da7cc7-f045-4ab6-9f9d-0c7483db4286.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/6200ac31-0a63-46c7-85db-37449fb2f5e9.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/942a14ca-2b53-4519-9fa6-e98f6ff7db67.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/a7280868-f477-4857-87b8-e613d5550a6b.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/b0d8232f-bf2b-430f-acfb-8d8707713cf4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/b9354bec-256a-4eac-af09-9acffb03d3a5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/e7a01263-0d97-4bb3-bcfa-1b69e974b3a4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/eda54d40-9650-44fd-829d-503a77a9310c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/ef354bda-93d0-47ce-acd8-4709b8fa5bb5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/fbf16a7f-4313-405c-a1ac-e2628414ba27.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploads/properties/fee02bd0-f944-418b-99a0-d8aadbe04635.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminBDS.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/adminBDS.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customer/property-detail.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/staff/staffBDS.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/staff/staffBDS.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
